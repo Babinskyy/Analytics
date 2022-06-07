@@ -1,0 +1,7 @@
+{
+  "name": "BroccoliBoss",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
