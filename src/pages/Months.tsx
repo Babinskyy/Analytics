@@ -51,7 +51,7 @@ import { Chart as ChartJS, registerables } from "chart.js";
 import { Bar, PolarArea } from "react-chartjs-2";
 ChartJS.register(...registerables);
 
-const exData = {
+const barData = {
   labels: ["Czerwiec", "Maj", "Kwiecień", "Marzec", "Luty"],
   datasets: [
     {
@@ -61,35 +61,27 @@ const exData = {
     },
   ],
 };
+const polarData = {
+  labels: ["Trójmiasto", "Warszawa ", "Śląsk", "Kujawy", "Podlasie"],
+  datasets: [
+    {
+      label: "Ilość",
+      data: [534, 155, 887, 235, 110],
+      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+    },
+  ],
+};
 
 const Months: React.FC = () => {
-  const [chartData, setChartData] = useState<any>();
+  const [BarChartData, setBarChartData] = useState<any>();
+  const [PolarChartData, setPolarChartData] = useState<any>();
   const [wichGraph, setWichGraph] = useState<boolean>(true);
 
   useEffect(() => {
-    // const fetchPrices = async () => {
-    //   const res = await fetch("https://api.coincap.io/v2/assets/?limit=5");
-    //   const data = await res.json();
-    //   setChartData({
-    //     labels: data.data.map((crypto: any) => crypto.name),
-    //     datasets: [
-    //       {
-    //         label: "Price in USD",
-    //         data: data.data.map((crypto: any) => crypto.priceUsd),
-    //         backgroundColor: [
-    //           "#ffbb11",
-    //           "#ecf0f1",
-    //           "#50AF95",
-    //           "#f3ba2f",
-    //           "#2a71d0",
-    //         ],
-    //       },
-    //     ],
-    //   });
-    // };
-    // fetchPrices();
-
-    setChartData(exData);
+    setBarChartData(barData);
+  }, []);
+  useEffect(() => {
+    setPolarChartData(polarData);
   }, []);
 
   return (
@@ -132,18 +124,18 @@ const Months: React.FC = () => {
           </IonLabel>
         </IonItem>
         <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
-          {chartData ? (
+          {BarChartData ? (
             <Bar
-              data={chartData}
+              data={BarChartData}
               options={{
                 indexAxis: "y",
                 plugins: {
                   title: {
                     display: true,
-                    text: "Ilość diet w 2022",
+                    text: "Ilość dostarczonych diet w 2022",
                   },
                   legend: {
-                    display: true,
+                    display: false,
                     position: "bottom",
                   },
                 },
@@ -154,14 +146,14 @@ const Months: React.FC = () => {
           )}
         </IonItem>
         <IonItem style={{ display: `${wichGraph ? "block" : "none"}` }}>
-          {chartData ? (
+          {PolarChartData ? (
             <PolarArea
-              data={chartData}
+              data={PolarChartData}
               options={{
                 plugins: {
                   title: {
                     display: true,
-                    text: "Cryptocurrency prices",
+                    text: "Ilość dostarczonych diet w rejonie",
                   },
                   legend: {
                     display: true,
@@ -176,69 +168,107 @@ const Months: React.FC = () => {
         </IonItem>
 
         <IonList className="days-list" lines="none">
-          <IonItem className="day-item">
+          <IonItem className="list-header">
             <IonLabel>
-              <div>
-                <div className="day">Czerwiec</div>
-                <div className="date">06.2022</div>
+              <div style={{ textAlign: "left", marginLeft: "5px" }}>
+                Miesiąc
+              </div>
+            </IonLabel>
+            <IonLabel>
+              <div style={{ textAlign: "right", marginRight: "5px" }}>
+                Ilość wydanych diet
               </div>
             </IonLabel>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Maj</div>
-                <div className="date">05.2022</div>
-              </div>
+              <div className="day">Czerwiec</div>
+              <div className="date">06.2022</div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Kwiecień</div>
-                <div className="date">04.2022</div>
-              </div>
+              <div className="day">Maj</div>
+              <div className="date">05.2022</div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>155</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Marzec</div>
-                <div className="date">03.2022</div>
-              </div>
+              <div className="day">Kwiecień</div>
+              <div className="date">04.2022</div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>887</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Luty</div>
-                <div className="date">02.2022</div>
-              </div>
+              <div className="day">Marzec</div>
+              <div className="date">03.2022</div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>23</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Luty</div>
-                <div className="date">02.2022</div>
-              </div>
+              <div className="day">Luty</div>
+              <div className="date">02.2022</div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>110</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Luty</div>
-                <div className="date">02.2022</div>
-              </div>
+              <div className="day">Luty</div>
+              <div className="date">02.2022</div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>155</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Luty</div>
-                <div className="date">02.2022</div>
-              </div>
+              <div className="day">Luty</div>
+              <div className="date">02.2022</div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div>wydanych diet:</div>
+                <div style={{ textAlign: "right" }}>110</div>
+              </IonLabel>
+            </IonItem>
+          </IonItem>
+          <IonItem className="day-item">
+            <IonLabel>
+              <div className="day">Luty</div>
+              <div className="date">02.2022</div>
+            </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div>wydanych diet:</div>
+                <div style={{ textAlign: "right" }}>110</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
         </IonList>
       </IonContent>

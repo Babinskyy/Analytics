@@ -50,33 +50,38 @@ import { useEffect, useState } from "react";
 import { Chart as ChartJS, registerables } from "chart.js";
 import { Doughnut, Bar, PolarArea } from "react-chartjs-2";
 ChartJS.register(...registerables);
+const barData = {
+  labels: ["Czwartek", "Środa", "Wtorek", "Poniedziałek", "Niedziela"],
+  datasets: [
+    {
+      label: "Ilość",
+      data: [534, 155, 887, 23, 110],
+      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+    },
+  ],
+};
+const polarData = {
+  labels: ["Trójmiasto", "Warszawa ", "Śląsk", "Kujawy", "Podlasie"],
+  datasets: [
+    {
+      label: "Ilość",
+      data: [534, 155, 887, 23, 110],
+      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+    },
+  ],
+};
 
 const Days: React.FC = () => {
-  const [chartData, setChartData] = useState<any>();
+  const [barChartData, setBarChartData] = useState<any>();
+  const [polarChartData, setPolarChartData] = useState<any>();
+
   const [wichGraph, setWichGraph] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchPrices = async () => {
-      const res = await fetch("https://api.coincap.io/v2/assets/?limit=5");
-      const data = await res.json();
-      setChartData({
-        labels: data.data.map((crypto: any) => crypto.name),
-        datasets: [
-          {
-            label: "Price in USD",
-            data: data.data.map((crypto: any) => crypto.priceUsd),
-            backgroundColor: [
-              "#ffbb11",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
-          },
-        ],
-      });
-    };
-    fetchPrices();
+    setBarChartData(barData);
+  }, []);
+  useEffect(() => {
+    setPolarChartData(polarData);
   }, []);
 
   return (
@@ -119,18 +124,18 @@ const Days: React.FC = () => {
           </IonLabel>
         </IonItem>
         <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
-          {chartData ? (
+          {barChartData ? (
             <Bar
-              data={chartData}
+              data={barChartData}
               options={{
                 indexAxis: "y",
                 plugins: {
                   title: {
                     display: true,
-                    text: "Cryptocurrency prices",
+                    text: "Ilość dostarczonych diet w czerwcu",
                   },
                   legend: {
-                    display: true,
+                    display: false,
                     position: "bottom",
                   },
                 },
@@ -141,14 +146,14 @@ const Days: React.FC = () => {
           )}
         </IonItem>
         <IonItem style={{ display: `${wichGraph ? "block" : "none"}` }}>
-          {chartData ? (
+          {polarChartData ? (
             <PolarArea
-              data={chartData}
+              data={polarChartData}
               options={{
                 plugins: {
                   title: {
                     display: true,
-                    text: "Cryptocurrency prices",
+                    text: "Ilość dostarczonych diet w danym rejonie",
                   },
                   legend: {
                     display: true,
@@ -163,6 +168,16 @@ const Days: React.FC = () => {
         </IonItem>
 
         <IonList className="days-list" lines="none">
+          <IonItem className="list-header">
+            <IonLabel>
+              <div style={{ textAlign: "left", marginLeft: "5px" }}>Dzień</div>
+            </IonLabel>
+            <IonLabel>
+              <div style={{ textAlign: "right", marginRight: "5px" }}>
+                Ilość wydanych diet
+              </div>
+            </IonLabel>
+          </IonItem>
           <IonItem className="day-item">
             <IonLabel>
               <div>
@@ -170,6 +185,11 @@ const Days: React.FC = () => {
                 <div className="date">13.06.2022</div>
               </div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
@@ -178,6 +198,11 @@ const Days: React.FC = () => {
                 <div className="date">13.06.2022</div>
               </div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
@@ -186,6 +211,11 @@ const Days: React.FC = () => {
                 <div className="date">13.06.2022</div>
               </div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
@@ -194,6 +224,11 @@ const Days: React.FC = () => {
                 <div className="date">13.06.2022</div>
               </div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
@@ -202,6 +237,11 @@ const Days: React.FC = () => {
                 <div className="date">13.06.2022</div>
               </div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
@@ -210,6 +250,11 @@ const Days: React.FC = () => {
                 <div className="date">13.06.2022</div>
               </div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
@@ -218,6 +263,11 @@ const Days: React.FC = () => {
                 <div className="date">13.06.2022</div>
               </div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
@@ -226,6 +276,11 @@ const Days: React.FC = () => {
                 <div className="date">13.06.2022</div>
               </div>
             </IonLabel>
+            <IonItem className="diet-number">
+              <IonLabel>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+              </IonLabel>
+            </IonItem>
           </IonItem>
         </IonList>
       </IonContent>

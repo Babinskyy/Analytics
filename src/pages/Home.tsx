@@ -5,6 +5,7 @@ import {
   caretForwardOutline,
   checkmarkOutline,
   chevronForwardOutline,
+  closeOutline,
   ellipsisVerticalOutline,
   gridOutline,
   handRight,
@@ -33,13 +34,18 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
+  IonCheckbox,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonHeader,
   IonIcon,
+  IonImg,
   IonItem,
   IonLabel,
   IonList,
   IonListHeader,
+  IonModal,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -47,40 +53,45 @@ import {
 import ExploreContainer from "../components/ExploreContainer";
 import "./Home.css";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Chart as ChartJS, registerables } from "chart.js";
 
 import { Doughnut, PolarArea, Bar, Chart, Pie } from "react-chartjs-2";
 import { display } from "@mui/material/node_modules/@mui/system";
+import { dismiss } from "@ionic/core/dist/types/utils/overlays";
 ChartJS.register(...registerables);
+const doughnutData = {
+  labels: ["slim-1500", "wege-2000", "sport-3000", "slim-1200", "keto-1500"],
+  datasets: [
+    {
+      label: "Ilość",
+      data: [534, 155, 887, 23, 110],
+      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+    },
+  ],
+};
+const polarData = {
+  labels: ["Trójmiasto", "Warszawa ", "Śląsk", "Kujawy", "Podlasie"],
+  datasets: [
+    {
+      label: "Ilość",
+      data: [534, 155, 887, 23, 110],
+      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+    },
+  ],
+};
 
 const Home: React.FC = () => {
-  const [chartData, setChartData] = useState<any>();
+  const [doughnutChartData, setDoughnutChartData] = useState<any>();
+  const [polarChartData, setPolarChartData] = useState<any>();
   const [wichGraph, setWichGraph] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchPrices = async () => {
-      const res = await fetch("https://api.coincap.io/v2/assets/?limit=5");
-      const data = await res.json();
-      setChartData({
-        labels: data.data.map((crypto: any) => crypto.name),
-        datasets: [
-          {
-            label: "Price in USD",
-            data: data.data.map((crypto: any) => crypto.priceUsd),
-            backgroundColor: [
-              "#ffbb11",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
-          },
-        ],
-      });
-    };
-    fetchPrices();
+    setDoughnutChartData(doughnutData);
+  }, []);
+  useEffect(() => {
+    setPolarChartData(polarData);
   }, []);
 
   return (
@@ -124,14 +135,14 @@ const Home: React.FC = () => {
           </IonLabel>
         </IonItem>
         <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
-          {chartData ? (
+          {doughnutChartData ? (
             <Doughnut
-              data={chartData}
+              data={doughnutChartData}
               options={{
                 plugins: {
                   title: {
                     display: true,
-                    text: "Cryptocurrency prices",
+                    text: "Ilość dostarczonych diet",
                   },
                   legend: {
                     display: true,
@@ -145,14 +156,14 @@ const Home: React.FC = () => {
           )}
         </IonItem>
         <IonItem style={{ display: `${wichGraph ? "block" : "none"}` }}>
-          {chartData ? (
+          {polarChartData ? (
             <PolarArea
-              data={chartData}
+              data={polarChartData}
               options={{
                 plugins: {
                   title: {
                     display: true,
-                    text: "Cryptocurrency prices",
+                    text: "Ilość dostarczonych diet w rejonie",
                   },
                   legend: {
                     display: true,
@@ -166,9 +177,6 @@ const Home: React.FC = () => {
           )}
         </IonItem>
         <IonList>
-          <IonItem className="list-header">
-            <IonLabel>Dostawy cateringu Pan Ogórek:</IonLabel>
-          </IonItem>
           <IonItem className="address-item">
             <IonLabel className="delivery-info-item">
               <div style={{ display: "flex" }}>
@@ -209,6 +217,7 @@ const Home: React.FC = () => {
             <IonItem>
               <div className="icon-time">
                 <IconButton
+                  id="open-modal"
                   onClick={() => {
                     console.log("click");
                   }}
@@ -221,6 +230,7 @@ const Home: React.FC = () => {
                     }}
                   />
                 </IconButton>
+
                 <IonLabel className="delivery-time" color="primary">
                   <div className="delivery-time-span">14:53</div>
                 </IonLabel>
