@@ -43,15 +43,16 @@ import {
   IonVirtualScroll,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
-import "./Days.scss";
+import "./Year.scss";
 
 import { useEffect, useState } from "react";
 
 import { Chart as ChartJS, registerables } from "chart.js";
-import { Doughnut, Bar, PolarArea } from "react-chartjs-2";
+import { Bar, PolarArea } from "react-chartjs-2";
 ChartJS.register(...registerables);
+
 const barData = {
-  labels: ["Czwartek", "Środa", "Wtorek", "Poniedziałek", "Niedziela"],
+  labels: ["Czerwiec", "Maj", "Kwiecień", "Marzec", "Luty"],
   datasets: [
     {
       label: "Ilość",
@@ -65,16 +66,15 @@ const polarData = {
   datasets: [
     {
       label: "Ilość",
-      data: [534, 155, 887, 23, 110],
+      data: [534, 155, 887, 235, 110],
       backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
 };
 
-const Days: React.FC = () => {
-  const [barChartData, setBarChartData] = useState<any>();
-  const [polarChartData, setPolarChartData] = useState<any>();
-
+const Year: React.FC = () => {
+  const [BarChartData, setBarChartData] = useState<any>();
+  const [PolarChartData, setPolarChartData] = useState<any>();
   const [wichGraph, setWichGraph] = useState<boolean>(true);
 
   useEffect(() => {
@@ -85,10 +85,10 @@ const Days: React.FC = () => {
   }, []);
 
   return (
-    <IonPage className="days">
+    <IonPage className="Year">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Czerwiec, 06.2022</IonTitle>
+          <IonTitle>2022</IonTitle>
           <IonButtons slot="end">
             <IonButton>
               <IonIcon slot="icon-only" icon={reorderFourOutline} />
@@ -124,15 +124,15 @@ const Days: React.FC = () => {
           </IonLabel>
         </IonItem>
         <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
-          {barChartData ? (
+          {BarChartData ? (
             <Bar
-              data={barChartData}
+              data={BarChartData}
               options={{
                 indexAxis: "y",
                 plugins: {
                   title: {
                     display: true,
-                    text: "Ilość dostarczonych diet w czerwcu",
+                    text: "Ilość dostarczonych diet w 2022",
                   },
                   legend: {
                     display: false,
@@ -146,14 +146,14 @@ const Days: React.FC = () => {
           )}
         </IonItem>
         <IonItem style={{ display: `${wichGraph ? "block" : "none"}` }}>
-          {polarChartData ? (
+          {PolarChartData ? (
             <PolarArea
-              data={polarChartData}
+              data={PolarChartData}
               options={{
                 plugins: {
                   title: {
                     display: true,
-                    text: "Ilość dostarczonych diet w danym rejonie",
+                    text: "Ilość dostarczonych diet w rejonie",
                   },
                   legend: {
                     display: true,
@@ -170,7 +170,9 @@ const Days: React.FC = () => {
         <IonList className="days-list" lines="none">
           <IonItem className="list-header">
             <IonLabel>
-              <div style={{ textAlign: "left", marginLeft: "5px" }}>Dzień</div>
+              <div style={{ textAlign: "left", marginLeft: "5px" }}>
+                Miesiąc
+              </div>
             </IonLabel>
             <IonLabel>
               <div style={{ textAlign: "right", marginRight: "5px" }}>
@@ -180,10 +182,8 @@ const Days: React.FC = () => {
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Czwartek</div>
-                <div className="date">13.06.2022</div>
-              </div>
+              <div className="day">Czerwiec</div>
+              <div className="date">06.2022</div>
             </IonLabel>
             <IonItem className="diet-number">
               <IonLabel>
@@ -193,92 +193,80 @@ const Days: React.FC = () => {
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Środa</div>
-                <div className="date">13.06.2022</div>
-              </div>
+              <div className="day">Maj</div>
+              <div className="date">05.2022</div>
             </IonLabel>
             <IonItem className="diet-number">
               <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>155</div>
               </IonLabel>
             </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Wtorek</div>
-                <div className="date">13.06.2022</div>
-              </div>
+              <div className="day">Kwiecień</div>
+              <div className="date">04.2022</div>
             </IonLabel>
             <IonItem className="diet-number">
               <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>887</div>
               </IonLabel>
             </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
+              <div className="day">Marzec</div>
+              <div className="date">03.2022</div>
             </IonLabel>
             <IonItem className="diet-number">
               <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>23</div>
               </IonLabel>
             </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
+              <div className="day">Luty</div>
+              <div className="date">02.2022</div>
             </IonLabel>
             <IonItem className="diet-number">
               <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>110</div>
               </IonLabel>
             </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
+              <div className="day">Luty</div>
+              <div className="date">02.2022</div>
             </IonLabel>
             <IonItem className="diet-number">
               <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+                <div style={{ textAlign: "right", fontSize: "20px" }}>155</div>
               </IonLabel>
             </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
+              <div className="day">Luty</div>
+              <div className="date">02.2022</div>
             </IonLabel>
             <IonItem className="diet-number">
               <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+                <div>wydanych diet:</div>
+                <div style={{ textAlign: "right" }}>110</div>
               </IonLabel>
             </IonItem>
           </IonItem>
           <IonItem className="day-item">
             <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
+              <div className="day">Luty</div>
+              <div className="date">02.2022</div>
             </IonLabel>
             <IonItem className="diet-number">
               <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
+                <div>wydanych diet:</div>
+                <div style={{ textAlign: "right" }}>110</div>
               </IonLabel>
             </IonItem>
           </IonItem>
@@ -288,4 +276,4 @@ const Days: React.FC = () => {
   );
 };
 
-export default Days;
+export default Year;

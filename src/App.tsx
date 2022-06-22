@@ -1,7 +1,7 @@
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import Home from "./pages/Home";
+import Day from "./pages/Day";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -23,8 +23,8 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 
 import "./theme/fonts.css";
-import Days from "./pages/Days";
-import Months from "./pages/Months";
+import Month from "./pages/Month";
+import Year from "./pages/Year";
 
 setupIonicReact();
 
@@ -32,17 +32,17 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
+        <Route exact path="/day">
+          <Day />
         </Route>
-        <Route exact path="/days">
-          <Days />
+        <Route exact path="/month">
+          <Month />
         </Route>
-        <Route exact path="/months">
-          <Months />
+        <Route exact path="/year">
+          <Year />
         </Route>
         <Route exact path="/">
-          <Redirect to="/home" />
+          <Redirect to="/Day" />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

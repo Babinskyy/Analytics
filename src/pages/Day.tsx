@@ -51,7 +51,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
-import "./Home.css";
+import "./Day.css";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -82,7 +82,7 @@ const polarData = {
   ],
 };
 
-const Home: React.FC = () => {
+const Day: React.FC = () => {
   const [doughnutChartData, setDoughnutChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
   const [wichGraph, setWichGraph] = useState<boolean>(true);
@@ -588,4 +588,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Day;
