@@ -60,6 +60,9 @@ import { Chart as ChartJS, registerables } from "chart.js";
 import { Doughnut, PolarArea, Bar, Chart, Pie } from "react-chartjs-2";
 import { display } from "@mui/material/node_modules/@mui/system";
 import { dismiss } from "@ionic/core/dist/types/utils/overlays";
+
+import OrderImage from "./../components/dostawa.jpg";
+
 ChartJS.register(...registerables);
 const doughnutData = {
   labels: ["slim-1500", "wege-2000", "sport-3000", "slim-1200", "keto-1500"],
@@ -87,6 +90,8 @@ const Day: React.FC = () => {
   const [polarChartData, setPolarChartData] = useState<any>();
   const [wichGraph, setWichGraph] = useState<boolean>(true);
 
+  const [showOrderPhoto, setShowOrderPhoto] = useState(false);
+
   useEffect(() => {
     setDoughnutChartData(doughnutData);
   }, []);
@@ -98,14 +103,35 @@ const Day: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton />
+          </IonButtons>
           <IonTitle slot="start">Poniedziałek, 13.05.2022</IonTitle>
-          <IonButtons slot="end">
+          {/* <IonButtons slot="end">
             <IonButton>
               <IonIcon slot="icon-only" icon={reorderFourOutline} />
             </IonButton>
-          </IonButtons>
+          </IonButtons> */}
         </IonToolbar>
       </IonHeader>
+
+      <IonModal
+        className="modal-image"
+        isOpen={showOrderPhoto}
+        onIonModalDidDismiss={() => setShowOrderPhoto(false)}
+      >
+        <IonFab vertical="top" horizontal="end" slot="fixed">
+          <IonFabButton
+            onClick={() => {
+              setShowOrderPhoto(false);
+            }}
+            color="danger"
+          >
+            <IonIcon icon={closeOutline} />
+          </IonFabButton>
+        </IonFab>
+        <IonImg src={OrderImage} />
+      </IonModal>
 
       <IonContent fullscreen>
         <IonItem>
@@ -219,7 +245,7 @@ const Day: React.FC = () => {
                 <IconButton
                   id="open-modal"
                   onClick={() => {
-                    console.log("click");
+                    setShowOrderPhoto(true);
                   }}
                 >
                   <PhotoCamera
@@ -357,7 +383,7 @@ const Day: React.FC = () => {
               <div className="icon-time">
                 <IconButton
                   onClick={() => {
-                    console.log("click");
+                    setShowOrderPhoto(true);
                   }}
                 >
                   <PhotoCamera

@@ -28,6 +28,7 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import {
+  IonBackButton,
   IonButton,
   IonButtons,
   IonContent,
@@ -41,22 +42,38 @@ import {
   IonTitle,
   IonToolbar,
   IonVirtualScroll,
+  NavContext,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
 import "./Month.scss";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Chart as ChartJS, registerables } from "chart.js";
 import { Doughnut, Bar, PolarArea } from "react-chartjs-2";
 ChartJS.register(...registerables);
 const barData = {
-  labels: ["Czwartek", "Środa", "Wtorek", "Poniedziałek", "Niedziela"],
+  labels: ["Sobota", "Piątek", "Czwartek", "Środa", "Wtorek", "Poniedziałek"],
+  date: [
+    "14.06.2022",
+    "13.06.2022",
+    "12.06.2022",
+    "11.06.2022",
+    "10.06.2022",
+    "09.06.2022",
+  ],
   datasets: [
     {
       label: "Ilość",
-      data: [534, 155, 887, 23, 110],
-      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+      data: [534, 299, 887, 230, 333, 443],
+      backgroundColor: [
+        "#ecf0f1",
+        "#ffbb11",
+        "#50AF95",
+        "#80Ab10",
+        "#10FA95",
+        "#eef234",
+      ],
     },
   ],
 };
@@ -72,6 +89,7 @@ const polarData = {
 };
 
 const Month: React.FC = () => {
+  const { navigate } = useContext(NavContext);
   const [barChartData, setBarChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
 
@@ -85,15 +103,18 @@ const Month: React.FC = () => {
   }, []);
 
   return (
-    <IonPage className="Month">
+    <IonPage className="month">
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton />
+          </IonButtons>
           <IonTitle>Czerwiec, 06.2022</IonTitle>
-          <IonButtons slot="end">
+          {/* <IonButtons slot="end">
             <IonButton>
               <IonIcon slot="icon-only" icon={reorderFourOutline} />
             </IonButton>
-          </IonButtons>
+          </IonButtons> */}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -126,6 +147,7 @@ const Month: React.FC = () => {
         <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
           {barChartData ? (
             <Bar
+              height={200}
               data={barChartData}
               options={{
                 indexAxis: "y",
@@ -178,110 +200,30 @@ const Month: React.FC = () => {
               </div>
             </IonLabel>
           </IonItem>
-          <IonItem className="day-item">
-            <IonLabel>
-              <div>
-                <div className="day">Czwartek</div>
-                <div className="date">13.06.2022</div>
-              </div>
-            </IonLabel>
-            <IonItem className="diet-number">
-              <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
-              </IonLabel>
-            </IonItem>
-          </IonItem>
-          <IonItem className="day-item">
-            <IonLabel>
-              <div>
-                <div className="day">Środa</div>
-                <div className="date">13.06.2022</div>
-              </div>
-            </IonLabel>
-            <IonItem className="diet-number">
-              <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
-              </IonLabel>
-            </IonItem>
-          </IonItem>
-          <IonItem className="day-item">
-            <IonLabel>
-              <div>
-                <div className="day">Wtorek</div>
-                <div className="date">13.06.2022</div>
-              </div>
-            </IonLabel>
-            <IonItem className="diet-number">
-              <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
-              </IonLabel>
-            </IonItem>
-          </IonItem>
-          <IonItem className="day-item">
-            <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
-            </IonLabel>
-            <IonItem className="diet-number">
-              <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
-              </IonLabel>
-            </IonItem>
-          </IonItem>
-          <IonItem className="day-item">
-            <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
-            </IonLabel>
-            <IonItem className="diet-number">
-              <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
-              </IonLabel>
-            </IonItem>
-          </IonItem>
-          <IonItem className="day-item">
-            <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
-            </IonLabel>
-            <IonItem className="diet-number">
-              <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
-              </IonLabel>
-            </IonItem>
-          </IonItem>
-          <IonItem className="day-item">
-            <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
-            </IonLabel>
-            <IonItem className="diet-number">
-              <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
-              </IonLabel>
-            </IonItem>
-          </IonItem>
-          <IonItem className="day-item">
-            <IonLabel>
-              <div>
-                <div className="day">Poniedziałek</div>
-                <div className="date">13.06.2022</div>
-              </div>
-            </IonLabel>
-            <IonItem className="diet-number">
-              <IonLabel>
-                <div style={{ textAlign: "right", fontSize: "20px" }}>534</div>
-              </IonLabel>
-            </IonItem>
-          </IonItem>
+
+          {barData.labels.map((e, i) => {
+            return (
+              <IonItem
+                className="day-item"
+                button
+                onClick={() => {
+                  navigate("/day", "forward", "push");
+                }}
+              >
+                <IonLabel>
+                  <div className="day">{e}</div>
+                  <div className="date">{barData.date[i]}</div>
+                </IonLabel>
+                <IonItem className="diet-number">
+                  <IonLabel>
+                    <div style={{ textAlign: "right", fontSize: "20px" }}>
+                      {barData.datasets[0].data[i]}
+                    </div>
+                  </IonLabel>
+                </IonItem>
+              </IonItem>
+            );
+          })}
         </IonList>
       </IonContent>
     </IonPage>
