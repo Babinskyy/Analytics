@@ -142,6 +142,17 @@ const Year: React.FC = () => {
             </IonButton>
             <IonButton
               shape="round"
+              fill={wichGraph ? "outline" : "solid"}
+              color={"tertiary"}
+              className="graph-button"
+              onClick={() => {
+                setWichGraph(false);
+              }}
+            >
+              Diety
+            </IonButton>
+            <IonButton
+              shape="round"
               fill={wichGraph ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"

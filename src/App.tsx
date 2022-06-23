@@ -42,7 +42,7 @@ const App: React.FC = () => (
           <Year />
         </Route>
         <Route exact path="/">
-          <Redirect to="/Day" />
+          <Redirect to="/Year" />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

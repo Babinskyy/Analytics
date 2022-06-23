@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "BroccoliBoss",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
