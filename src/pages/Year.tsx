@@ -49,7 +49,7 @@ import "./Year.scss";
 import { useContext, useEffect, useState } from "react";
 
 import { Chart as ChartJS, registerables } from "chart.js";
-import { Bar, PolarArea } from "react-chartjs-2";
+import { Bar, PolarArea, Doughnut } from "react-chartjs-2";
 ChartJS.register(...registerables);
 
 const barData = {
@@ -94,8 +94,32 @@ const polarData = {
   datasets: [
     {
       label: "Ilość",
-      data: [534, 155, 887, 235, 110],
+      data: [534, 300, 250, 530, 300],
       backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+    },
+  ],
+};
+const doughnutData = {
+  labels: [
+    "slim-1500",
+    "wege-2000",
+    "sport-2500",
+    "keto-2200",
+    "keto-1200",
+    "slim-2500",
+  ],
+  datasets: [
+    {
+      label: "Ilość",
+      data: [534, 155, 600, 235, 110, 641],
+      backgroundColor: [
+        "#ffbb11",
+        "#ecf0f1",
+        "#50AF95",
+        "#80Ab10",
+        "#10FA95",
+        "#1bcb55",
+      ],
     },
   ],
 };
@@ -103,9 +127,10 @@ const polarData = {
 const Year: React.FC = () => {
   const { navigate } = useContext(NavContext);
 
-  const [BarChartData, setBarChartData] = useState<any>();
-  const [PolarChartData, setPolarChartData] = useState<any>();
-  const [wichGraph, setWichGraph] = useState<boolean>(true);
+  const [barChartData, setBarChartData] = useState<any>();
+  const [polarChartData, setPolarChartData] = useState<any>();
+  const [doughnutChartData, setdoughnutChartData] = useState<any>();
+  const [whichGraph, setWhichGraph] = useState<string>("diets");
 
   useEffect(() => {
     setBarChartData(barData);
@@ -113,17 +138,85 @@ const Year: React.FC = () => {
   useEffect(() => {
     setPolarChartData(polarData);
   }, []);
+  useEffect(() => {
+    setdoughnutChartData(doughnutData);
+  }, []);
+
+  const GraphSelect = () => {
+    switch (whichGraph) {
+      case "area":
+        if (polarChartData) {
+          return (
+            <PolarArea
+              data={polarChartData}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Ilość dostarczonych diet w rejonie",
+                  },
+                  legend: {
+                    display: true,
+                    position: "bottom",
+                  },
+                },
+              }}
+            />
+          );
+        } else return <></>;
+      case "diets":
+        if (barChartData) {
+          return (
+            <Bar
+              height={300}
+              data={barChartData}
+              options={{
+                indexAxis: "y",
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Ilość dostarczonych diet w 2022",
+                  },
+                  legend: {
+                    display: false,
+                    position: "bottom",
+                  },
+                },
+              }}
+            />
+          );
+        } else return <></>;
+      case "types":
+        if (doughnutChartData) {
+          return (
+            <Doughnut
+              data={doughnutChartData}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Typy dostarczonych diet w 2022",
+                  },
+                  legend: {
+                    display: true,
+                    position: "bottom",
+                  },
+                },
+              }}
+            />
+          );
+        } else return <></>;
+
+      default:
+        return <></>;
+    }
+  };
 
   return (
     <IonPage className="year">
       <IonHeader>
         <IonToolbar>
           <IonTitle>2022</IonTitle>
-          {/* <IonButtons slot="end">
-            <IonButton>
-              <IonIcon slot="icon-only" icon={reorderFourOutline} />
-            </IonButton>
-          </IonButtons> */}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -131,33 +224,33 @@ const Year: React.FC = () => {
           <IonLabel>
             <IonButton
               shape="round"
-              fill={wichGraph ? "outline" : "solid"}
+              fill={whichGraph === "diets" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWichGraph(false);
+                setWhichGraph("diets");
               }}
             >
               Diety
             </IonButton>
             <IonButton
               shape="round"
-              fill={wichGraph ? "outline" : "solid"}
+              fill={whichGraph === "types" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWichGraph(false);
+                setWhichGraph("types");
               }}
             >
-              Diety
+              Typy
             </IonButton>
             <IonButton
               shape="round"
-              fill={wichGraph ? "solid" : "outline"}
+              fill={whichGraph === "area" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWichGraph(true);
+                setWhichGraph("area");
               }}
             >
               Rejony
@@ -165,53 +258,13 @@ const Year: React.FC = () => {
           </IonLabel>
         </IonItem>
 
-        {wichGraph ? (
-          <IonItem>
-            {PolarChartData ? (
-              <PolarArea
-                data={PolarChartData}
-                options={{
-                  plugins: {
-                    title: {
-                      display: true,
-                      text: "Ilość dostarczonych diet w rejonie",
-                    },
-                    legend: {
-                      display: true,
-                      position: "bottom",
-                    },
-                  },
-                }}
-              />
-            ) : (
-              <></>
-            )}
-          </IonItem>
-        ) : (
-          <IonItem>
-            {BarChartData ? (
-              <Bar
-                height={300}
-                data={BarChartData}
-                options={{
-                  indexAxis: "y",
-                  plugins: {
-                    title: {
-                      display: true,
-                      text: "Ilość dostarczonych diet w 2022",
-                    },
-                    legend: {
-                      display: false,
-                      position: "bottom",
-                    },
-                  },
-                }}
-              />
-            ) : (
-              <></>
-            )}
-          </IonItem>
-        )}
+        <IonItem
+          style={{
+            height: "394px",
+          }}
+        >
+          <GraphSelect />
+        </IonItem>
 
         <IonList className="days-list" lines="none">
           <IonItem className="list-header">

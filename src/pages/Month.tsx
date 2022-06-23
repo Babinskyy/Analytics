@@ -82,7 +82,23 @@ const polarData = {
   datasets: [
     {
       label: "Ilość",
-      data: [534, 155, 887, 23, 110],
+      data: [534, 240, 650, 230, 170],
+      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+    },
+  ],
+};
+const doughnutData = {
+  labels: [
+    "slim-1500",
+    "wege-2000",
+    "sport-2500",
+    "keto-2200",
+    "specjały-brokuła",
+  ],
+  datasets: [
+    {
+      label: "Ilość",
+      data: [534, 155, 887, 235, 110],
       backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
@@ -92,8 +108,8 @@ const Month: React.FC = () => {
   const { navigate } = useContext(NavContext);
   const [barChartData, setBarChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
-
-  const [wichGraph, setWichGraph] = useState<boolean>(true);
+  const [doughnutChartData, setdoughnutChartData] = useState<any>();
+  const [whichGraph, setWhichGraph] = useState<string>("diets");
 
   useEffect(() => {
     setBarChartData(barData);
@@ -101,6 +117,79 @@ const Month: React.FC = () => {
   useEffect(() => {
     setPolarChartData(polarData);
   }, []);
+  useEffect(() => {
+    setdoughnutChartData(doughnutData);
+  }, []);
+
+  const GraphSelect = () => {
+    switch (whichGraph) {
+      case "area":
+        if (polarChartData) {
+          return (
+            <PolarArea
+              data={polarChartData}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Ilość dostarczonych diet w rejonie",
+                  },
+                  legend: {
+                    display: true,
+                    position: "bottom",
+                  },
+                },
+              }}
+            />
+          );
+        } else return <></>;
+      case "diets":
+        if (barChartData) {
+          return (
+            <Bar
+              height={300}
+              data={barChartData}
+              options={{
+                indexAxis: "y",
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Ilość dostarczonych diet w 2022",
+                  },
+                  legend: {
+                    display: false,
+                    position: "bottom",
+                  },
+                },
+              }}
+            />
+          );
+        } else return <></>;
+      case "types":
+        if (doughnutChartData) {
+          return (
+            <Doughnut
+              data={doughnutChartData}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Typy dostarczonych diet w 2022",
+                  },
+                  legend: {
+                    display: true,
+                    position: "bottom",
+                  },
+                },
+              }}
+            />
+          );
+        } else return <></>;
+
+      default:
+        return <></>;
+    }
+  };
 
   return (
     <IonPage className="month">
@@ -122,29 +211,49 @@ const Month: React.FC = () => {
           <IonLabel>
             <IonButton
               shape="round"
-              fill={wichGraph ? "outline" : "solid"}
+              fill={whichGraph === "diets" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWichGraph(false);
+                setWhichGraph("diets");
               }}
             >
               Diety
             </IonButton>
             <IonButton
               shape="round"
-              fill={wichGraph ? "solid" : "outline"}
+              fill={whichGraph === "types" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWichGraph(true);
+                setWhichGraph("types");
+              }}
+            >
+              Typy
+            </IonButton>
+            <IonButton
+              shape="round"
+              fill={whichGraph === "area" ? "solid" : "outline"}
+              color={"tertiary"}
+              className="graph-button"
+              onClick={() => {
+                setWhichGraph("area");
               }}
             >
               Rejony
             </IonButton>
           </IonLabel>
         </IonItem>
-        <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
+
+        <IonItem
+          style={{
+            height: "394px",
+          }}
+        >
+          <GraphSelect />
+        </IonItem>
+
+        {/* <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
           {barChartData ? (
             <Bar
               height={200}
@@ -187,7 +296,7 @@ const Month: React.FC = () => {
           ) : (
             <></>
           )}
-        </IonItem>
+        </IonItem> */}
 
         <IonList className="days-list" lines="none">
           <IonItem className="list-header">

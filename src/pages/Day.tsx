@@ -79,25 +79,74 @@ const polarData = {
   datasets: [
     {
       label: "Ilość",
-      data: [534, 155, 887, 23, 110],
+      data: [534, 250, 321, 230, 401],
       backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
 };
 
 const Day: React.FC = () => {
-  const [doughnutChartData, setDoughnutChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
-  const [wichGraph, setWichGraph] = useState<boolean>(true);
+  const [doughnutChartData, setdoughnutChartData] = useState<any>();
+  const [whichGraph, setWhichGraph] = useState<string>("types");
 
   const [showOrderPhoto, setShowOrderPhoto] = useState(false);
 
   useEffect(() => {
-    setDoughnutChartData(doughnutData);
-  }, []);
-  useEffect(() => {
     setPolarChartData(polarData);
   }, []);
+  useEffect(() => {
+    setdoughnutChartData(doughnutData);
+  }, []);
+
+  const GraphSelect = () => {
+    switch (whichGraph) {
+      case "area":
+        if (polarChartData) {
+          return (
+            <PolarArea
+              data={polarChartData}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Ilość dostarczonych diet w rejonie",
+                  },
+                  legend: {
+                    display: true,
+                    position: "bottom",
+                  },
+                },
+              }}
+            />
+          );
+        } else return <></>;
+
+      case "types":
+        if (doughnutChartData) {
+          return (
+            <Doughnut
+              data={doughnutChartData}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Typy dostarczonych diet w 2022",
+                  },
+                  legend: {
+                    display: true,
+                    position: "bottom",
+                  },
+                },
+              }}
+            />
+          );
+        } else return <></>;
+
+      default:
+        return <></>;
+    }
+  };
 
   return (
     <IonPage>
@@ -107,11 +156,6 @@ const Day: React.FC = () => {
             <IonBackButton />
           </IonButtons>
           <IonTitle slot="start">Poniedziałek, 13.05.2022</IonTitle>
-          {/* <IonButtons slot="end">
-            <IonButton>
-              <IonIcon slot="icon-only" icon={reorderFourOutline} />
-            </IonButton>
-          </IonButtons> */}
         </IonToolbar>
       </IonHeader>
 
@@ -138,29 +182,38 @@ const Day: React.FC = () => {
           <IonLabel>
             <IonButton
               shape="round"
-              fill={wichGraph ? "outline" : "solid"}
+              fill={whichGraph === "types" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWichGraph(false);
+                setWhichGraph("types");
               }}
             >
-              Diety
+              Typy
             </IonButton>
             <IonButton
               shape="round"
-              fill={wichGraph ? "solid" : "outline"}
+              fill={whichGraph === "area" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWichGraph(true);
+                setWhichGraph("area");
               }}
             >
               Rejony
             </IonButton>
           </IonLabel>
         </IonItem>
-        <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
+
+        <IonItem
+          style={{
+            height: "394px",
+          }}
+        >
+          <GraphSelect />
+        </IonItem>
+
+        {/* <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
           {doughnutChartData ? (
             <Doughnut
               data={doughnutChartData}
@@ -201,7 +254,7 @@ const Day: React.FC = () => {
           ) : (
             <></>
           )}
-        </IonItem>
+        </IonItem> */}
         <IonList>
           <IonItem className="address-item">
             <IonLabel className="delivery-info-item">
