@@ -265,50 +265,7 @@ const Month: React.FC = () => {
           <GraphSelect />
         </IonItem>
 
-        {/* <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>
-          {barChartData ? (
-            <Bar
-              height={200}
-              data={barChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość dostarczonych diet w czerwcu",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
-                },
-              }}
-            />
-          ) : (
-            <></>
-          )}
-        </IonItem>
-        <IonItem style={{ display: `${wichGraph ? "block" : "none"}` }}>
-          {polarChartData ? (
-            <PolarArea
-              data={polarChartData}
-              options={{
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość dostarczonych diet w danym rejonie",
-                  },
-                  legend: {
-                    display: true,
-                    position: "bottom",
-                  },
-                },
-              }}
-            />
-          ) : (
-            <></>
-          )}
-        </IonItem> */}
+        
 
         <IonList className="days-list" lines="none">
           <IonItem className="list-header">
