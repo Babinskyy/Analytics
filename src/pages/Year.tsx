@@ -46,7 +46,7 @@ import {
 import ExploreContainer from "../components/ExploreContainer";
 import "./Year.scss";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import { Chart as ChartJS, registerables } from "chart.js";
 import { Bar, PolarArea, Doughnut } from "react-chartjs-2";

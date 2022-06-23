@@ -53,7 +53,7 @@ import {
 import ExploreContainer from "../components/ExploreContainer";
 import "./Day.css";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Chart as ChartJS, registerables } from "chart.js";
 
@@ -88,7 +88,7 @@ const polarData = {
 const Day: React.FC = () => {
   const [polarChartData, setPolarChartData] = useState<any>();
   const [doughnutChartData, setdoughnutChartData] = useState<any>();
-  const [whichGraph, setWhichGraph] = useState<string>("types");
+  const [whichGraph, setWhichGraph] = useState<string>();
 
   const [showOrderPhoto, setShowOrderPhoto] = useState(false);
 
@@ -97,6 +97,9 @@ const Day: React.FC = () => {
   }, []);
   useEffect(() => {
     setdoughnutChartData(doughnutData);
+  }, []);
+  useEffect(() => {
+    setWhichGraph("types");
   }, []);
 
   const GraphSelect = () => {
@@ -110,7 +113,7 @@ const Day: React.FC = () => {
                 plugins: {
                   title: {
                     display: true,
-                    text: "Ilość dostarczonych diet w rejonie",
+                    text: "Ilość dostarczonych diet na rejon",
                   },
                   legend: {
                     display: true,
@@ -131,7 +134,7 @@ const Day: React.FC = () => {
                 plugins: {
                   title: {
                     display: true,
-                    text: "Typy dostarczonych diet w 2022",
+                    text: "Typy dostarczonych diet",
                   },
                   legend: {
                     display: true,
@@ -147,6 +150,10 @@ const Day: React.FC = () => {
         return <></>;
     }
   };
+
+  const GraphSelectMemo = useMemo(() => {
+    return <GraphSelect />;
+  }, [whichGraph]);
 
   return (
     <IonPage>
@@ -210,7 +217,7 @@ const Day: React.FC = () => {
             height: "394px",
           }}
         >
-          <GraphSelect />
+          {GraphSelectMemo}
         </IonItem>
 
         {/* <IonItem style={{ display: `${wichGraph ? "none" : "block"}` }}>

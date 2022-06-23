@@ -82,7 +82,7 @@ const polarData = {
   datasets: [
     {
       label: "Ilość",
-      data: [534, 240, 650, 230, 170],
+      data: [350, 240, 300, 230, 170],
       backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
@@ -98,7 +98,7 @@ const doughnutData = {
   datasets: [
     {
       label: "Ilość",
-      data: [534, 155, 887, 235, 110],
+      data: [534, 155, 300, 235, 110],
       backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
@@ -132,7 +132,7 @@ const Month: React.FC = () => {
                 plugins: {
                   title: {
                     display: true,
-                    text: "Ilość dostarczonych diet w rejonie",
+                    text: "Ilość dostarczonych diet na rejon",
                   },
                   legend: {
                     display: true,
@@ -154,7 +154,7 @@ const Month: React.FC = () => {
                 plugins: {
                   title: {
                     display: true,
-                    text: "Ilość dostarczonych diet w 2022",
+                    text: "Ilość dostarczonych diet",
                   },
                   legend: {
                     display: false,
@@ -174,7 +174,7 @@ const Month: React.FC = () => {
                 plugins: {
                   title: {
                     display: true,
-                    text: "Typy dostarczonych diet w 2022",
+                    text: "Typy dostarczonych diet",
                   },
                   legend: {
                     display: true,
