@@ -1,23 +1,36 @@
+body.dark {
+    .day-item{
+        --background: rgb(37, 37, 37);
+        border: 1px solid #141414;
+    }
+    .diet-number{
+        --background: rgb(37, 37, 37);
+        
+    }
+    
+}
+
+.day-item{
+  
+    border-radius: 10px;
+      width: 95%;
+      left: 50%;
+      transform: translate(-50%);
+      margin: 10px 0;
+  
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+      border: 1px solid lightgrey;
+  }
+
 .year {
 
     
 .days-list{
     /* background-color: rgb(39, 39, 39); */
 }
-.day-item{
-    
-    /* border: 1px solid rgb(44, 44, 44); */
-    
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
-    /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
-    /* background-color: antiquewhite; */
-    --background: rgb(37, 37, 37);
-  border-radius: 10px;
-    width: 95%;
-    left: 50%;
-    transform: translate(-50%);
-    margin: 13px 0;
-}
+
+
+
 
 
 .day{
@@ -47,7 +60,7 @@
 }
 
 .diet-number{
-    --background: rgb(37, 37, 37);
+    
     font-size: 12px;
 }
 

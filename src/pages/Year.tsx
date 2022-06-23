@@ -6,6 +6,8 @@ import {
   checkmarkOutline,
   chevronForwardOutline,
   handRight,
+  moon,
+  moonOutline,
   reorderFourOutline,
 } from "ionicons/icons";
 import {
@@ -85,7 +87,7 @@ const barData = {
     {
       label: "Ilość",
       data: [0, 0, 887, 235, 345, 1233, 544, 654, 560, 234, 432, 333],
-      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+      backgroundColor: ["#ffbb11", "#17b2d9", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
 };
@@ -95,7 +97,7 @@ const polarData = {
     {
       label: "Ilość",
       data: [534, 300, 250, 530, 300],
-      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+      backgroundColor: ["#ffbb11", "#17b2d9", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
 };
@@ -114,7 +116,7 @@ const doughnutData = {
       data: [534, 155, 600, 235, 110, 641],
       backgroundColor: [
         "#ffbb11",
-        "#ecf0f1",
+        "#17b2d9",
         "#50AF95",
         "#80Ab10",
         "#10FA95",
@@ -217,7 +219,24 @@ const Year: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>2022</IonTitle>
+          <IonButtons slot="end">
+          <IonButton onClick={() => {
+
+            const bodyClasses = document.querySelector("body");
+
+            if(bodyClasses?.classList.contains("dark"))
+            {
+              document.body.classList.remove("dark");
+            }
+            else
+            {
+              document.body.classList.add("dark")
+            }
+
+          }} style={{marginRight: "15px"}}><IonIcon icon={moon}/></IonButton>
+        </IonButtons>
         </IonToolbar>
+        
       </IonHeader>
       <IonContent fullscreen>
         <IonItem>

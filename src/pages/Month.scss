@@ -1,21 +1,8 @@
+
 .month {
     
 .days-list{
     /* background-color: rgb(39, 39, 39); */
-}
-.day-item{
-    
-    /* border: 1px solid rgb(44, 44, 44); */
-    
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
-    /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
-    /* background-color: antiquewhite; */
-    --background: rgb(37, 37, 37);
-  border-radius: 10px;
-    width: 95%;
-    left: 50%;
-    transform: translate(-50%);
-    margin: 13px 0;
 }
 
 
@@ -45,7 +32,7 @@
     
 }
 .diet-number{
-    --background: rgb(37, 37, 37);
+    
     font-size: 12px;
 }
 

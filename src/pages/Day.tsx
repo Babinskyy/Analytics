@@ -10,6 +10,7 @@ import {
   gridOutline,
   handRight,
   menuOutline,
+  moon,
   reorderFourOutline,
 } from "ionicons/icons";
 import {
@@ -51,7 +52,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
-import "./Day.css";
+import "./Day.scss";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -70,7 +71,7 @@ const doughnutData = {
     {
       label: "Ilość",
       data: [534, 155, 887, 23, 110],
-      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+      backgroundColor: ["#ffbb11", "#17b2d9", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
 };
@@ -80,7 +81,7 @@ const polarData = {
     {
       label: "Ilość",
       data: [534, 250, 321, 230, 401],
-      backgroundColor: ["#ffbb11", "#ecf0f1", "#50AF95", "#80Ab10", "#10FA95"],
+      backgroundColor: ["#ffbb11", "#17b2d9", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
 };
@@ -164,6 +165,22 @@ const Day: React.FC = () => {
             <IonBackButton />
           </IonButtons>
           <IonTitle slot="start">Poniedziałek, 13.05.2022</IonTitle>
+          <IonButtons slot="end">
+          <IonButton onClick={() => {
+
+            const bodyClasses = document.querySelector("body");
+
+            if(bodyClasses?.classList.contains("dark"))
+            {
+              document.body.classList.remove("dark");
+            }
+            else
+            {
+              document.body.classList.add("dark")
+            }
+
+          }} style={{marginRight: "15px"}}><IonIcon icon={moon}/></IonButton>
+        </IonButtons>
         </IonToolbar>
       </IonHeader>
 
