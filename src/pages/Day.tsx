@@ -107,6 +107,7 @@ const Day: React.FC = () => {
       case "area":
         if (polarChartData) {
           return (
+            
             <PolarArea
               data={polarChartData}
               options={{
