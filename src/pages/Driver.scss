@@ -1,0 +1,85 @@
+body.dark .month {
+    
+    .address-item{
+        
+        border-bottom: 1px solid rgb(49, 49, 49);
+        
+        
+    }
+
+}
+
+
+.address-item{
+    
+    padding-bottom: 0px;
+    /* padding-top: 10px; */
+    max-width: 100%;
+   
+    
+    
+    
+}
+.address{
+    margin-bottom: 0px;
+    margin-top: 10px;
+    
+    
+}
+.graph-button{
+    margin-right: 5.8px;
+    
+    font-size: 14px;
+}
+
+.street{
+    font-size: 24px;
+    font-weight: 550;
+    padding-bottom: 5px;
+    
+}
+.town-post{
+    opacity: 0.5; 
+}
+.diet-item{    
+    letter-spacing: 1.5px;
+}
+.list-header{
+    
+    text-align: center;
+    letter-spacing: 1.5px;
+    
+}
+
+.delivery-time-span{
+    font-size: 35px;
+    text-align: center;
+    
+    
+}
+
+.icon-time{
+    
+    
+    top: 10px;
+    height: 150px;
+    width: 100px;
+    padding-top: 20px;
+}
+.MuiIconButton-colorSecondary{
+    color: #5260ff;
+}
+
+ion-modal.modal-image {
+	z-index: 20006;
+    height: 100%;
+    --background: none;
+
+}
+ion-modal.modal-image::part(content) {
+	border-top-left-radius: 13px;
+	border-top-right-radius: 13px;
+}
+ion-modal.modal-image ion-img {
+	margin: auto 25px;
+}
