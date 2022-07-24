@@ -8,8 +8,10 @@ import {
   handRight,
   moon,
   reorderFourOutline,
+  searchOutline,
 } from "ionicons/icons";
 import {
+  Autocomplete,
   Button,
   FormControl,
   FormControlLabel,
@@ -24,10 +26,12 @@ import {
   Paper,
   Select,
   Switch,
+  TextField,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import {
   IonBackButton,
   IonButton,
@@ -78,6 +82,31 @@ const barData = {
     },
   ],
 };
+const tackiBarData = {
+  labels: ["96", "24W", "3T", "155", "205", "41T"],
+  date: [
+    "14.06.2022",
+    "13.06.2022",
+    "12.06.2022",
+    "11.06.2022",
+    "10.06.2022",
+    "09.06.2022",
+  ],
+  datasets: [
+    {
+      label: "Ilość",
+      data: [9, 6, 7, 1, 8, 2],
+      backgroundColor: [
+        "#80Ab10",
+        "#50AF95",
+        "#ffbb11",
+        "#10FA95",
+        "#eef234",
+        "#17b2d9",
+      ],
+    },
+  ],
+};
 const polarData = {
   labels: ["Trójmiasto", "Warszawa ", "Śląsk", "Kujawy", "Podlasie"],
   datasets: [
@@ -108,12 +137,16 @@ const doughnutData = {
 const Drivers: React.FC = () => {
   const { navigate } = useContext(NavContext);
   const [barChartData, setBarChartData] = useState<any>();
+  const [tackiBarChartData, setTackiBarChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
   const [doughnutChartData, setdoughnutChartData] = useState<any>();
   const [whichGraph, setWhichGraph] = useState<string>("diets");
 
   useEffect(() => {
     setBarChartData(barData);
+  }, []);
+  useEffect(() => {
+    setTackiBarChartData(tackiBarData);
   }, []);
   useEffect(() => {
     setPolarChartData(polarData);
@@ -155,7 +188,7 @@ const Drivers: React.FC = () => {
                 plugins: {
                   title: {
                     display: true,
-                    text: "Ilość dostarczonych diet",
+                    text: "Ilość kilometrów",
                   },
                   legend: {
                     display: false,
@@ -166,19 +199,21 @@ const Drivers: React.FC = () => {
             />
           );
         } else return <></>;
-      case "types":
-        if (doughnutChartData) {
+      case "tacki":
+        if (tackiBarChartData) {
           return (
-            <Doughnut
-              data={doughnutChartData}
+            <Bar
+              height={300}
+              data={tackiBarChartData}
               options={{
+                indexAxis: "y",
                 plugins: {
                   title: {
                     display: true,
-                    text: "Typy dostarczonych diet",
+                    text: "Ilość zniszczonych tacek",
                   },
                   legend: {
-                    display: true,
+                    display: false,
                     position: "bottom",
                   },
                 },
@@ -230,54 +265,41 @@ const Drivers: React.FC = () => {
                 setWhichGraph("diets");
               }}
             >
-              Diety
+              Kilometry
             </IonButton>
             <IonButton
               shape="round"
-              fill={whichGraph === "types" ? "solid" : "outline"}
+              fill={whichGraph === "tacki" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWhichGraph("types");
+                setWhichGraph("tacki");
               }}
             >
-              Typy
+              Tacki
             </IonButton>
-            <IonButton
-              shape="round"
-              fill={whichGraph === "area" ? "solid" : "outline"}
-              color={"tertiary"}
-              className="graph-button"
-              onClick={() => {
-                setWhichGraph("area");
-              }}
-            >
-              Rejony
-            </IonButton>
+            
           </IonLabel>
         </IonItem>
 
         <IonItem
           style={{
             height: "394px",
+            marginBottom: "0px",
           }}
         >
           <GraphSelect />
         </IonItem>
 
+        <IonItem className="list-header" style={{}} >
+            
+            <TextField id="outlined-basic" label="Wyszukaj kierowcę" variant="outlined" style={{width: "100%", margin: "auto", marginTop: "10px"}}/>
+            
+          </IonItem>
         
 
         <IonList className="days-list" lines="none">
-          <IonItem className="list-header">
-            <IonLabel>
-              <div style={{ textAlign: "left", marginLeft: "5px" }}>Dzień</div>
-            </IonLabel>
-            <IonLabel>
-              <div style={{ textAlign: "right", marginRight: "5px" }}>
-                Ilość wydanych diet
-              </div>
-            </IonLabel>
-          </IonItem>
+          
 
           {barData.labels.map((e, i) => {
             return (
@@ -293,10 +315,10 @@ const Drivers: React.FC = () => {
                   <div className="date">{barData.date[i]}</div>
                 </IonLabel>
                 <IonItem className="diet-number">
-                  <IonLabel>
-                    <div style={{ textAlign: "right", fontSize: "20px" }}>
+                  <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
+                    
                       {barData.datasets[0].data[i]}
-                    </div>
+                    
                   </IonLabel>
                 </IonItem>
               </IonItem>

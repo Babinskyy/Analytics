@@ -59,8 +59,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Chart as ChartJS, registerables } from "chart.js";
 
 import { Doughnut, PolarArea, Bar, Chart, Pie } from "react-chartjs-2";
-import { display } from "@mui/material/node_modules/@mui/system";
-import { dismiss } from "@ionic/core/dist/types/utils/overlays";
 
 import OrderImage from "./../components/dostawa.jpg";
 
