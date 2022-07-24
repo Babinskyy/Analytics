@@ -139,7 +139,7 @@ const Drivers: React.FC = () => {
   const [barChartData, setBarChartData] = useState<any>();
   const [tackiBarChartData, setTackiBarChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
-  const [doughnutChartData, setdoughnutChartData] = useState<any>();
+  
   const [whichGraph, setWhichGraph] = useState<string>("diets");
 
   useEffect(() => {
@@ -151,9 +151,7 @@ const Drivers: React.FC = () => {
   useEffect(() => {
     setPolarChartData(polarData);
   }, []);
-  useEffect(() => {
-    setdoughnutChartData(doughnutData);
-  }, []);
+  
 
   const GraphSelect = () => {
     switch (whichGraph) {

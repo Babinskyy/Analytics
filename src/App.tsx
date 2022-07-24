@@ -22,12 +22,16 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 
+import "./theme/Global.scss";
+
 import "./theme/fonts.css";
 import Day from "./pages/Day";
 import Month from "./pages/Month";
 import Year from "./pages/Year";
 import Driver from "./pages//Driver";
 import Drivers from "./pages//Drivers";
+
+
 
 setupIonicReact();
 

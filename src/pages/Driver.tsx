@@ -77,6 +77,12 @@ type CommentsArrayType = {
   name: string;
   // date: string;
 };
+type TackiArrayType = {
+  tacka: string;
+  howMany: number;
+  name: string;
+  // date: string;
+};
 
 type barChartDataType = {
   labels: string[];
@@ -88,6 +94,14 @@ type barChartDataType = {
   }[];
 };
 
+type DeliveryDataType = {
+  address: string;
+  address2: string;
+  diets: string[];
+  time: string;
+  isPhoto: boolean;
+};
+
 const Driver: React.FC = () => {
   const _commentsArray: CommentsArrayType[] = [
     {
@@ -96,7 +110,38 @@ const Driver: React.FC = () => {
       name: "Marjusz",
     },
   ];
-  
+
+  const _tackiArray: TackiArrayType[] = [
+    {
+      tacka: "wege1500",
+      howMany: 2,
+      name: "Justyna",
+    },
+  ];
+  const _deliveryArray: DeliveryDataType[] = [
+    {
+      address: "Jesionowa 20/2",
+      address2: "Gdańsk 80-256",
+      diets: ["sport-1500-kcal", "slim-2000-kcal"],
+      time: "14:53",
+      isPhoto: true,
+    },
+    {
+      address: "Warszawska 30/1",
+      address2: "Gdańsk 80-256",
+      diets: ["wege-1500-kcal", "slim-2000-kcal", "sport-2500-kcal"],
+      time: "15:11",
+      isPhoto: true,
+    },
+    {
+      address: "Leśny stok 25/13",
+      address2: "Gdańsk 80-256",
+      diets: ["wege-1500-kcal", "slim-2000-kcal", "sport-2500-kcal"],
+      time: "15:11",
+      isPhoto: false,
+    },
+  ];
+
   const barData: barChartDataType = {
     labels: [
       "sobota",
@@ -161,22 +206,7 @@ const Driver: React.FC = () => {
       },
     ],
   };
-  const doughnutData = {
-    labels: ["slim-1500", "wege-2000", "sport-3000", "slim-1200", "keto-1500"],
-    datasets: [
-      {
-        label: "Ilość",
-        data: [534, 155, 887, 23, 110],
-        backgroundColor: [
-          "#ffbb11",
-          "#17b2d9",
-          "#50AF95",
-          "#80Ab10",
-          "#10FA95",
-        ],
-      },
-    ],
-  };
+
   const lineData = {
     labels: ["slim-1500", "wege-2000", "sport-3000", "slim-1200", "keto-1500"],
     datasets: [
@@ -208,14 +238,19 @@ const Driver: React.FC = () => {
   const [barChartData, setBarChartData] = useState<barChartDataType>();
   const [tackiBarChartData, setTackiBarChartData] = useState<any>();
   const [whichGraph, setWhichGraph] = useState<string>();
-  const [doughnutChartData, setdoughnutChartData] = useState<any>();
+  const [deliveryArray, setDeliveryArray] =
+    useState<DeliveryDataType[]>(_deliveryArray);
+
   const [lineChartData, setLineChartData] = useState<any>();
 
   const [showOrderPhoto, setShowOrderPhoto] = useState(false);
 
   const [presentAlert] = useIonAlert();
+
   const [commentsArray, setCommentsArray] =
     useState<CommentsArrayType[]>(_commentsArray);
+
+  const [tackiArray, setTackiArray] = useState<TackiArrayType[]>(_tackiArray);
 
   useEffect(() => {
     setTackiBarChartData(tackiBarData);
@@ -224,11 +259,9 @@ const Driver: React.FC = () => {
     setBarChartData(barData);
   }, []);
   useEffect(() => {
-    setWhichGraph("kilometers");
+    setWhichGraph("route");
   }, []);
-  useEffect(() => {
-    setdoughnutChartData(doughnutData);
-  }, []);
+
   useEffect(() => {
     setLineChartData(lineData);
   }, []);
@@ -259,9 +292,6 @@ const Driver: React.FC = () => {
         } else return <></>;
       case "comments":
         return <></>;
-
-      default:
-        return <></>;
       case "tacki":
         if (tackiBarChartData) {
           return (
@@ -284,6 +314,8 @@ const Driver: React.FC = () => {
             />
           );
         } else return <></>;
+      default:
+        return <></>;
     }
   };
 
@@ -339,6 +371,17 @@ const Driver: React.FC = () => {
       <IonContent fullscreen>
         <IonItem>
           <IonLabel>
+          <IonButton
+              shape="round"
+              fill={whichGraph === "route" ? "solid" : "outline"}
+              color={"tertiary"}
+              className="graph-button"
+              onClick={() => {
+                setWhichGraph("route");
+              }}
+            >
+              Trasa
+            </IonButton>
             <IonButton
               shape="round"
               fill={whichGraph === "kilometers" ? "solid" : "outline"}
@@ -372,17 +415,7 @@ const Driver: React.FC = () => {
             >
               Uwagi
             </IonButton>
-            <IonButton
-              shape="round"
-              fill={whichGraph === "route" ? "solid" : "outline"}
-              color={"tertiary"}
-              className="graph-button"
-              onClick={() => {
-                setWhichGraph("route");
-              }}
-            >
-              Trasa
-            </IonButton>
+            
           </IonLabel>
         </IonItem>
 
@@ -458,7 +491,7 @@ const Driver: React.FC = () => {
             <IonList>
               {commentsArray.map((e) => {
                 return (
-                  <IonItem className="day-item" lines="none" >
+                  <IonItem className="day-item" lines="none">
                     <IonLabel>
                       <IonLabel
                         style={{
@@ -487,8 +520,9 @@ const Driver: React.FC = () => {
                       </IonLabel>
                     </IonLabel>
                     <IonItem className="diet-number">
-                      <IonLabel style={{ textAlign: "right"}}>
-                        <IconButton style={{}}
+                      <IonLabel style={{ textAlign: "right" }}>
+                        <IconButton
+                          style={{}}
                           onClick={() =>
                             presentAlert({
                               header: `Czy na pewno chcesz usunąć uwagę ${e.title}?`,
@@ -567,46 +601,37 @@ const Driver: React.FC = () => {
             >
               {GraphSelectMemo}
             </IonItem>
-            <IonItem className="day-item" button onClick={() => {
+            <IonItem
+              className="day-item"
+              button
+              onClick={() => {
                 presentAlert({
                   header: "Wprowadź zniszczone tacki",
                   buttons: [
                     {
                       text: "OK",
-                      handler(value) {},
+                      handler(value) {
+                        setTackiArray([
+                          ...tackiArray,
+                          {
+                            tacka: value[0],
+                            howMany: value[1],
+                            name: value[2],
+                          },
+                        ]);
+                      },
                     },
                   ],
                   inputs: [
                     {
-                      placeholder: "Nazwa tacki",
+                      placeholder: "Nazwa diety",
                       type: "search",
                       attributes: {
                         maxlength: 50,
                       },
                     },
                     {
-                      placeholder: "Nazwa tacki",
-                      type: "search",
-                      attributes: {
-                        maxlength: 50,
-                      },
-                    },
-                    {
-                      placeholder: "Nazwa tacki",
-                      type: "search",
-                      attributes: {
-                        maxlength: 50,
-                      },
-                    },
-                    {
-                      placeholder: "Nazwa tacki",
-                      type: "search",
-                      attributes: {
-                        maxlength: 50,
-                      },
-                    },
-                    {
-                      placeholder: "Nazwa tacki",
+                      placeholder: "ilość zniszczonych tacek",
                       type: "search",
                       attributes: {
                         maxlength: 50,
@@ -620,7 +645,8 @@ const Driver: React.FC = () => {
                     },
                   ],
                 });
-              }}>
+              }}
+            >
               <IonLabel style={{ overflow: "visible" }}>
                 <div
                   style={{
@@ -646,42 +672,27 @@ const Driver: React.FC = () => {
             </IonItem>
 
             <IonList>
-              {commentsArray.map((e) => {
+              {tackiArray.map((e) => {
                 return (
-                  <IonItem className="day-item" lines="none" >
+                  <IonItem className="day-item" lines="none">
                     <IonLabel>
                       <IonLabel
                         style={{
                           "white-space": "normal",
                         }}
                       >
-                        <div className="street">{e.title}</div>
-                      </IonLabel>
-
-                      <IonLabel>
-                        <IonItem
-                          lines="none"
-                          style={{
-                            "--padding-start": "0px",
-                            "--min-height": "0px",
-                          }}
-                        >
-                          <IonLabel
-                            style={{
-                              "white-space": "normal",
-                            }}
-                          >
-                            {e.description}
-                          </IonLabel>
-                        </IonItem>
+                        <div className="street">
+                          {e.tacka} x {e.howMany}
+                        </div>
                       </IonLabel>
                     </IonLabel>
-                    <IonItem className="diet-number">
-                      <IonLabel style={{ textAlign: "right"}}>
-                        <IconButton style={{}}
+                    <IonItem className="diet-number" style={{"--inner-padding-end": "0"}}>
+                      <IonLabel style={{ textAlign: "right" }}>
+                        <IconButton
+                          style={{}}
                           onClick={() =>
                             presentAlert({
-                              header: `Czy na pewno chcesz usunąć uwagę ${e.title}?`,
+                              header: `Czy na pewno chcesz usunąć?`,
 
                               cssClass: "custom-alert",
                               buttons: [
@@ -693,12 +704,12 @@ const Driver: React.FC = () => {
                                   text: "Tak",
                                   cssClass: "alert-button-confirm",
                                   handler: () => {
-                                    let _tempCommentsArray = commentsArray;
-                                    _tempCommentsArray.splice(
-                                      commentsArray.indexOf(e),
+                                    let _tempTackiArray = tackiArray;
+                                    _tempTackiArray.splice(
+                                      tackiArray.indexOf(e),
                                       1
                                     );
-                                    setCommentsArray([..._tempCommentsArray]);
+                                    setTackiArray([..._tempTackiArray]);
                                   },
                                 },
                               ],
@@ -743,66 +754,66 @@ const Driver: React.FC = () => {
                 },
               }}
             />
-            <IonItem className="address-item">
-              <IonLabel className="delivery-info-item">
-                <div style={{ display: "flex" }}>
-                  <IonLabel>
-                    <div className="address">
-                      <div className="street">Jesionowa 20/2</div>
-                      <div className="town-post">Gdańsk 80-542</div>
+
+            {deliveryArray.map((e) => {
+              return (
+                <IonItem className="day-item" button onClick={() => {}}>
+                  <IonLabel className="delivery-info-item">
+                    <div style={{ display: "flex" }}>
+                      <IonLabel>
+                        <div className="address">
+                          <div className="street">{e.address}</div>
+                          <div className="town-post">{e.address2}</div>
+                        </div>
+                      </IonLabel>
                     </div>
+                    {e.diets.map((_e) => {
+                      return (
+                        <IonList lines="none">
+                          <IonLabel className="diet-item">
+                            <IonItem
+                              style={{
+                                "--padding-start": "0px",
+                                "--min-height": "0px",
+                              }}
+                            >
+                              <IonIcon src={chevronForwardOutline} />
+                              <div>{_e}</div>
+                            </IonItem>
+                          </IonLabel>
+                        </IonList>
+                      );
+                    })}
                   </IonLabel>
-                </div>
+                  <IonItem lines="none">
+                    <div className="icon-time">
+                      <IconButton
+                        id="open-modal"
+                        onClick={() => {
+                          setShowOrderPhoto(true);
+                        }}
+                      >
+                        <PhotoCamera
+                          color={e.isPhoto ? "primary" : "disabled"}
+                          style={{
+                            fontSize: "55px",
+                            marginLeft: "15px",
+                          }}
+                        />
+                      </IconButton>
 
-                <IonList lines="none">
-                  <IonLabel className="diet-item">
-                    <IonItem
-                      style={{
-                        "--padding-start": "0px",
-                        "--min-height": "0px",
-                      }}
-                    >
-                      <IonIcon src={chevronForwardOutline} />
-                      <IonLabel>sport-1500-kcal</IonLabel>
-                    </IonItem>
-                  </IonLabel>
-
-                  <IonLabel className="diet-item">
-                    <IonItem
-                      style={{
-                        "--padding-start": "0px",
-                        "--min-height": "0px",
-                      }}
-                    >
-                      <IonIcon src={chevronForwardOutline} />
-                      <IonLabel>sport-1500-kcal</IonLabel>
-                    </IonItem>
-                  </IonLabel>
-                </IonList>
-              </IonLabel>
-              <IonItem>
-                <div className="icon-time">
-                  <IconButton
-                    id="open-modal"
-                    onClick={() => {
-                      setShowOrderPhoto(true);
-                    }}
-                  >
-                    <PhotoCamera
-                      color="primary"
-                      style={{
-                        fontSize: "55px",
-                        marginLeft: "15px",
-                      }}
-                    />
-                  </IconButton>
-
-                  <IonLabel className="delivery-time" color="primary">
-                    <div className="delivery-time-span">14:53</div>
-                  </IonLabel>
-                </div>
-              </IonItem>
-            </IonItem>
+                      <IonLabel className="delivery-time" color="primary">
+                        {e.isPhoto ? (
+                          <div className="delivery-time-span">{e.time}</div>
+                        ) : (
+                          <></>
+                        )}
+                      </IonLabel>
+                    </div>
+                  </IonItem>
+                </IonItem>
+              );
+            })}
           </div>
         ) : whichGraph === "kilometers" ? (
           <div>
@@ -835,7 +846,7 @@ const Driver: React.FC = () => {
             >
               {GraphSelectMemo}
             </IonItem>
-            <IonList></IonList>
+
             {barChartData?.labels.map((e, i) => {
               return (
                 <IonItem className="day-item" button lines="none">
