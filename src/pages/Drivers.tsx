@@ -231,13 +231,14 @@ const Drivers: React.FC = () => {
           <IonTitle>
             <IonButton
               fill="outline"
+              color="tertiary"
               onClick={() => {
                 navigate("/year", "forward", "push");
               }}
             >
               Diety
             </IonButton>
-            <IonButton fill="solid">Kierowcy</IonButton>
+            <IonButton fill="solid" color="tertiary">Kierowcy</IonButton>
           </IonTitle>
           <IonButtons slot="end">
             <IonButton

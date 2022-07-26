@@ -220,9 +220,10 @@ const Year: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>
-            <IonButton fill="solid">Diety</IonButton>
+            <IonButton fill="solid" color="tertiary">Diety</IonButton>
             <IonButton
               fill="outline"
+              color="tertiary"
               onClick={() => {
                 navigate("/drivers", "forward", "push");
               }}
@@ -249,8 +250,8 @@ const Year: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonItem lines="none">
-          <IonLabel>
+        <IonItem >
+          <IonLabel >
             <IonButton
               shape="round"
               fill={whichGraph === "amount" ? "solid" : "outline"}
