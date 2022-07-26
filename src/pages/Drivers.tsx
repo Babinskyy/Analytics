@@ -141,6 +141,7 @@ const Drivers: React.FC = () => {
   const [polarChartData, setPolarChartData] = useState<any>();
 
   const [whichGraph, setWhichGraph] = useState<string>("diets");
+  const [searchValue, setSearchValue] = useState<string>("");
 
   useEffect(() => {
     setBarChartData(barData);
@@ -301,11 +302,20 @@ const Drivers: React.FC = () => {
             label="Wyszukaj kierowcę"
             variant="outlined"
             style={{ width: "100%", margin: "auto", marginTop: "10px" }}
+            onChange={(e) => {
+              setSearchValue(e.target.value);
+            }}
           />
         </IonItem>
 
         <IonList className="days-list" lines="none">
-          {barData.labels.map((e, i) => {
+          {barData.labels.filter((e) => {
+            if (searchValue == "") {
+              return e;
+            } else if (e.toLowerCase().includes(searchValue.toLowerCase())){
+              return e;
+            }
+          }).map((e, i) => {
             return (
               <IonItem
                 className="day-item"
