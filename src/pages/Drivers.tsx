@@ -31,7 +31,7 @@ import {
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import {
   IonBackButton,
   IonButton,
@@ -139,7 +139,7 @@ const Drivers: React.FC = () => {
   const [barChartData, setBarChartData] = useState<any>();
   const [tackiBarChartData, setTackiBarChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
-  
+
   const [whichGraph, setWhichGraph] = useState<string>("diets");
 
   useEffect(() => {
@@ -151,7 +151,6 @@ const Drivers: React.FC = () => {
   useEffect(() => {
     setPolarChartData(polarData);
   }, []);
-  
 
   const GraphSelect = () => {
     switch (whichGraph) {
@@ -229,26 +228,33 @@ const Drivers: React.FC = () => {
     <IonPage className="month">
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton />
-          </IonButtons>
-          <IonTitle>Kierowcy</IonTitle>
+          <IonTitle>
+            <IonButton
+              fill="outline"
+              onClick={() => {
+                navigate("/year", "forward", "push");
+              }}
+            >
+              Diety
+            </IonButton>
+            <IonButton fill="solid">Kierowcy</IonButton>
+          </IonTitle>
           <IonButtons slot="end">
-          <IonButton onClick={() => {
+            <IonButton
+              onClick={() => {
+                const bodyClasses = document.querySelector("body");
 
-            const bodyClasses = document.querySelector("body");
-
-            if(bodyClasses?.classList.contains("dark"))
-            {
-              document.body.classList.remove("dark");
-            }
-            else
-            {
-              document.body.classList.add("dark")
-            }
-
-          }} style={{marginRight: "15px"}}><IonIcon icon={moon}/></IonButton>
-        </IonButtons>
+                if (bodyClasses?.classList.contains("dark")) {
+                  document.body.classList.remove("dark");
+                } else {
+                  document.body.classList.add("dark");
+                }
+              }}
+              style={{ marginRight: "15px" }}
+            >
+              <IonIcon icon={moon} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -276,7 +282,6 @@ const Drivers: React.FC = () => {
             >
               Tacki
             </IonButton>
-            
           </IonLabel>
         </IonItem>
 
@@ -289,16 +294,16 @@ const Drivers: React.FC = () => {
           <GraphSelect />
         </IonItem>
 
-        <IonItem className="list-header" style={{}} >
-            
-            <TextField id="outlined-basic" label="Wyszukaj kierowcę" variant="outlined" style={{width: "100%", margin: "auto", marginTop: "10px"}}/>
-            
-          </IonItem>
-        
+        <IonItem className="list-header" style={{}}>
+          <TextField
+            id="outlined-basic"
+            label="Wyszukaj kierowcę"
+            variant="outlined"
+            style={{ width: "100%", margin: "auto", marginTop: "10px" }}
+          />
+        </IonItem>
 
         <IonList className="days-list" lines="none">
-          
-
           {barData.labels.map((e, i) => {
             return (
               <IonItem
@@ -314,9 +319,7 @@ const Drivers: React.FC = () => {
                 </IonLabel>
                 <IonItem className="diet-number">
                   <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
-                    
-                      {barData.datasets[0].data[i]}
-                    
+                    {barData.datasets[0].data[i]}
                   </IonLabel>
                 </IonItem>
               </IonItem>
