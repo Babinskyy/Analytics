@@ -519,10 +519,10 @@ const Driver: React.FC = () => {
                         </IonItem>
                       </IonLabel>
                     </IonLabel>
-                    <IonItem className="diet-number">
-                      <IonLabel style={{ textAlign: "right" }}>
+                    <IonItem className="diet-number" style={{"--inner-padding-end": "0"}} >
+                      <IonLabel style={{textAlign: "right"}}>
                         <IconButton
-                          style={{}}
+                          style={{color: "black"}}
                           onClick={() =>
                             presentAlert({
                               header: `Czy na pewno chcesz usunąć uwagę ${e.title}?`,
@@ -689,7 +689,7 @@ const Driver: React.FC = () => {
                     <IonItem className="diet-number" style={{"--inner-padding-end": "0"}}>
                       <IonLabel style={{ textAlign: "right" }}>
                         <IconButton
-                          style={{}}
+                          style={{color: "black"}}
                           onClick={() =>
                             presentAlert({
                               header: `Czy na pewno chcesz usunąć?`,

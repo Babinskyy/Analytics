@@ -132,7 +132,8 @@ const Year: React.FC = () => {
   const [barChartData, setBarChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
   const [doughnutChartData, setdoughnutChartData] = useState<any>();
-  const [whichGraph, setWhichGraph] = useState<string>("diets");
+  const [whichGraph, setWhichGraph] = useState<string>("amount");
+  const [whichView, setWhichView] = useState<string>("diets");
 
   useEffect(() => {
     setBarChartData(barData);
@@ -166,7 +167,7 @@ const Year: React.FC = () => {
             />
           );
         } else return <></>;
-      case "diets":
+      case "amount":
         if (barChartData) {
           return (
             <Bar
@@ -218,39 +219,48 @@ const Year: React.FC = () => {
     <IonPage className="year">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>2022</IonTitle>
+          <IonTitle>
+            <IonButton fill="solid">Diety</IonButton>
+            <IonButton
+              fill="outline"
+              onClick={() => {
+                navigate("/drivers", "forward", "push");
+              }}
+            >
+              Kierowcy
+            </IonButton>
+          </IonTitle>
           <IonButtons slot="end">
-          <IonButton onClick={() => {
+            <IonButton
+              onClick={() => {
+                const bodyClasses = document.querySelector("body");
 
-            const bodyClasses = document.querySelector("body");
-
-            if(bodyClasses?.classList.contains("dark"))
-            {
-              document.body.classList.remove("dark");
-            }
-            else
-            {
-              document.body.classList.add("dark")
-            }
-
-          }} style={{marginRight: "15px"}}><IonIcon icon={moon}/></IonButton>
-        </IonButtons>
+                if (bodyClasses?.classList.contains("dark")) {
+                  document.body.classList.remove("dark");
+                } else {
+                  document.body.classList.add("dark");
+                }
+              }}
+              style={{ marginRight: "15px" }}
+            >
+              <IonIcon icon={moon} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
-        
       </IonHeader>
       <IonContent fullscreen>
-        <IonItem>
+        <IonItem lines="none">
           <IonLabel>
             <IonButton
               shape="round"
-              fill={whichGraph === "diets" ? "solid" : "outline"}
+              fill={whichGraph === "amount" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWhichGraph("diets");
+                setWhichGraph("amount");
               }}
             >
-              Diety
+              Ilość
             </IonButton>
             <IonButton
               shape="round"
@@ -278,12 +288,33 @@ const Year: React.FC = () => {
         </IonItem>
 
         <IonItem
+        lines="none"
           style={{
             height: "394px",
           }}
         >
           <GraphSelect />
         </IonItem>
+          <IonItem lines="none">
+            <IonLabel
+              style={{
+                fontWeight: "500",
+                overflow: "visible",
+                marginLeft: "20px",
+              }}
+            >
+              <span>Łącznie dostarczonych diet:</span>
+            </IonLabel>
+            <IonLabel
+              style={{
+                fontSize: "35px",
+                marginLeft: "5px",
+                color: "#5260ff",
+              }}
+            >
+              <span>5432</span>
+            </IonLabel>
+          </IonItem>
 
         <IonList className="days-list" lines="none">
           <IonItem className="list-header">

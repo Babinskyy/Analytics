@@ -263,7 +263,7 @@ const Drivers: React.FC = () => {
                 setWhichGraph("diets");
               }}
             >
-              Kilometry
+              Dystans
             </IonButton>
             <IonButton
               shape="round"

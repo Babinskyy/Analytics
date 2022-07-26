@@ -110,7 +110,7 @@ const Month: React.FC = () => {
   const [barChartData, setBarChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
   const [doughnutChartData, setdoughnutChartData] = useState<any>();
-  const [whichGraph, setWhichGraph] = useState<string>("diets");
+  const [whichGraph, setWhichGraph] = useState<string>("amount");
 
   useEffect(() => {
     setBarChartData(barData);
@@ -144,7 +144,7 @@ const Month: React.FC = () => {
             />
           );
         } else return <></>;
-      case "diets":
+      case "amount":
         if (barChartData) {
           return (
             <Bar
@@ -223,14 +223,14 @@ const Month: React.FC = () => {
           <IonLabel>
             <IonButton
               shape="round"
-              fill={whichGraph === "diets" ? "solid" : "outline"}
+              fill={whichGraph === "amount" ? "solid" : "outline"}
               color={"tertiary"}
               className="graph-button"
               onClick={() => {
-                setWhichGraph("diets");
+                setWhichGraph("amount");
               }}
             >
-              Diety
+              Ilość
             </IonButton>
             <IonButton
               shape="round"
