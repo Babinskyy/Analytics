@@ -168,7 +168,7 @@ const Driver: React.FC = () => {
     datasets: [
       {
         label: "Ilość",
-        data: [ 4455, 5534, 5299, 2887, 4230, 6333, 3443, 0, 0, 0, 0, 0,],
+        data: [4455, 5534, 5299, 2887, 4230, 6333, 3443, 0, 0, 0, 0, 0],
         backgroundColor: [
           "#17b2d9",
           "#99abd9",
@@ -245,6 +245,7 @@ const Driver: React.FC = () => {
   const [barChartData, setBarChartData] = useState<barChartDataType>();
   const [tackiBarChartData, setTackiBarChartData] = useState<any>();
   const [whichGraph, setWhichGraph] = useState<string>();
+  const [averageKilometersSum, setAverageKilometersSum] = useState<number>(0);
   const [deliveryArray, setDeliveryArray] =
     useState<DeliveryDataType[]>(_deliveryArray);
 
@@ -330,6 +331,28 @@ const Driver: React.FC = () => {
   const GraphSelectMemo = useMemo(() => {
     return <GraphSelect />;
   }, [whichGraph]);
+
+  useEffect(() => {
+
+    let tempSum = 0;
+    let activeMonths = 0;
+    
+    for(const n of barData.datasets[0].data)
+    {
+      tempSum += n/20;
+
+      if(n > 0)
+      {
+        activeMonths++;
+      }
+
+    }
+
+    tempSum = Math.round(tempSum / activeMonths);
+
+    setAverageKilometersSum(tempSum)
+
+  }, [barData.datasets[0]])
 
   return (
     <IonPage>
@@ -849,9 +872,11 @@ const Driver: React.FC = () => {
                   color: "#5260ff",
                 }}
               >
-                {barData.datasets[0].data.reduce(function(x, y) {
-                  return x + y
-                })}
+                <span>
+                  {barData.datasets[0].data.reduce(function (x, y) {
+                    return x + y;
+                  })}
+                </span>
               </IonLabel>
             </IonItem>
             <IonItem
@@ -861,18 +886,35 @@ const Driver: React.FC = () => {
             >
               {GraphSelectMemo}
             </IonItem>
+            <IonItem lines="none" style={{
+              textAlign: "center"
+            }} >
+              <IonLabel
+                style={{
+                  fontWeight: "500",
+                  overflow: "visible",
+                  textAlign: "center"
+                }}
+              >
+                <span>Średnia długość trasy:</span>
+                <span style={{
+                  color: "#5260ff",
+                  fontSize: "35px",
+                  marginLeft: "10px",
+                  verticalAlign: "middle"
+                }}>{averageKilometersSum} km</span>
+              </IonLabel>
+            </IonItem>
 
             {barChartData?.labels
               .filter((e, i) => {
                 if (barData.datasets[0].data[i] > 0) {
-                  
-                  return e
-                  
+                  return e;
                 }
               })
               .map((e, i) => {
                 return (
-                  <IonItem className="day-item" button lines="none">
+                  <IonItem className="day-item" lines="none">
                     <IonLabel
                       style={{
                         "white-space": "normal",
@@ -882,7 +924,14 @@ const Driver: React.FC = () => {
                     </IonLabel>
 
                     <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
+                      <IonLabel>
+                      <span style={{fontSize: "15px", opacity: "0.5", marginBottom: "2px"}}>Łącznie: </span>
                       {barData.datasets[0].data[i]}
+                      </IonLabel>
+                      <IonLabel>
+                      <span style={{fontSize: "15px", opacity: "0.5"}}>Średnio: </span>
+                      {Math.round(barData.datasets[0].data[i]/20)}
+                      </IonLabel>
                     </IonLabel>
                   </IonItem>
                 );

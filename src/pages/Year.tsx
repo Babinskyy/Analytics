@@ -220,8 +220,10 @@ const Year: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>
-            <IonButton fill="solid" color="tertiary">Diety</IonButton>
+            <IonButton fill="solid" color="tertiary"
+            className="double-button-first">Diety</IonButton>
             <IonButton
+            className="double-button-second"
               fill="outline"
               color="tertiary"
               onClick={() => {
@@ -301,7 +303,7 @@ const Year: React.FC = () => {
               style={{
                 fontWeight: "500",
                 overflow: "visible",
-                marginLeft: "20px",
+                marginLeft: "35px",
               }}
             >
               <span>Łącznie dostarczonych diet:</span>
@@ -313,7 +315,9 @@ const Year: React.FC = () => {
                 color: "#5260ff",
               }}
             >
-              <span>5432</span>
+              <span>{barData.datasets[0].data.reduce(function(x, y) {
+                  return x + y
+                })}</span>
             </IonLabel>
           </IonItem>
 

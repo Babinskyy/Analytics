@@ -52,7 +52,7 @@ import {
 import ExploreContainer from "../components/ExploreContainer";
 import "./Drivers.scss";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import { Chart as ChartJS, registerables } from "chart.js";
 import { Doughnut, Bar, PolarArea } from "react-chartjs-2";
@@ -135,6 +135,7 @@ const doughnutData = {
 };
 
 const Drivers: React.FC = () => {
+
   const { navigate } = useContext(NavContext);
   const [barChartData, setBarChartData] = useState<any>();
   const [tackiBarChartData, setTackiBarChartData] = useState<any>();
@@ -225,12 +226,18 @@ const Drivers: React.FC = () => {
     }
   };
 
+  const chartMemo = useMemo(
+    () => <GraphSelect />,
+    [whichGraph, barData, polarChartData, tackiBarChartData]
+  );
+
   return (
     <IonPage className="month">
       <IonHeader>
         <IonToolbar>
           <IonTitle>
             <IonButton
+              className="double-button-first"
               fill="outline"
               color="tertiary"
               onClick={() => {
@@ -239,7 +246,7 @@ const Drivers: React.FC = () => {
             >
               Diety
             </IonButton>
-            <IonButton fill="solid" color="tertiary">
+            <IonButton className="double-button-second" fill="solid" color="tertiary">
               Kierowcy
             </IonButton>
           </IonTitle>
@@ -295,7 +302,7 @@ const Drivers: React.FC = () => {
             marginBottom: "0px",
           }}
         >
-          <GraphSelect />
+          {chartMemo}
         </IonItem>
 
         <IonItem className="list-header" style={{}}>
