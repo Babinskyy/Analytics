@@ -239,7 +239,9 @@ const Drivers: React.FC = () => {
             >
               Diety
             </IonButton>
-            <IonButton fill="solid" color="tertiary">Kierowcy</IonButton>
+            <IonButton fill="solid" color="tertiary">
+              Kierowcy
+            </IonButton>
           </IonTitle>
           <IonButtons slot="end">
             <IonButton
@@ -298,6 +300,7 @@ const Drivers: React.FC = () => {
 
         <IonItem className="list-header" style={{}}>
           <TextField
+            autoComplete="off"
             id="outlined-basic"
             label="Wyszukaj kierowcę"
             variant="outlined"
@@ -309,33 +312,35 @@ const Drivers: React.FC = () => {
         </IonItem>
 
         <IonList className="days-list" lines="none">
-          {barData.labels.filter((e) => {
-            if (searchValue == "") {
-              return e;
-            } else if (e.toLowerCase().includes(searchValue.toLowerCase())){
-              return e;
-            }
-          }).map((e, i) => {
-            return (
-              <IonItem
-                className="day-item"
-                button
-                onClick={() => {
-                  navigate("/driver", "forward", "push");
-                }}
-              >
-                <IonLabel>
-                  <div className="day">{e}</div>
-                  <div className="date">{barData.date[i]}</div>
-                </IonLabel>
-                <IonItem className="diet-number">
-                  <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
-                    {barData.datasets[0].data[i]}
+          {barData.labels
+            .filter((e) => {
+              if (searchValue == "") {
+                return e;
+              } else if (e.toLowerCase().includes(searchValue.toLowerCase())) {
+                return e;
+              }
+            })
+            .map((e, i) => {
+              return (
+                <IonItem
+                  className="day-item"
+                  button
+                  onClick={() => {
+                    navigate("/driver", "forward", "push");
+                  }}
+                >
+                  <IonLabel>
+                    <div className="day">{e}</div>
+                    <div className="date">{barData.date[i]}</div>
                   </IonLabel>
+                  <IonItem className="diet-number">
+                    <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
+                      {barData.datasets[0].data[i]}
+                    </IonLabel>
+                  </IonItem>
                 </IonItem>
-              </IonItem>
-            );
-          })}
+              );
+            })}
         </IonList>
       </IonContent>
     </IonPage>
