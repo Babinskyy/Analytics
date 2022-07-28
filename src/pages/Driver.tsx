@@ -144,12 +144,18 @@ const Driver: React.FC = () => {
 
   const barData: barChartDataType = {
     labels: [
-      "sobota",
-      "niedziela",
-      "poniedziałek",
-      "wtorek",
-      "środa",
-      "czwartek",
+      "Styczeń",
+      "Luty",
+      "Marzec",
+      "Kwiecień",
+      "Maj",
+      "Czerwiec",
+      "Lipiec",
+      "Sierpień",
+      "Wrzesień",
+      "Październik",
+      "Listopad",
+      "Grudzień",
     ],
     date: [
       "14.06.2022",
@@ -162,9 +168,10 @@ const Driver: React.FC = () => {
     datasets: [
       {
         label: "Ilość",
-        data: [534, 299, 887, 230, 333, 443],
+        data: [ 4455, 5534, 5299, 2887, 4230, 6333, 3443, 0, 0, 0, 0, 0,],
         backgroundColor: [
           "#17b2d9",
+          "#99abd9",
           "#ffbb11",
           "#50AF95",
           "#80Ab10",
@@ -251,6 +258,7 @@ const Driver: React.FC = () => {
     useState<CommentsArrayType[]>(_commentsArray);
 
   const [tackiArray, setTackiArray] = useState<TackiArrayType[]>(_tackiArray);
+  const [kilometersSum, setKilometersSum] = useState<number>(0);
 
   useEffect(() => {
     setTackiBarChartData(tackiBarData);
@@ -371,7 +379,7 @@ const Driver: React.FC = () => {
       <IonContent fullscreen>
         <IonItem>
           <IonLabel>
-          <IonButton
+            <IonButton
               shape="round"
               fill={whichGraph === "route" ? "solid" : "outline"}
               color={"tertiary"}
@@ -415,7 +423,6 @@ const Driver: React.FC = () => {
             >
               Uwagi
             </IonButton>
-            
           </IonLabel>
         </IonItem>
 
@@ -519,10 +526,13 @@ const Driver: React.FC = () => {
                         </IonItem>
                       </IonLabel>
                     </IonLabel>
-                    <IonItem className="diet-number" style={{"--inner-padding-end": "0"}} >
-                      <IonLabel style={{textAlign: "right"}}>
+                    <IonItem
+                      className="diet-number"
+                      style={{ "--inner-padding-end": "0" }}
+                    >
+                      <IonLabel style={{ textAlign: "right" }}>
                         <IconButton
-                          style={{color: "black"}}
+                          style={{ color: "black" }}
                           onClick={() =>
                             presentAlert({
                               header: `Czy na pewno chcesz usunąć uwagę ${e.title}?`,
@@ -686,10 +696,13 @@ const Driver: React.FC = () => {
                         </div>
                       </IonLabel>
                     </IonLabel>
-                    <IonItem className="diet-number" style={{"--inner-padding-end": "0"}}>
+                    <IonItem
+                      className="diet-number"
+                      style={{ "--inner-padding-end": "0" }}
+                    >
                       <IonLabel style={{ textAlign: "right" }}>
                         <IconButton
-                          style={{color: "black"}}
+                          style={{ color: "black" }}
                           onClick={() =>
                             presentAlert({
                               header: `Czy na pewno chcesz usunąć?`,
@@ -824,7 +837,7 @@ const Driver: React.FC = () => {
                   overflow: "visible",
                   marginBottom: "auto",
                   marginTop: "auto",
-                  marginLeft: "10px",
+                  marginLeft: "0px",
                 }}
               >
                 <span>Łącznie przejechanych kilometrów:</span>
@@ -832,11 +845,13 @@ const Driver: React.FC = () => {
               <IonLabel
                 style={{
                   fontSize: "35px",
-                  marginLeft: "10px",
+                  marginLeft: "5px",
                   color: "#5260ff",
                 }}
               >
-                5432
+                {barData.datasets[0].data.reduce(function(x, y) {
+                  return x + y
+                })}
               </IonLabel>
             </IonItem>
             <IonItem
@@ -847,23 +862,31 @@ const Driver: React.FC = () => {
               {GraphSelectMemo}
             </IonItem>
 
-            {barChartData?.labels.map((e, i) => {
-              return (
-                <IonItem className="day-item" button lines="none">
-                  <IonLabel
-                    style={{
-                      "white-space": "normal",
-                    }}
-                  >
-                    <div className="street">{e}</div>
-                  </IonLabel>
+            {barChartData?.labels
+              .filter((e, i) => {
+                if (barData.datasets[0].data[i] > 0) {
+                  
+                  return e
+                  
+                }
+              })
+              .map((e, i) => {
+                return (
+                  <IonItem className="day-item" button lines="none">
+                    <IonLabel
+                      style={{
+                        "white-space": "normal",
+                      }}
+                    >
+                      <div className="street">{e}</div>
+                    </IonLabel>
 
-                  <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
-                    {barData.datasets[0].data[i]}
-                  </IonLabel>
-                </IonItem>
-              );
-            })}
+                    <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
+                      {barData.datasets[0].data[i]}
+                    </IonLabel>
+                  </IonItem>
+                );
+              })}
           </div>
         ) : (
           <></>
