@@ -84,7 +84,45 @@ const polarData = {
   ],
 };
 
+type DeliveryDataType = {
+  address: string;
+  address2: string;
+  diets: string[];
+  time: string;
+  isPhoto: boolean;
+};
+
 const Day: React.FC = () => {
+
+  
+
+  const _deliveryArray: DeliveryDataType[] = [
+    {
+      address: "Jesionowa 20/2",
+      address2: "Gdańsk 80-256",
+      diets: ["sport-1500-kcal", "slim-2000-kcal"],
+      time: "14:53",
+      isPhoto: true,
+    },
+    {
+      address: "Warszawska 30/1",
+      address2: "Gdańsk 80-256",
+      diets: ["wege-1500-kcal", "slim-2000-kcal", "sport-2500-kcal"],
+      time: "15:11",
+      isPhoto: true,
+    },
+    {
+      address: "Leśny stok 25/13",
+      address2: "Gdańsk 80-256",
+      diets: ["wege-1500-kcal", "slim-2000-kcal", "sport-2500-kcal"],
+      time: "15:11",
+      isPhoto: false,
+    },
+  ];
+
+  const [deliveryArray, setDeliveryArray] =
+    useState<DeliveryDataType[]>(_deliveryArray);
+
   const [polarChartData, setPolarChartData] = useState<any>();
   const [doughnutChartData, setdoughnutChartData] = useState<any>();
   const [whichGraph, setWhichGraph] = useState<string>();
@@ -201,7 +239,7 @@ const Day: React.FC = () => {
       </IonModal>
 
       <IonContent fullscreen>
-        <IonItem>
+        <IonItem lines="none">
           <IonLabel>
             <IonButton
               shape="round"
@@ -229,6 +267,7 @@ const Day: React.FC = () => {
         </IonItem>
 
         <IonItem
+        lines="none"
           style={{
             height: "394px",
           }}
@@ -238,203 +277,66 @@ const Day: React.FC = () => {
 
         
         <IonList>
-          <IonItem className="address-item">
-            <IonLabel className="delivery-info-item">
-              <div style={{ display: "flex" }}>
-                <IonLabel>
-                  <div className="address">
-                    <div className="street">Jesionowa 20/2</div>
-                    <div className="town-post">Gdańsk 80-542</div>
-                  </div>
-                </IonLabel>
-              </div>
+        {deliveryArray.map((e) => {
+              return (
+                <IonItem className="day-item" button onClick={() => {}}>
+                  <IonLabel className="delivery-info-item">
+                    <div style={{ display: "flex" }}>
+                      <IonLabel>
+                        <div className="address">
+                          <div className="street">{e.address}</div>
+                          <div className="town-post">{e.address2}</div>
+                        </div>
+                      </IonLabel>
+                    </div>
+                    {e.diets.map((_e) => {
+                      return (
+                        <IonList lines="none">
+                          <IonLabel className="diet-item">
+                            <IonItem
+                              style={{
+                                "--padding-start": "0px",
+                                "--min-height": "0px",
+                              }}
+                            >
+                              <IonIcon src={chevronForwardOutline} />
+                              <div>{_e}</div>
+                            </IonItem>
+                          </IonLabel>
+                        </IonList>
+                      );
+                    })}
+                  </IonLabel>
+                  <IonItem lines="none">
+                    <div className="icon-time">
+                      <IconButton
+                        id="open-modal"
+                        onClick={() => {
+                          setShowOrderPhoto(true);
+                        }}
+                      >
+                        <PhotoCamera
+                          color={e.isPhoto ? "primary" : "disabled"}
+                          style={{
+                            fontSize: "55px",
+                            marginLeft: "15px",
+                          }}
+                        />
+                      </IconButton>
 
-              <IonList lines="none">
-                <IonLabel className="diet-item">
-                  <IonItem
-                    style={{
-                      "--padding-start": "0px",
-                      "--min-height": "0px",
-                    }}
-                  >
-                    <IonIcon src={chevronForwardOutline} />
-                    <IonLabel>sport-1500-kcal</IonLabel>
+                      <IonLabel className="delivery-time" color="primary">
+                        {e.isPhoto ? (
+                          <div className="delivery-time-span">{e.time}</div>
+                        ) : (
+                          <></>
+                        )}
+                      </IonLabel>
+                    </div>
                   </IonItem>
-                </IonLabel>
-
-                <IonLabel className="diet-item">
-                  <IonItem
-                    style={{
-                      "--padding-start": "0px",
-                      "--min-height": "0px",
-                    }}
-                  >
-                    <IonIcon src={chevronForwardOutline} />
-                    <IonLabel>sport-1500-kcal</IonLabel>
-                  </IonItem>
-                </IonLabel>
-              </IonList>
-            </IonLabel>
-            <IonItem>
-              <div className="icon-time">
-                <IconButton
-                  id="open-modal"
-                  onClick={() => {
-                    setShowOrderPhoto(true);
-                  }}
-                >
-                  <PhotoCamera
-                    color="primary"
-                    style={{
-                      fontSize: "55px",
-                      marginLeft: "15px",
-                    }}
-                  />
-                </IconButton>
-
-                <IonLabel className="delivery-time" color="primary">
-                  <div className="delivery-time-span">14:53</div>
-                </IonLabel>
-              </div>
-            </IonItem>
-          </IonItem>
-          <IonItem className="address-item">
-            <IonLabel className="delivery-info-item">
-              <div style={{ display: "flex" }}>
-                <IonLabel>
-                  <div className="address">
-                    <div className="street">ul. Jesionowa 20/2</div>
-                    <div className="town-post">Gdańsk 80-542</div>
-                  </div>
-                </IonLabel>
-              </div>
-
-              <IonList lines="none">
-                <IonLabel className="diet-item">
-                  <IonItem
-                    style={{
-                      "--padding-start": "0px",
-                      "--min-height": "0px",
-                    }}
-                  >
-                    <IonIcon src={chevronForwardOutline} />
-                    <IonLabel>sport-1500-kcal</IonLabel>
-                  </IonItem>
-                </IonLabel>
-
-                <IonLabel className="diet-item">
-                  <IonItem
-                    style={{
-                      "--padding-start": "0px",
-                      "--min-height": "0px",
-                    }}
-                  >
-                    <IonIcon src={chevronForwardOutline} />
-                    <IonLabel>sport-1500-kcal</IonLabel>
-                  </IonItem>
-                </IonLabel>
-              </IonList>
-            </IonLabel>
-            <IonItem>
-              <div className="icon-time">
-                <IconButton
-                  onClick={() => {
-                    console.log("click");
-                  }}
-                >
-                  <PhotoCamera
-                    style={{
-                      fontSize: "55px",
-                      marginLeft: "15px",
-                    }}
-                  />
-                </IconButton>
-                <IonLabel className="delivery-time" color="primary">
-                  <div className="delivery-time-span"></div>
-                </IonLabel>
-              </div>
-            </IonItem>
-          </IonItem>
-          <IonItem className="address-item">
-            <IonLabel className="delivery-info-item">
-              <div style={{ display: "flex" }}>
-                <IonLabel>
-                  <div className="address">
-                    <div className="street">Jesionowa 20/2</div>
-                    <div className="town-post">Gdańsk 80-542</div>
-                  </div>
-                </IonLabel>
-              </div>
-
-              <IonList lines="none">
-                <IonLabel className="diet-item">
-                  <IonItem
-                    style={{
-                      "--padding-start": "0px",
-                      "--min-height": "0px",
-                    }}
-                  >
-                    <IonIcon src={chevronForwardOutline} />
-                    <IonLabel>sport-1500-kcal</IonLabel>
-                  </IonItem>
-                </IonLabel>
-
-                <IonLabel className="diet-item">
-                  <IonItem
-                    style={{
-                      "--padding-start": "0px",
-                      "--min-height": "0px",
-                    }}
-                  >
-                    <IonIcon src={chevronForwardOutline} />
-                    <IonLabel>sport-1500-kcal</IonLabel>
-                  </IonItem>
-                </IonLabel>
-                <IonLabel className="diet-item">
-                  <IonItem
-                    style={{
-                      "--padding-start": "0px",
-                      "--min-height": "0px",
-                    }}
-                  >
-                    <IonIcon src={chevronForwardOutline} />
-                    <IonLabel>sport-1500-kcal</IonLabel>
-                  </IonItem>
-                </IonLabel>
-                <IonLabel className="diet-item">
-                  <IonItem
-                    style={{
-                      "--padding-start": "0px",
-                      "--min-height": "0px",
-                    }}
-                  >
-                    <IonIcon src={chevronForwardOutline} />
-                    <IonLabel>sport-1500-kcal</IonLabel>
-                  </IonItem>
-                </IonLabel>
-              </IonList>
-            </IonLabel>
-            <IonItem>
-              <div className="icon-time">
-                <IconButton
-                  onClick={() => {
-                    setShowOrderPhoto(true);
-                  }}
-                >
-                  <PhotoCamera
-                    color="primary"
-                    style={{
-                      fontSize: "55px",
-                      marginLeft: "15px",
-                    }}
-                  />
-                </IconButton>
-                <IonLabel className="delivery-time" color="primary">
-                  <div className="delivery-time-span">14:53</div>
-                </IonLabel>
-              </div>
-            </IonItem>
-          </IonItem>
+                </IonItem>
+              );
+            })}
+          
           
         </IonList>
       </IonContent>

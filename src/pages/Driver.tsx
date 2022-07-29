@@ -2,6 +2,8 @@ import {
   addCircleOutline,
   addOutline,
   arrowUpOutline,
+  calendarNumberOutline,
+  calendarOutline,
   cameraOutline,
   caretForward,
   caretForwardOutline,
@@ -39,6 +41,7 @@ import {
   IonButtons,
   IonCheckbox,
   IonContent,
+  IonDatetime,
   IonFab,
   IonFabButton,
   IonHeader,
@@ -68,6 +71,7 @@ import { Doughnut, PolarArea, Bar, Chart, Pie, Line } from "react-chartjs-2";
 
 import OrderImage from "./../components/dostawa.jpg";
 import Add from "@mui/icons-material/Add";
+import { height, width } from "@mui/system";
 
 ChartJS.register(...registerables);
 
@@ -183,12 +187,18 @@ const Driver: React.FC = () => {
   };
   const tackiBarData = {
     labels: [
-      "sobota 15.07",
-      "wtorek 18.06",
-      "poniedziałek 12.03",
-      "poniedziałek 12.03",
-      "środa 22.04",
-      "piątek 05.12",
+      "Styczeń",
+      "Luty",
+      "Marzec",
+      "Kwiecień",
+      "Maj",
+      "Czerwiec",
+      "Lipiec",
+      "Sierpień",
+      "Wrzesień",
+      "Październik",
+      "Listopad",
+      "Grudzień",
     ],
     date: [
       "14.06.2022",
@@ -201,7 +211,7 @@ const Driver: React.FC = () => {
     datasets: [
       {
         label: "Ilość",
-        data: [9, 6, 7, 1, 8, 2],
+        data: [9, 6, 7, 1, 8, 2, 6, 4],
         backgroundColor: [
           "#80Ab10",
           "#50AF95",
@@ -209,6 +219,8 @@ const Driver: React.FC = () => {
           "#10FA95",
           "#eef234",
           "#17b2d9",
+          "#a0a0b9",
+          "#abf2d9",
         ],
       },
     ],
@@ -245,13 +257,15 @@ const Driver: React.FC = () => {
   const [barChartData, setBarChartData] = useState<barChartDataType>();
   const [tackiBarChartData, setTackiBarChartData] = useState<any>();
   const [whichGraph, setWhichGraph] = useState<string>();
+
   const [averageKilometersSum, setAverageKilometersSum] = useState<number>(0);
   const [deliveryArray, setDeliveryArray] =
     useState<DeliveryDataType[]>(_deliveryArray);
 
   const [lineChartData, setLineChartData] = useState<any>();
 
-  const [showOrderPhoto, setShowOrderPhoto] = useState(false);
+  const [showOrderPhoto, setShowOrderPhoto] = useState<boolean>(false);
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
   const [presentAlert] = useIonAlert();
 
@@ -333,26 +347,21 @@ const Driver: React.FC = () => {
   }, [whichGraph]);
 
   useEffect(() => {
-
     let tempSum = 0;
     let activeMonths = 0;
-    
-    for(const n of barData.datasets[0].data)
-    {
-      tempSum += n/20;
 
-      if(n > 0)
-      {
+    for (const n of barData.datasets[0].data) {
+      tempSum += n / 20;
+
+      if (n > 0) {
         activeMonths++;
       }
-
     }
 
     tempSum = Math.round(tempSum / activeMonths);
 
-    setAverageKilometersSum(tempSum)
-
-  }, [barData.datasets[0]])
+    setAverageKilometersSum(tempSum);
+  }, [barData.datasets[0]]);
 
   return (
     <IonPage>
@@ -398,9 +407,26 @@ const Driver: React.FC = () => {
         </IonFab>
         <IonImg src={OrderImage} />
       </IonModal>
+      <IonModal
+        className="modal-image"
+        isOpen={showCalendar}
+        onIonModalDidDismiss={() => setShowCalendar(false)}
+      >
+        <IonFab vertical="top" horizontal="end" slot="fixed">
+          <IonFabButton
+            onClick={() => {
+              setShowCalendar(false);
+            }}
+            color="danger"
+          >
+            <IonIcon icon={closeOutline} />
+          </IonFabButton>
+        </IonFab>
+        <IonDatetime />
+      </IonModal>
 
       <IonContent fullscreen>
-        <IonItem>
+        <IonItem lines="none">
           <IonLabel>
             <IonButton
               shape="round"
@@ -605,31 +631,27 @@ const Driver: React.FC = () => {
           </div>
         ) : whichGraph === "tacki" ? (
           <div>
-            <IonItem>
-              <IonLabel
-                style={{
-                  fontWeight: "500",
-                  overflow: "visible",
-                  marginBottom: "auto",
-                  marginTop: "auto",
-                  marginLeft: "55px",
-                }}
-              >
+            <IonItem lines="none" style={{ textAlign: "center" }}>
+              <IonLabel>
                 <span>Łącznie zniszczonych tacek:</span>
-              </IonLabel>
-              <IonLabel
-                style={{
-                  fontSize: "35px",
-                  marginLeft: "10px",
-                  color: "#5260ff",
-                }}
-              >
-                54
+
+                <span
+                  style={{
+                    fontSize: "35px",
+                    marginLeft: "5px",
+                    color: "#5260ff",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  54
+                </span>
               </IonLabel>
             </IonItem>
             <IonItem
+              lines="none"
               style={{
                 height: "394px",
+                marginBottom: "10px",
               }}
             >
               {GraphSelectMemo}
@@ -775,6 +797,28 @@ const Driver: React.FC = () => {
           </div>
         ) : whichGraph === "route" ? (
           <div>
+            <IonItem lines="none" style={{ textAlign: "center" }}>
+              <IonLabel>
+                <span>Wybrany dzień: </span>
+                <span style={{ color: "#5260ff", fontWeight: "600" }}>
+                  Dzisiaj, 29 lipiec
+                </span>
+
+                <IonIcon
+                  style={{
+                    fontSize: "30px",
+                    marginLeft: "5px",
+                    verticalAlign: "middle",
+
+                    color: "#5260ff",
+                  }}
+                  icon={calendarOutline}
+                  onClick={() => {
+                    setShowCalendar(true);
+                  }}
+                />
+              </IonLabel>
+            </IonItem>
             <Line
               data={lineChartData}
               options={{
@@ -853,26 +897,18 @@ const Driver: React.FC = () => {
           </div>
         ) : whichGraph === "kilometers" ? (
           <div>
-            <IonItem>
-              <IonLabel
-                style={{
-                  fontWeight: "500",
-                  overflow: "visible",
-                  marginBottom: "auto",
-                  marginTop: "auto",
-                  marginLeft: "0px",
-                }}
-              >
-                <span>Łącznie przejechanych kilometrów:</span>
-              </IonLabel>
-              <IonLabel
-                style={{
-                  fontSize: "35px",
-                  marginLeft: "5px",
-                  color: "#5260ff",
-                }}
-              >
-                <span>
+            <IonItem lines="none">
+              <IonLabel>
+                <span style={{}}>Łącznie przejechanych kilometrów:</span>
+
+                <span
+                  style={{
+                    fontSize: "35px",
+                    marginLeft: "5px",
+                    color: "#5260ff",
+                    verticalAlign: "middle",
+                  }}
+                >
                   {barData.datasets[0].data.reduce(function (x, y) {
                     return x + y;
                   })}
@@ -880,29 +916,31 @@ const Driver: React.FC = () => {
               </IonLabel>
             </IonItem>
             <IonItem
+              lines="none"
               style={{
                 height: "394px",
               }}
             >
               {GraphSelectMemo}
             </IonItem>
-            <IonItem lines="none" style={{
-              textAlign: "center"
-            }} >
-              <IonLabel
-                style={{
-                  fontWeight: "500",
-                  overflow: "visible",
-                  textAlign: "center"
-                }}
-              >
+            <IonItem
+              lines="none"
+              style={{
+                textAlign: "center",
+              }}
+            >
+              <IonLabel>
                 <span>Średnia długość trasy:</span>
-                <span style={{
-                  color: "#5260ff",
-                  fontSize: "35px",
-                  marginLeft: "10px",
-                  verticalAlign: "middle"
-                }}>{averageKilometersSum} km</span>
+                <span
+                  style={{
+                    color: "#5260ff",
+                    fontSize: "35px",
+                    marginLeft: "10px",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  {averageKilometersSum} km
+                </span>
               </IonLabel>
             </IonItem>
 
@@ -925,12 +963,22 @@ const Driver: React.FC = () => {
 
                     <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
                       <IonLabel>
-                      <span style={{fontSize: "15px", opacity: "0.5", marginBottom: "2px"}}>Łącznie: </span>
-                      {barData.datasets[0].data[i]}
+                        <span
+                          style={{
+                            fontSize: "15px",
+                            opacity: "0.5",
+                            marginBottom: "2px",
+                          }}
+                        >
+                          Łącznie:{" "}
+                        </span>
+                        {barData.datasets[0].data[i]}
                       </IonLabel>
                       <IonLabel>
-                      <span style={{fontSize: "15px", opacity: "0.5"}}>Średnio: </span>
-                      {Math.round(barData.datasets[0].data[i]/20)}
+                        <span style={{ fontSize: "15px", opacity: "0.5" }}>
+                          Średnio:{" "}
+                        </span>
+                        {Math.round(barData.datasets[0].data[i] / 20)}
                       </IonLabel>
                     </IonLabel>
                   </IonItem>

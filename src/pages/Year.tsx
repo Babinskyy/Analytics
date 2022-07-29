@@ -298,31 +298,24 @@ const Year: React.FC = () => {
         >
           <GraphSelect />
         </IonItem>
-          <IonItem lines="none">
+          <IonItem lines="none" style={{textAlign: "center"}}>
             <IonLabel
-              style={{
-                fontWeight: "500",
-                overflow: "visible",
-                marginLeft: "35px",
-              }}
+              
             >
               <span>Łącznie dostarczonych diet:</span>
-            </IonLabel>
-            <IonLabel
-              style={{
+            
+              <span style={{
                 fontSize: "35px",
                 marginLeft: "5px",
                 color: "#5260ff",
-              }}
-            >
-              <span>{barData.datasets[0].data.reduce(function(x, y) {
+                verticalAlign: "middle"
+              }}>{barData.datasets[0].data.reduce(function(x, y) {
                   return x + y
                 })}</span>
             </IonLabel>
           </IonItem>
 
-        <IonList className="days-list" lines="none">
-          <IonItem className="list-header">
+          <IonItem className="list-header" lines="none">
             <IonLabel>
               <div style={{ textAlign: "left", marginLeft: "5px" }}>
                 Miesiąc
@@ -334,6 +327,7 @@ const Year: React.FC = () => {
               </div>
             </IonLabel>
           </IonItem>
+        <IonList className="days-list" lines="none">
 
           {barData.labels.map((e, i) => {
             return barData.datasets[0].data[i] > 0 ? (

@@ -117,22 +117,7 @@ const polarData = {
     },
   ],
 };
-const doughnutData = {
-  labels: [
-    "slim-1500",
-    "wege-2000",
-    "sport-2500",
-    "keto-2200",
-    "specjały-brokuła",
-  ],
-  datasets: [
-    {
-      label: "Ilość",
-      data: [534, 155, 300, 235, 110],
-      backgroundColor: ["#ffbb11", "#17b2d9", "#50AF95", "#80Ab10", "#10FA95"],
-    },
-  ],
-};
+
 
 const Drivers: React.FC = () => {
 
@@ -305,7 +290,7 @@ const Drivers: React.FC = () => {
           {chartMemo}
         </IonItem>
 
-        <IonItem className="list-header" style={{}}>
+        <IonItem style={{}}>
           <TextField
             autoComplete="off"
             id="outlined-basic"
@@ -317,6 +302,18 @@ const Drivers: React.FC = () => {
             }}
           />
         </IonItem>
+        <IonItem className="list-header" lines="none">
+            <IonLabel>
+              <div style={{ textAlign: "left", marginLeft: "5px" }}>
+                Kierowca
+              </div>
+            </IonLabel>
+            <IonLabel>
+              <div style={{ textAlign: "right", marginRight: "5px" }}>
+                {whichGraph === "diets" ? "Kilometry" : "Tacki" }
+              </div>
+            </IonLabel>
+          </IonItem>
 
         <IonList className="days-list" lines="none">
           {barData.labels
@@ -332,17 +329,19 @@ const Drivers: React.FC = () => {
                 <IonItem
                   className="day-item"
                   button
+                  style={{paddingTop: "15px", paddingBottom: "15px"}}
                   onClick={() => {
                     navigate("/driver", "forward", "push");
                   }}
                 >
-                  <IonLabel>
-                    <div className="day">{e}</div>
-                    <div className="date">{barData.date[i]}</div>
+                  
+                  <IonLabel >
+                    <span className="day">{e}</span >
+                    
                   </IonLabel>
-                  <IonItem className="diet-number">
+                  <IonItem >
                     <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
-                      {barData.datasets[0].data[i]}
+                      <span>{whichGraph === "diets" ? barData.datasets[0].data[i] : tackiBarData.datasets[0].data[i] }</span>
                     </IonLabel>
                   </IonItem>
                 </IonItem>
