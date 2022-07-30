@@ -73,6 +73,9 @@ import OrderImage from "./../components/dostawa.jpg";
 import Add from "@mui/icons-material/Add";
 import { height, width } from "@mui/system";
 
+import { format, parseISO } from "date-fns";
+import plLocale from "date-fns/locale/pl";
+
 ChartJS.register(...registerables);
 
 type CommentsArrayType = {
@@ -263,6 +266,9 @@ const Driver: React.FC = () => {
     useState<DeliveryDataType[]>(_deliveryArray);
 
   const [lineChartData, setLineChartData] = useState<any>();
+  const [chooseDate, setChooseDate] = useState<string>(format(parseISO(new Date().toJSON()), "d MMMM, yyyy", {
+    locale: plLocale,
+  }));
 
   const [showOrderPhoto, setShowOrderPhoto] = useState<boolean>(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
@@ -422,7 +428,47 @@ const Driver: React.FC = () => {
             <IonIcon icon={closeOutline} />
           </IonFabButton>
         </IonFab>
-        <IonDatetime />
+        <IonItem
+          button={false}
+          style={{
+            marginLeft: "15px",
+            marginRight: "15px",
+            marginTop: "auto",
+            marginBottom: "auto",
+            borderRadius: "10px",
+            boxShadow: " rgba(0, 0, 0, 0.5) 0px 7px 10px",
+            "--ripple-color": "transparent",
+          }}
+        >
+          <IonDatetime
+            onIonChange={(e) => {
+              
+
+              if (e.detail.value) {
+                console.log(
+                  format(parseISO(e.detail.value), "d MMMM, yyyy", {
+                    locale: plLocale,
+                  })
+                );
+              }
+
+              if (e.detail.value) {
+                setChooseDate(
+                  format(parseISO(e.detail.value), "d MMMM, yyyy", {
+                    locale: plLocale,
+                  })
+                );
+              }
+            }}
+            locale="pl-PL"
+            showDefaultButtons={true}
+            presentation="date"
+            mode="ios"
+            cancelText="Anuluj"
+            doneText="Zatwierdź"
+            style={{ "--background": "transparent" }}
+          ></IonDatetime>
+        </IonItem>
       </IonModal>
 
       <IonContent fullscreen>
@@ -800,9 +846,13 @@ const Driver: React.FC = () => {
             <IonItem lines="none" style={{ textAlign: "center" }}>
               <IonLabel>
                 <span>Wybrany dzień: </span>
-                <span style={{ color: "#5260ff", fontWeight: "600" }}>
-                  Dzisiaj, 29 lipiec
-                </span>
+
+                <span
+                  style={{ color: "#5260ff", fontWeight: "600" }}
+                  onClick={() => {
+                    setShowCalendar(true);
+                  }}
+                >{chooseDate}</span>
 
                 <IonIcon
                   style={{
