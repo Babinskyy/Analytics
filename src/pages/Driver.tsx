@@ -418,16 +418,7 @@ const Driver: React.FC = () => {
         isOpen={showCalendar}
         onIonModalDidDismiss={() => setShowCalendar(false)}
       >
-        <IonFab vertical="top" horizontal="end" slot="fixed">
-          <IonFabButton
-            onClick={() => {
-              setShowCalendar(false);
-            }}
-            color="danger"
-          >
-            <IonIcon icon={closeOutline} />
-          </IonFabButton>
-        </IonFab>
+        
         <IonItem
           button={false}
           style={{
