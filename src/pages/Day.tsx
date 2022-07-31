@@ -1,5 +1,6 @@
 import {
   arrowUpOutline,
+  calendarOutline,
   cameraOutline,
   caretForward,
   caretForwardOutline,
@@ -37,6 +38,7 @@ import {
   IonButtons,
   IonCheckbox,
   IonContent,
+  IonDatetime,
   IonFab,
   IonFabButton,
   IonHeader,
@@ -61,6 +63,9 @@ import { Chart as ChartJS, registerables } from "chart.js";
 import { Doughnut, PolarArea, Bar, Chart, Pie } from "react-chartjs-2";
 
 import OrderImage from "./../components/dostawa.jpg";
+
+import { format, parseISO } from "date-fns";
+import plLocale from "date-fns/locale/pl";
 
 ChartJS.register(...registerables);
 const doughnutData = {
@@ -128,6 +133,10 @@ const Day: React.FC = () => {
   const [whichGraph, setWhichGraph] = useState<string>();
 
   const [showOrderPhoto, setShowOrderPhoto] = useState(false);
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [chooseDate, setChooseDate] = useState<string>(format(parseISO(new Date().toJSON()), "d MMMM, yyyy", {
+    locale: plLocale,
+  }));
 
   useEffect(() => {
     setPolarChartData(polarData);
@@ -237,6 +246,54 @@ const Day: React.FC = () => {
         </IonFab>
         <IonImg src={OrderImage} />
       </IonModal>
+      <IonModal
+        className="modal-image"
+        isOpen={showCalendar}
+        onIonModalDidDismiss={() => setShowCalendar(false)}
+      >
+        
+        <IonItem
+          button={false}
+          style={{
+            marginLeft: "15px",
+            marginRight: "15px",
+            marginTop: "auto",
+            marginBottom: "auto",
+            borderRadius: "10px",
+            boxShadow: " rgba(0, 0, 0, 0.5) 0px 7px 10px",
+            "--ripple-color": "transparent",
+          }}
+        >
+          <IonDatetime
+            onIonChange={(e) => {
+              
+
+              if (e.detail.value) {
+                console.log(
+                  format(parseISO(e.detail.value), "d MMMM, yyyy", {
+                    locale: plLocale,
+                  })
+                );
+              }
+
+              if (e.detail.value) {
+                setChooseDate(
+                  format(parseISO(e.detail.value), "d MMMM, yyyy", {
+                    locale: plLocale,
+                  })
+                );
+              }
+            }}
+            locale="pl-PL"
+            showDefaultButtons={true}
+            presentation="date"
+            mode="ios"
+            cancelText="Anuluj"
+            doneText="Zatwierdź"
+            style={{ "--background": "transparent" }}
+          ></IonDatetime>
+        </IonItem>
+      </IonModal>
 
       <IonContent fullscreen>
         <IonItem lines="none">
@@ -265,6 +322,32 @@ const Day: React.FC = () => {
             </IonButton>
           </IonLabel>
         </IonItem>
+        <IonItem lines="none" style={{ textAlign: "center" }}>
+              <IonLabel>
+                <span>Wybrany dzień: </span>
+
+                <span
+                  style={{ color: "#5260ff", fontWeight: "600" }}
+                  onClick={() => {
+                    setShowCalendar(true);
+                  }}
+                >{chooseDate}</span>
+
+                <IonIcon
+                  style={{
+                    fontSize: "30px",
+                    marginLeft: "5px",
+                    verticalAlign: "middle",
+
+                    color: "#5260ff",
+                  }}
+                  icon={calendarOutline}
+                  onClick={() => {
+                    setShowCalendar(true);
+                  }}
+                />
+              </IonLabel>
+            </IonItem>
 
         <IonItem
         lines="none"
