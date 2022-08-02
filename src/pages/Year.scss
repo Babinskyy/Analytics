@@ -1,65 +1,46 @@
 body.dark {
-    .day-item{
-        --background: rgb(37, 37, 37);
-        border: 1px solid #141414;
-    }
-    .diet-number{
-        --background: rgb(37, 37, 37);
-        
-    }
-    
+  .day-item {
+    --background: rgb(37, 37, 37);
+    border: 1px solid #141414;
+  }
+  .diet-number {
+    --background: rgb(37, 37, 37);
+  }
 }
 
-.day-item{
-  
-    border-radius: 10px;
-      width: 95%;
-      left: 50%;
-      transform: translate(-50%);
-      margin-bottom: 10px;
-  
-    //   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-      border: 1px solid lightgrey;
-      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  }
+.day-item {
+  border-radius: 10px;
+  width: 95%;
+  left: 50%;
+  transform: translate(-50%);
+  margin-bottom: 10px;
+
+  //   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  border: 1px solid lightgrey;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
 
 .year {
-
-    
-
-
-
-
-
-
-.day{
-    
+  .day {
     font-size: 24px;
     font-weight: 550;
     padding-bottom: 5px;
-}
-.date{
-    opacity: 0.5; 
-}
-.diet-item{    
+  }
+  .date {
+    opacity: 0.5;
+  }
+  .diet-item {
     letter-spacing: 1.5px;
-}
+  }
 
-
-.delivery-time-span{
+  .delivery-time-span {
     font-size: 35px;
     text-align: center;
-    
-    
-}
+  }
 
-.diet-number{
-    
+  .diet-number {
     font-size: 12px;
+  }
 }
 
 
-
-
-
-}
