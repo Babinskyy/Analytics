@@ -318,7 +318,21 @@ const Year: React.FC = () => {
                 </IonItem>
               </IonCol>
               <IonCol sizeMd="auto" size="12">
+              <IonItem className="list-header" lines="none">
+              <IonLabel>
+                <div style={{ textAlign: "left", marginLeft: "10px" }}>
+                  Miesiąc
+                </div>
+              </IonLabel>
+              <IonLabel>
+                <div style={{ textAlign: "right", marginRight: "30px" }}>
+                  
+                  Diety
+                </div>
+              </IonLabel>
+            </IonItem>
                 <IonItem style={{ maxHeight: "750px", overflow: "auto" }}>
+                  
                   <IonList className="days-list" lines="none">
                     {barData.labels.map((e, i) => {
                       return barData.datasets[0].data[i] > 0 ? (

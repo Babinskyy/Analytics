@@ -36,6 +36,7 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
+  IonCol,
   IonContent,
   IonHeader,
   IonIcon,
@@ -44,9 +45,11 @@ import {
   IonList,
   IonListHeader,
   IonPage,
+  IonRow,
   IonTitle,
   IonToolbar,
   IonVirtualScroll,
+  isPlatform,
   NavContext,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
@@ -118,9 +121,7 @@ const polarData = {
   ],
 };
 
-
 const Drivers: React.FC = () => {
-
   const { navigate } = useContext(NavContext);
   const [barChartData, setBarChartData] = useState<any>();
   const [tackiBarChartData, setTackiBarChartData] = useState<any>();
@@ -231,7 +232,11 @@ const Drivers: React.FC = () => {
             >
               Diety
             </IonButton>
-            <IonButton className="double-button-second" fill="solid" color="tertiary">
+            <IonButton
+              className="double-button-second"
+              fill="solid"
+              color="tertiary"
+            >
               Kierowcy
             </IonButton>
           </IonTitle>
@@ -280,74 +285,166 @@ const Drivers: React.FC = () => {
             </IonButton>
           </IonLabel>
         </IonItem>
-
-        <IonItem
+        {!isPlatform("mobile") ? (
+          <div>
+            <IonRow className="ion-justify-content-center">
+              <IonCol sizeMd="auto" size="12">
+          <IonItem
+          
+          lines="none"
           style={{
-            height: "394px",
-            marginBottom: "0px",
+            height: "750px",
+            width: "750px",
           }}
         >
-          {chartMemo}
+          <GraphSelect />
         </IonItem>
+        </IonCol>
+        <IonCol sizeMd="auto" size="12">
+        <IonItem style={{width: "400px"}}>
+              <TextField
+                autoComplete="off"
+                id="outlined-basic"
+                label="Wyszukaj kierowcę"
+                variant="outlined"
+                style={{ width: "100%", margin: "auto", marginTop: "10px" }}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                }}
+              />
+            </IonItem>
+            <IonItem className="list-header" lines="none">
+              <IonLabel>
+                <div style={{ textAlign: "left", marginLeft: "5px" }}>
+                  Kierowca
+                </div>
+              </IonLabel>
+              <IonLabel>
+                <div style={{ textAlign: "right", marginRight: "5px" }}>
+                  {whichGraph === "diets" ? "Kilometry" : "Tacki"}
+                </div>
+              </IonLabel>
+            </IonItem>
 
-        <IonItem style={{}}>
-          <TextField
-            autoComplete="off"
-            id="outlined-basic"
-            label="Wyszukaj kierowcę"
-            variant="outlined"
-            style={{ width: "100%", margin: "auto", marginTop: "10px" }}
-            onChange={(e) => {
-              setSearchValue(e.target.value);
-            }}
-          />
-        </IonItem>
-        <IonItem className="list-header" lines="none">
-            <IonLabel>
-              <div style={{ textAlign: "left", marginLeft: "5px" }}>
-                Kierowca
-              </div>
-            </IonLabel>
-            <IonLabel>
-              <div style={{ textAlign: "right", marginRight: "5px" }}>
-                {whichGraph === "diets" ? "Kilometry" : "Tacki" }
-              </div>
-            </IonLabel>
-          </IonItem>
+            <IonList className="days-list" lines="none">
+              {barData.labels
+                .filter((e) => {
+                  if (searchValue == "") {
+                    return e;
+                  } else if (
+                    e.toLowerCase().includes(searchValue.toLowerCase())
+                  ) {
+                    return e;
+                  }
+                })
+                .map((e, i) => {
+                  return (
+                    <IonItem
+                      className="day-item"
+                      button
+                      style={{ paddingTop: "15px", paddingBottom: "15px" }}
+                      onClick={() => {
+                        navigate("/driver", "forward", "push");
+                      }}
+                    >
+                      <IonLabel>
+                        <span className="day">{e}</span>
+                      </IonLabel>
+                      <IonItem>
+                        <IonLabel
+                          style={{ textAlign: "right", fontSize: "20px" }}
+                        >
+                          <span>
+                            {whichGraph === "diets"
+                              ? barData.datasets[0].data[i]
+                              : tackiBarData.datasets[0].data[i]}
+                          </span>
+                        </IonLabel>
+                      </IonItem>
+                    </IonItem>
+                  );
+                })}
+            </IonList>
+        </IonCol>
+        </IonRow>
+        </div>
+        ) : (
+          <div>
+            <IonItem
+              style={{
+                height: "394px",
+                marginBottom: "0px",
+              }}
+            >
+              {chartMemo}
+            </IonItem>
 
-        <IonList className="days-list" lines="none">
-          {barData.labels
-            .filter((e) => {
-              if (searchValue == "") {
-                return e;
-              } else if (e.toLowerCase().includes(searchValue.toLowerCase())) {
-                return e;
-              }
-            })
-            .map((e, i) => {
-              return (
-                <IonItem
-                  className="day-item"
-                  button
-                  style={{paddingTop: "15px", paddingBottom: "15px"}}
-                  onClick={() => {
-                    navigate("/driver", "forward", "push");
-                  }}
-                >
-                  
-                  <IonLabel >
-                    <span className="day">{e}</span >
-                    
-                  </IonLabel>
-                  <IonItem >
-                    <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
-                      <span>{whichGraph === "diets" ? barData.datasets[0].data[i] : tackiBarData.datasets[0].data[i] }</span>
-                    </IonLabel>
-                  </IonItem>
-                </IonItem>
-              );
-            })}
-        </IonList>
+            <IonItem style={{}}>
+              <TextField
+                autoComplete="off"
+                id="outlined-basic"
+                label="Wyszukaj kierowcę"
+                variant="outlined"
+                style={{ width: "100%", margin: "auto", marginTop: "10px" }}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                }}
+              />
+            </IonItem>
+            <IonItem className="list-header" lines="none">
+              <IonLabel>
+                <div style={{ textAlign: "left", marginLeft: "5px" }}>
+                  Kierowca
+                </div>
+              </IonLabel>
+              <IonLabel>
+                <div style={{ textAlign: "right", marginRight: "5px" }}>
+                  {whichGraph === "diets" ? "Kilometry" : "Tacki"}
+                </div>
+              </IonLabel>
+            </IonItem>
+
+            <IonList className="days-list" lines="none">
+              {barData.labels
+                .filter((e) => {
+                  if (searchValue == "") {
+                    return e;
+                  } else if (
+                    e.toLowerCase().includes(searchValue.toLowerCase())
+                  ) {
+                    return e;
+                  }
+                })
+                .map((e, i) => {
+                  return (
+                    <IonItem
+                      className="day-item"
+                      button
+                      style={{ paddingTop: "15px", paddingBottom: "15px" }}
+                      onClick={() => {
+                        navigate("/driver", "forward", "push");
+                      }}
+                    >
+                      <IonLabel>
+                        <span className="day">{e}</span>
+                      </IonLabel>
+                      <IonItem>
+                        <IonLabel
+                          style={{ textAlign: "right", fontSize: "20px" }}
+                        >
+                          <span>
+                            {whichGraph === "diets"
+                              ? barData.datasets[0].data[i]
+                              : tackiBarData.datasets[0].data[i]}
+                          </span>
+                        </IonLabel>
+                      </IonItem>
+                    </IonItem>
+                  );
+                })}
+            </IonList>
+          </div>
+        )}
       </IonContent>
     </IonPage>
   );

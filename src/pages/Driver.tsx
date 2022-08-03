@@ -55,6 +55,7 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  isPlatform,
   useIonAlert,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
@@ -266,9 +267,11 @@ const Driver: React.FC = () => {
     useState<DeliveryDataType[]>(_deliveryArray);
 
   const [lineChartData, setLineChartData] = useState<any>();
-  const [chooseDate, setChooseDate] = useState<string>(format(parseISO(new Date().toJSON()), "d MMMM, yyyy", {
-    locale: plLocale,
-  }));
+  const [chooseDate, setChooseDate] = useState<string>(
+    format(parseISO(new Date().toJSON()), "d MMMM, yyyy", {
+      locale: plLocale,
+    })
+  );
 
   const [showOrderPhoto, setShowOrderPhoto] = useState<boolean>(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
@@ -418,7 +421,6 @@ const Driver: React.FC = () => {
         isOpen={showCalendar}
         onIonModalDidDismiss={() => setShowCalendar(false)}
       >
-        
         <IonItem
           button={false}
           style={{
@@ -433,8 +435,6 @@ const Driver: React.FC = () => {
         >
           <IonDatetime
             onIonChange={(e) => {
-              
-
               if (e.detail.value) {
                 console.log(
                   format(parseISO(e.detail.value as string), "d MMMM, yyyy", {
@@ -512,7 +512,166 @@ const Driver: React.FC = () => {
           </IonLabel>
         </IonItem>
 
-        {whichGraph === "comments" ? (
+        {!isPlatform("mobile") ? (
+          whichGraph === "comments" ? (
+            <div>
+              <IonItem
+              style={{width: "500px"}}
+                className="day-item"
+                button
+                onClick={() => {
+                  presentAlert({
+                    header: "Wypełnij formularz",
+                    buttons: [
+                      {
+                        text: "OK",
+                        handler(value) {
+                          setCommentsArray([
+                            ...commentsArray,
+                            {
+                              title: value[0],
+                              description: value[1],
+                              name: value[2],
+                            },
+                          ]);
+                        },
+                      },
+                    ],
+                    inputs: [
+                      {
+                        placeholder: "Tytuł uwagi",
+                        type: "search",
+                        attributes: {
+                          maxlength: 50,
+                        },
+                      },
+                      {
+                        type: "textarea",
+                        placeholder: "Opis uwagi",
+                      },
+                      {
+                        placeholder: "Imię",
+                        attributes: {
+                          maxlength: 15,
+                        },
+                      },
+                    ],
+                  });
+                }}
+              >
+                <IonLabel>
+                  <span
+                    style={{
+                      textAlign: "center",
+                      fontSize: "22px",
+                    }}
+                  >
+                    Dodaj uwagę
+                  </span>
+                </IonLabel>
+
+                <IonLabel
+                  style={{
+                    textAlign: "right",
+                  }}
+                >
+                  <Add
+                    style={{
+                      fontSize: "40px",
+                      fontWeight: "100px",
+                    }}
+                  />
+                </IonLabel>
+              </IonItem>
+              <IonList>
+                {commentsArray.map((e) => {
+                  return (
+                    <IonItem className="day-item" lines="none" style={{width: "500px"}}>
+                      <IonLabel>
+                        <IonLabel
+                          style={{
+                            "white-space": "normal",
+                          }}
+                        >
+                          <div className="street">{e.title}</div>
+                        </IonLabel>
+
+                        <IonLabel>
+                          <IonItem
+                            lines="none"
+                            style={{
+                              "--padding-start": "0px",
+                              "--min-height": "0px",
+                            }}
+                          >
+                            <IonLabel
+                              style={{
+                                "white-space": "normal",
+                              }}
+                            >
+                              {e.description}
+                            </IonLabel>
+                          </IonItem>
+                        </IonLabel>
+                      </IonLabel>
+                      <IonItem
+                        className="diet-number"
+                        style={{ "--inner-padding-end": "0" }}
+                      >
+                        <IonLabel style={{ textAlign: "right" }}>
+                          <IconButton
+                            style={{ color: "black" }}
+                            onClick={() =>
+                              presentAlert({
+                                header: `Czy na pewno chcesz usunąć uwagę ${e.title}?`,
+
+                                cssClass: "custom-alert",
+                                buttons: [
+                                  {
+                                    text: "Nie",
+                                    cssClass: "alert-button-cancel",
+                                  },
+                                  {
+                                    text: "Tak",
+                                    cssClass: "alert-button-confirm",
+                                    handler: () => {
+                                      let _tempCommentsArray = commentsArray;
+                                      _tempCommentsArray.splice(
+                                        commentsArray.indexOf(e),
+                                        1
+                                      );
+                                      setCommentsArray([..._tempCommentsArray]);
+                                    },
+                                  },
+                                ],
+                              })
+                            }
+                          >
+                            <HighlightOffOutlinedIcon />
+                          </IconButton>
+
+                          <IonItem lines="none" style={{ textAlign: "right" }}>
+                            <IonLabel>
+                              <div className="town-post">15.07.2022</div>
+                              <div
+                                className="town-post"
+                                style={{ textAlign: "center" }}
+                              >
+                                {e.name}
+                              </div>
+                            </IonLabel>
+                          </IonItem>
+                        </IonLabel>
+                      </IonItem>
+                    </IonItem>
+                  );
+                })}
+              </IonList>
+            </div>
+          ) : (
+            <></>
+          )
+        ) : whichGraph === "comments" ? (
           <div>
             <IonItem
               className="day-item"
@@ -843,7 +1002,9 @@ const Driver: React.FC = () => {
                   onClick={() => {
                     setShowCalendar(true);
                   }}
-                >{chooseDate}</span>
+                >
+                  {chooseDate}
+                </span>
 
                 <IonIcon
                   style={{

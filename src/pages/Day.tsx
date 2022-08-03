@@ -400,6 +400,7 @@ const Day: React.FC = () => {
                 </IonItem>
               </IonCol>
               <IonCol sizeMd="auto" size="12">
+                
                 <IonItem style={{ maxHeight: "750px", overflow: "auto" }}>
                   <IonList>
                     {deliveryArray.map((e) => {
