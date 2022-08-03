@@ -30,6 +30,7 @@ import Month from "./pages/Month";
 import Year from "./pages/Year";
 import Driver from "./pages//Driver";
 import Drivers from "./pages//Drivers";
+import YearCopy from "./pages/Year copy";
 
 
 
@@ -53,6 +54,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/year">
           <Year />
+        </Route>
+        <Route exact path="/yearCopy">
+          <YearCopy />
         </Route>
         <Route exact path="/">
           <Redirect to="/Year" />

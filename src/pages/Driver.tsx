@@ -437,7 +437,7 @@ const Driver: React.FC = () => {
 
               if (e.detail.value) {
                 console.log(
-                  format(parseISO(e.detail.value), "d MMMM, yyyy", {
+                  format(parseISO(e.detail.value as string), "d MMMM, yyyy", {
                     locale: plLocale,
                   })
                 );
@@ -445,7 +445,7 @@ const Driver: React.FC = () => {
 
               if (e.detail.value) {
                 setChooseDate(
-                  format(parseISO(e.detail.value), "d MMMM, yyyy", {
+                  format(parseISO(e.detail.value as string), "d MMMM, yyyy", {
                     locale: plLocale,
                   })
                 );

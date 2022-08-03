@@ -37,6 +37,7 @@ import {
   IonButton,
   IonButtons,
   IonCheckbox,
+  IonCol,
   IonContent,
   IonDatetime,
   IonFab,
@@ -50,8 +51,10 @@ import {
   IonListHeader,
   IonModal,
   IonPage,
+  IonRow,
   IonTitle,
   IonToolbar,
+  isPlatform,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
 import "./Day.scss";
@@ -98,9 +101,6 @@ type DeliveryDataType = {
 };
 
 const Day: React.FC = () => {
-
-  
-
   const _deliveryArray: DeliveryDataType[] = [
     {
       address: "Jesionowa 20/2",
@@ -119,9 +119,44 @@ const Day: React.FC = () => {
     {
       address: "Leśny stok 25/13",
       address2: "Gdańsk 80-256",
-      diets: ["wege-1500-kcal", "slim-2000-kcal", "sport-2500-kcal"],
-      time: "15:11",
+      diets: ["wege-1500-kcal", "dieta cud-1500 kcal", "sport-2500-kcal"],
+      time: "16:11",
       isPhoto: false,
+    },
+    {
+      address: "Jagodowa 4/12",
+      address2: "Gdańsk 80-256",
+      diets: ["wege-1500-kcal"],
+      time: "16:33",
+      isPhoto: true,
+    },
+    {
+      address: "Borówkowa 31/1",
+      address2: "Gdańsk 80-256",
+      diets: ["keto-1500 kcal-low carb", "sport-2500-kcal"],
+      time: "16:47",
+      isPhoto: false,
+    },
+    {
+      address: "Sujkowskiego 1/14",
+      address2: "Gdańsk 80-256",
+      diets: ["slim-1200 kcal-low ig", "slim-2000-kcal", "sport-2500-kcal"],
+      time: "16:59",
+      isPhoto: false,
+    },
+    {
+      address: "Kulerskiego 6/42",
+      address2: "Grudziądz 86-300",
+      diets: ["sport-2500-kcal"],
+      time: "17:21",
+      isPhoto: true,
+    },
+    {
+      address: "Sosnkowskiego 6f/1",
+      address2: "Gdańsk 80-256",
+      diets: ["wege-1500-kcal", "slim-2000-kcal"],
+      time: "17:44",
+      isPhoto: true,
     },
   ];
 
@@ -134,9 +169,11 @@ const Day: React.FC = () => {
 
   const [showOrderPhoto, setShowOrderPhoto] = useState(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  const [chooseDate, setChooseDate] = useState<string>(format(parseISO(new Date().toJSON()), "d MMMM, yyyy", {
-    locale: plLocale,
-  }));
+  const [chooseDate, setChooseDate] = useState<string>(
+    format(parseISO(new Date().toJSON()), "d MMMM, yyyy", {
+      locale: plLocale,
+    })
+  );
 
   useEffect(() => {
     setPolarChartData(polarData);
@@ -148,12 +185,15 @@ const Day: React.FC = () => {
     setWhichGraph("types");
   }, []);
 
-  const GraphSelect = () => {
-    switch (whichGraph) {
+  type GraphSelectType = {
+    defaultGraph?: string;
+  };
+
+  const GraphSelect: React.FC<GraphSelectType> = ({ defaultGraph }) => {
+    switch (defaultGraph ? defaultGraph : whichGraph) {
       case "area":
         if (polarChartData) {
           return (
-            
             <PolarArea
               data={polarChartData}
               options={{
@@ -211,21 +251,21 @@ const Day: React.FC = () => {
           </IonButtons>
           <IonTitle slot="start">Poniedziałek, 13.05.2022</IonTitle>
           <IonButtons slot="end">
-          <IonButton onClick={() => {
+            <IonButton
+              onClick={() => {
+                const bodyClasses = document.querySelector("body");
 
-            const bodyClasses = document.querySelector("body");
-
-            if(bodyClasses?.classList.contains("dark"))
-            {
-              document.body.classList.remove("dark");
-            }
-            else
-            {
-              document.body.classList.add("dark")
-            }
-
-          }} style={{marginRight: "15px"}}><IonIcon icon={moon}/></IonButton>
-        </IonButtons>
+                if (bodyClasses?.classList.contains("dark")) {
+                  document.body.classList.remove("dark");
+                } else {
+                  document.body.classList.add("dark");
+                }
+              }}
+              style={{ marginRight: "15px" }}
+            >
+              <IonIcon icon={moon} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -247,56 +287,53 @@ const Day: React.FC = () => {
         <IonImg src={OrderImage} />
       </IonModal>
       <IonModal
-        className="modal-image"
+        style={{
+          "--width": "auto",
+          "--height": "auto",
+        }}
+        mode="ios"
+        keepContentsMounted
+        // className="modal-image"
         isOpen={showCalendar}
         onIonModalDidDismiss={() => setShowCalendar(false)}
       >
-        
-        <IonItem
-          button={false}
+        <IonDatetime
           style={{
-            marginLeft: "15px",
-            marginRight: "15px",
-            marginTop: "auto",
-            marginBottom: "auto",
-            borderRadius: "10px",
-            boxShadow: " rgba(0, 0, 0, 0.5) 0px 7px 10px",
-            "--ripple-color": "transparent",
+            color: "black",
           }}
-        >
-          <IonDatetime
-            onIonChange={(e) => {
-              
+          onIonChange={(e) => {
+            if (e.detail.value) {
+              console.log(
+                format(parseISO(e.detail.value as string), "d MMMM, yyyy", {
+                  locale: plLocale,
+                })
+              );
+            }
 
-              if (e.detail.value) {
-                console.log(
-                  format(parseISO(e.detail.value), "d MMMM, yyyy", {
-                    locale: plLocale,
-                  })
-                );
-              }
-
-              if (e.detail.value) {
-                setChooseDate(
-                  format(parseISO(e.detail.value), "d MMMM, yyyy", {
-                    locale: plLocale,
-                  })
-                );
-              }
-            }}
-            locale="pl-PL"
-            showDefaultButtons={true}
-            presentation="date"
-            mode="ios"
-            cancelText="Anuluj"
-            doneText="Zatwierdź"
-            style={{ "--background": "transparent" }}
-          ></IonDatetime>
-        </IonItem>
+            if (e.detail.value) {
+              setChooseDate(
+                format(parseISO(e.detail.value as string), "d MMMM, yyyy", {
+                  locale: plLocale,
+                })
+              );
+            }
+          }}
+          locale="pl-PL"
+          showDefaultButtons={true}
+          presentation="date"
+          mode="ios"
+          cancelText="Anuluj"
+          doneText="Zatwierdź"
+          // style={{ "--background": "transparent" }}
+        ></IonDatetime>
       </IonModal>
 
       <IonContent fullscreen>
-        <IonItem lines="none">
+        
+
+        {!isPlatform("mobile") ? (
+          <div>
+            <IonItem lines="none" style={{textAlign: "center"}}>
           <IonLabel>
             <IonButton
               shape="round"
@@ -323,6 +360,149 @@ const Day: React.FC = () => {
           </IonLabel>
         </IonItem>
         <IonItem lines="none" style={{ textAlign: "center" }}>
+          <IonLabel>
+            <span>Wybrany dzień: </span>
+
+            <span
+              style={{ color: "#5260ff", fontWeight: "600" }}
+              onClick={() => {
+                setShowCalendar(true);
+              }}
+            >
+              {chooseDate}
+            </span>
+
+            <IonIcon
+              style={{
+                fontSize: "30px",
+                marginLeft: "5px",
+                verticalAlign: "middle",
+
+                color: "#5260ff",
+              }}
+              icon={calendarOutline}
+              onClick={() => {
+                setShowCalendar(true);
+              }}
+            />
+          </IonLabel>
+        </IonItem>
+            <IonRow className="ion-justify-content-center">
+              <IonCol sizeMd="auto" size="12">
+                <IonItem
+                  lines="none"
+                  style={{
+                    height: "750px",
+                    width: "750px",
+                  }}
+                >
+                  <GraphSelect />
+                </IonItem>
+              </IonCol>
+              <IonCol sizeMd="auto" size="12">
+                <IonItem style={{ maxHeight: "750px", overflow: "auto" }}>
+                  <IonList>
+                    {deliveryArray.map((e) => {
+                      return (
+                        <IonItem
+                          className="day-item"
+                          style={{ maxWidth: "600px" }}
+                        >
+                          <IonLabel className="delivery-info-item">
+                            <div style={{ display: "flex" }}>
+                              <IonLabel>
+                                <div className="address">
+                                  <div className="street">{e.address}</div>
+                                  <div className="town-post">{e.address2}</div>
+                                </div>
+                              </IonLabel>
+                            </div>
+                            {e.diets.map((_e) => {
+                              return (
+                                <IonList lines="none">
+                                  <IonLabel className="diet-item">
+                                    <IonItem
+                                      style={{
+                                        "--padding-start": "0px",
+                                        "--min-height": "0px",
+                                      }}
+                                    >
+                                      <IonIcon src={chevronForwardOutline} />
+                                      <div>{_e}</div>
+                                    </IonItem>
+                                  </IonLabel>
+                                </IonList>
+                              );
+                            })}
+                          </IonLabel>
+                          <IonItem lines="none">
+                            <div className="icon-time">
+                              <IconButton
+                                id="open-modal"
+                                onClick={() => {
+                                  setShowOrderPhoto(true);
+                                }}
+                              >
+                                <PhotoCamera
+                                  color={e.isPhoto ? "primary" : "disabled"}
+                                  style={{
+                                    fontSize: "55px",
+                                    marginLeft: "15px",
+                                  }}
+                                />
+                              </IconButton>
+
+                              <IonLabel
+                                className="delivery-time"
+                                color="primary"
+                              >
+                                {e.isPhoto ? (
+                                  <div className="delivery-time-span">
+                                    {e.time}
+                                  </div>
+                                ) : (
+                                  <></>
+                                )}
+                              </IonLabel>
+                            </div>
+                          </IonItem>
+                        </IonItem>
+                      );
+                    })}
+                  </IonList>
+                </IonItem>
+              </IonCol>
+            </IonRow>
+          </div>
+        ) : (
+          <div>
+            <IonItem lines="none">
+              <IonLabel>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "types" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("types");
+                  }}
+                >
+                  Typy
+                </IonButton>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "area" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("area");
+                  }}
+                >
+                  Rejony
+                </IonButton>
+              </IonLabel>
+            </IonItem>
+            <IonItem lines="none" style={{ textAlign: "center" }}>
               <IonLabel>
                 <span>Wybrany dzień: </span>
 
@@ -331,7 +511,9 @@ const Day: React.FC = () => {
                   onClick={() => {
                     setShowCalendar(true);
                   }}
-                >{chooseDate}</span>
+                >
+                  {chooseDate}
+                </span>
 
                 <IonIcon
                   style={{
@@ -349,79 +531,77 @@ const Day: React.FC = () => {
               </IonLabel>
             </IonItem>
 
-        <IonItem
-        lines="none"
-          style={{
-            height: "394px",
-          }}
-        >
-          {GraphSelectMemo}
-        </IonItem>
-
-        
-        <IonList>
-        {deliveryArray.map((e) => {
-              return (
-                <IonItem className="day-item" button onClick={() => {}}>
-                  <IonLabel className="delivery-info-item">
-                    <div style={{ display: "flex" }}>
-                      <IonLabel>
-                        <div className="address">
-                          <div className="street">{e.address}</div>
-                          <div className="town-post">{e.address2}</div>
-                        </div>
-                      </IonLabel>
-                    </div>
-                    {e.diets.map((_e) => {
-                      return (
-                        <IonList lines="none">
-                          <IonLabel className="diet-item">
-                            <IonItem
-                              style={{
-                                "--padding-start": "0px",
-                                "--min-height": "0px",
-                              }}
-                            >
-                              <IonIcon src={chevronForwardOutline} />
-                              <div>{_e}</div>
-                            </IonItem>
-                          </IonLabel>
-                        </IonList>
-                      );
-                    })}
-                  </IonLabel>
-                  <IonItem lines="none">
-                    <div className="icon-time">
-                      <IconButton
-                        id="open-modal"
-                        onClick={() => {
-                          setShowOrderPhoto(true);
-                        }}
-                      >
-                        <PhotoCamera
-                          color={e.isPhoto ? "primary" : "disabled"}
-                          style={{
-                            fontSize: "55px",
-                            marginLeft: "15px",
+            <IonItem
+              lines="none"
+              style={{
+                height: "394px",
+              }}
+            >
+              <GraphSelect />
+            </IonItem>
+            <IonList>
+              {deliveryArray.map((e) => {
+                return (
+                  <IonItem className="day-item" style={{ maxWidth: "600px" }}>
+                    <IonLabel className="delivery-info-item">
+                      <div style={{ display: "flex" }}>
+                        <IonLabel>
+                          <div className="address">
+                            <div className="street">{e.address}</div>
+                            <div className="town-post">{e.address2}</div>
+                          </div>
+                        </IonLabel>
+                      </div>
+                      {e.diets.map((_e) => {
+                        return (
+                          <IonList lines="none">
+                            <IonLabel className="diet-item">
+                              <IonItem
+                                style={{
+                                  "--padding-start": "0px",
+                                  "--min-height": "0px",
+                                }}
+                              >
+                                <IonIcon src={chevronForwardOutline} />
+                                <div>{_e}</div>
+                              </IonItem>
+                            </IonLabel>
+                          </IonList>
+                        );
+                      })}
+                    </IonLabel>
+                    <IonItem lines="none">
+                      <div className="icon-time">
+                        <IconButton
+                          id="open-modal"
+                          onClick={() => {
+                            setShowOrderPhoto(true);
                           }}
-                        />
-                      </IconButton>
+                        >
+                          <PhotoCamera
+                            color={e.isPhoto ? "primary" : "disabled"}
+                            style={{
+                              fontSize: "55px",
+                              marginLeft: "15px",
+                            }}
+                          />
+                        </IconButton>
 
-                      <IonLabel className="delivery-time" color="primary">
-                        {e.isPhoto ? (
-                          <div className="delivery-time-span">{e.time}</div>
-                        ) : (
-                          <></>
-                        )}
-                      </IonLabel>
-                    </div>
+                        <IonLabel className="delivery-time" color="primary">
+                          {e.isPhoto ? (
+                            <div className="delivery-time-span">{e.time}</div>
+                          ) : (
+                            <></>
+                          )}
+                        </IonLabel>
+                      </div>
+                    </IonItem>
                   </IonItem>
-                </IonItem>
-              );
-            })}
-          
-          
-        </IonList>
+                );
+              })}
+            </IonList>
+          </div>
+        )}
       </IonContent>
     </IonPage>
   );

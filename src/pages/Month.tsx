@@ -44,6 +44,9 @@ import {
   IonToolbar,
   IonVirtualScroll,
   NavContext,
+  isPlatform,
+  IonRow,
+  IonCol,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
 import "./Month.scss";
@@ -54,19 +57,73 @@ import { Chart as ChartJS, registerables } from "chart.js";
 import { Doughnut, Bar, PolarArea } from "react-chartjs-2";
 ChartJS.register(...registerables);
 const barData = {
-  labels: ["Sobota", "Piątek", "Czwartek", "Środa", "Wtorek", "Poniedziałek"],
+  labels: [
+    "Niedziela",
+    "Sobota",
+    "Piątek",
+    "Czwartek",
+    "Środa",
+    "Wtorek",
+    "Poniedziałek",
+    "Niedziela",
+    "Sobota",
+    "Piątek",
+    "Czwartek",
+    "Środa",
+    "Wtorek",
+    "Poniedziałek",
+    "Niedziela",
+    "Sobota",
+    "Piątek",
+    "Czwartek",
+    "Środa",
+    "Wtorek",
+    "Poniedziałek",
+    "Niedziela",
+    "Sobota",
+    "Piątek",
+    "Czwartek",
+    "Środa",
+    "Wtorek",
+    "Poniedziałek",
+  ],
   date: [
+    "28.06.2022",
+    "27.06.2022",
+    "26.06.2022",
+    "25.06.2022",
+    "24.06.2022",
+    "23.06.2022",
+    "22.06.2022",
+    "21.06.2022",
+    "20.06.2022",
+    "19.06.2022",
+    "18.06.2022",
+    "17.06.2022",
+    "16.06.2022",
+    "15.06.2022",
     "14.06.2022",
     "13.06.2022",
     "12.06.2022",
     "11.06.2022",
     "10.06.2022",
     "09.06.2022",
+    "08.06.2022",
+    "07.06.2022",
+    "06.06.2022",
+    "05.06.2022",
+    "04.06.2022",
+    "03.06.2022",
+    "02.06.2022",
+    "01.06.2022",
   ],
   datasets: [
     {
       label: "Ilość",
-      data: [534, 299, 887, 230, 333, 443],
+      data: [
+        230, 333, 534, 612, 299, 887, 333, 443, 534, 299, 810, 299, 764, 230,
+        333, 443, 600, 230, 333, 443, 230, 333, 443, 534, 299, 534, 299, 650
+      ],
       backgroundColor: [
         "#17b2d9",
         "#ffbb11",
@@ -74,6 +131,21 @@ const barData = {
         "#80Ab10",
         "#10FA95",
         "#eef234",
+        "#42794c",
+        "#bb876c",
+        "#b18785",
+        "#98def3",
+        "#b6c9e5",
+        "#70aaba",
+        "#0c41ae",
+        "#e0f4f8",
+        "#26aeca",
+        "#0c3151",
+        "#ce4761",
+        "#4083f0",
+        "#9d9565",
+        "#9728a2",
+        "#048f15",
       ],
     },
   ],
@@ -122,8 +194,12 @@ const Month: React.FC = () => {
     setdoughnutChartData(doughnutData);
   }, []);
 
-  const GraphSelect = () => {
-    switch (whichGraph) {
+  type GraphSelectType = {
+    defaultGraph?: string;
+  };
+
+  const GraphSelect: React.FC<GraphSelectType> = ({ defaultGraph }) => {
+    switch (defaultGraph ? defaultGraph : whichGraph) {
       case "area":
         if (polarChartData) {
           return (
@@ -201,88 +277,142 @@ const Month: React.FC = () => {
           </IonButtons>
           <IonTitle>Czerwiec, 06.2022</IonTitle>
           <IonButtons slot="end">
-          <IonButton onClick={() => {
+            <IonButton
+              onClick={() => {
+                const bodyClasses = document.querySelector("body");
 
-            const bodyClasses = document.querySelector("body");
-
-            if(bodyClasses?.classList.contains("dark"))
-            {
-              document.body.classList.remove("dark");
-            }
-            else
-            {
-              document.body.classList.add("dark")
-            }
-
-          }} style={{marginRight: "15px"}}><IonIcon icon={moon}/></IonButton>
-        </IonButtons>
+                if (bodyClasses?.classList.contains("dark")) {
+                  document.body.classList.remove("dark");
+                } else {
+                  document.body.classList.add("dark");
+                }
+              }}
+              style={{ marginRight: "15px" }}
+            >
+              <IonIcon icon={moon} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonItem>
-          <IonLabel>
-            <IonButton
-              shape="round"
-              fill={whichGraph === "amount" ? "solid" : "outline"}
-              color={"tertiary"}
-              className="graph-button"
-              onClick={() => {
-                setWhichGraph("amount");
+      <IonItem lines="none" style={{textAlign: "center"}}>
+              <IonLabel>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "amount" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("amount");
+                  }}
+                >
+                  Ilość
+                </IonButton>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "types" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("types");
+                  }}
+                >
+                  Typy
+                </IonButton>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "area" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("area");
+                  }}
+                >
+                  Rejony
+                </IonButton>
+              </IonLabel>
+            </IonItem>
+        {!isPlatform("mobile") ? (
+         <div>
+         <IonRow className="ion-justify-content-center">
+           <IonCol sizeMd="auto" size="12">
+             <IonItem
+               className="graph"
+               lines="none"
+               style={{
+                 height: "750px",
+                 width: "750px",
+               }}
+             >
+               <GraphSelect />
+             </IonItem>
+           </IonCol>
+           <IonCol sizeMd="auto" size="12">
+             <IonItem style={{ maxHeight: "750px", overflow: "auto" }}>
+               <IonList className="days-list" lines="none">
+                 {barData.labels.map((e, i) => {
+                   return barData.datasets[0].data[i] > 0 ? (
+                     <IonItem
+                       className="day-item"
+                       style={{ width: "400px" }}
+                       button
+                       onClick={() => {
+                         navigate("/day", "forward", "push");
+                       }}
+                     >
+                       <IonLabel>
+                         <div
+                           style={{
+                             fontSize: "24px",
+                             fontWeight: "550",
+                             paddingBottom: "5px",
+                           }}
+                         >
+                           {e}
+                         </div>
+                         <div style={{ opacity: "0.5" }}>
+                           {barData.date[i]}
+                         </div>
+                       </IonLabel>
+                       <IonItem className="diet-number">
+                         <IonLabel>
+                           <div
+                             style={{ textAlign: "right", fontSize: "20px" }}
+                           >
+                             {barData.datasets[0].data[i]}
+                           </div>
+                         </IonLabel>
+                       </IonItem>
+                     </IonItem>
+                   ) : (
+                     <></>
+                   );
+                 })}
+               </IonList>
+             </IonItem>
+           </IonCol>
+         </IonRow>
+       </div>
+        ) : (
+          <div>
+            
+
+            <IonItem
+              className="graph"
+              lines="none"
+              style={{
+                height: "392.727px",
+                width: "392.727px",
               }}
             >
-              Ilość
-            </IonButton>
-            <IonButton
-              shape="round"
-              fill={whichGraph === "types" ? "solid" : "outline"}
-              color={"tertiary"}
-              className="graph-button"
-              onClick={() => {
-                setWhichGraph("types");
-              }}
-            >
-              Typy
-            </IonButton>
-            <IonButton
-              shape="round"
-              fill={whichGraph === "area" ? "solid" : "outline"}
-              color={"tertiary"}
-              className="graph-button"
-              onClick={() => {
-                setWhichGraph("area");
-              }}
-            >
-              Rejony
-            </IonButton>
-          </IonLabel>
-        </IonItem>
-
-        <IonItem
-          style={{
-            height: "394px",
-          }}
-        >
-          <GraphSelect />
-        </IonItem>
-
-        
-
+              <GraphSelect />
+            </IonItem>
         <IonList className="days-list" lines="none">
-          <IonItem className="list-header">
-            <IonLabel>
-              <div style={{ textAlign: "left", marginLeft: "5px" }}>Dzień</div>
-            </IonLabel>
-            <IonLabel>
-              <div style={{ textAlign: "right", marginRight: "5px" }}>
-                Ilość wydanych diet
-              </div>
-            </IonLabel>
-          </IonItem>
-
           {barData.labels.map((e, i) => {
             return (
               <IonItem
                 className="day-item"
+                style={{ maxWidth: "600px" }}
                 button
                 onClick={() => {
                   navigate("/day", "forward", "push");
@@ -303,6 +433,10 @@ const Month: React.FC = () => {
             );
           })}
         </IonList>
+          </div>
+        )}
+
+       
       </IonContent>
     </IonPage>
   );
