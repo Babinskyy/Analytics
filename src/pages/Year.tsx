@@ -265,7 +265,7 @@ const Year: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonItem lines="none" style={{textAlign: "center"}}>
+        <IonItem lines="none" style={{textAlign: !isPlatform("mobile") ? "center" : "left"}}>
           <IonLabel>
             <IonButton
               shape="round"
@@ -307,7 +307,7 @@ const Year: React.FC = () => {
             <IonRow className="ion-justify-content-center">
               <IonCol sizeMd="auto" size="12">
                 <IonItem
-                  className="graph"
+                  
                   lines="none"
                   style={{
                     height: "750px",

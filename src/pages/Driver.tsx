@@ -40,6 +40,7 @@ import {
   IonButton,
   IonButtons,
   IonCheckbox,
+  IonCol,
   IonContent,
   IonDatetime,
   IonFab,
@@ -53,6 +54,7 @@ import {
   IonListHeader,
   IonModal,
   IonPage,
+  IonRow,
   IonTitle,
   IonToolbar,
   isPlatform,
@@ -144,9 +146,44 @@ const Driver: React.FC = () => {
     {
       address: "Leśny stok 25/13",
       address2: "Gdańsk 80-256",
-      diets: ["wege-1500-kcal", "slim-2000-kcal", "sport-2500-kcal"],
-      time: "15:11",
+      diets: ["wege-1500-kcal", "dieta cud-1500 kcal", "sport-2500-kcal"],
+      time: "16:11",
       isPhoto: false,
+    },
+    {
+      address: "Jagodowa 4/12",
+      address2: "Gdańsk 80-256",
+      diets: ["wege-1500-kcal"],
+      time: "16:33",
+      isPhoto: true,
+    },
+    {
+      address: "Borówkowa 31/1",
+      address2: "Gdańsk 80-256",
+      diets: ["keto-1500 kcal-low carb", "sport-2500-kcal"],
+      time: "16:47",
+      isPhoto: false,
+    },
+    {
+      address: "Sujkowskiego 1/14",
+      address2: "Gdańsk 80-256",
+      diets: ["slim-1200 kcal-low ig", "slim-2000-kcal", "sport-2500-kcal"],
+      time: "16:59",
+      isPhoto: false,
+    },
+    {
+      address: "Kulerskiego 6/42",
+      address2: "Grudziądz 86-300",
+      diets: ["sport-2500-kcal"],
+      time: "17:21",
+      isPhoto: true,
+    },
+    {
+      address: "Sosnkowskiego 6f/1",
+      address2: "Gdańsk 80-256",
+      diets: ["wege-1500-kcal", "slim-2000-kcal"],
+      time: "17:44",
+      isPhoto: true,
     },
   ];
 
@@ -346,6 +383,26 @@ const Driver: React.FC = () => {
             />
           );
         } else return <></>;
+        case "route":
+          if (lineChartData) {
+            return (
+              <Line
+                data={lineChartData}
+                options={{
+                  plugins: {
+                    title: {
+                      display: true,
+                      text: "Performarance",
+                    },
+                    legend: {
+                      display: true,
+                      position: "bottom",
+                    },
+                  },
+                }}
+              />
+            );
+          } else return <></>;
       default:
         return <></>;
     }
@@ -516,7 +573,7 @@ const Driver: React.FC = () => {
           whichGraph === "comments" ? (
             <div>
               <IonItem
-              style={{width: "500px"}}
+                style={{ width: "500px" }}
                 className="day-item"
                 button
                 onClick={() => {
@@ -586,7 +643,11 @@ const Driver: React.FC = () => {
               <IonList>
                 {commentsArray.map((e) => {
                   return (
-                    <IonItem className="day-item" lines="none" style={{width: "500px"}}>
+                    <IonItem
+                      className="day-item"
+                      lines="none"
+                      style={{ width: "500px" }}
+                    >
                       <IonLabel>
                         <IonLabel
                           style={{
@@ -667,6 +728,407 @@ const Driver: React.FC = () => {
                   );
                 })}
               </IonList>
+            </div>
+          ) : whichGraph === "tacki" ? (
+            <div>
+              <IonItem lines="none" style={{ textAlign: "center" }}>
+                <IonLabel>
+                  <span>Łącznie zniszczonych tacek:</span>
+
+                  <span
+                    style={{
+                      fontSize: "35px",
+                      marginLeft: "5px",
+                      color: "#5260ff",
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    54
+                  </span>
+                </IonLabel>
+              </IonItem>
+              <IonRow className="ion-justify-content-center">
+                <IonCol sizeMd="auto" size="12">
+                  <IonItem
+                    lines="none"
+                    style={{
+                      height: "750px",
+                      width: "750px",
+                    }}
+                  >
+                    <GraphSelect />
+                  </IonItem>
+                </IonCol>
+                <IonCol sizeMd="auto" size="12">
+                  <IonItem
+                    className="day-item"
+                    button
+                    style={{ width: "400px" }}
+                    onClick={() => {
+                      presentAlert({
+                        header: "Wprowadź zniszczone tacki",
+                        buttons: [
+                          {
+                            text: "OK",
+                            handler(value) {
+                              setTackiArray([
+                                ...tackiArray,
+                                {
+                                  tacka: value[0],
+                                  howMany: value[1],
+                                  name: value[2],
+                                },
+                              ]);
+                            },
+                          },
+                        ],
+                        inputs: [
+                          {
+                            placeholder: "Nazwa diety",
+                            type: "search",
+                            attributes: {
+                              maxlength: 50,
+                            },
+                          },
+                          {
+                            placeholder: "ilość zniszczonych tacek",
+                            type: "search",
+                            attributes: {
+                              maxlength: 50,
+                            },
+                          },
+                          {
+                            placeholder: "Imię",
+                            attributes: {
+                              maxlength: 15,
+                            },
+                          },
+                        ],
+                      });
+                    }}
+                  >
+                    <IonLabel style={{ overflow: "visible" }}>
+                      <span
+                        style={{
+                          fontSize: "22px",
+                        }}
+                      >
+                        Dodaj zniszczenie tacki
+                      </span>
+                    </IonLabel>
+
+                    <IonLabel
+                      style={{
+                        textAlign: "right",
+                      }}
+                    >
+                      <Add
+                        style={{
+                          fontSize: "40px",
+                        }}
+                      />
+                    </IonLabel>
+                  </IonItem>
+                  <IonItem style={{ maxHeight: "750px", overflow: "auto" }}>
+                    <IonList>
+                      {tackiArray.map((e) => {
+                        return (
+                          <IonItem
+                            className="day-item"
+                            lines="none"
+                            style={{
+                              width: "400px",
+                              boxShadow: " rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                            }}
+                          >
+                            <IonLabel>
+                              <IonLabel
+                                style={{
+                                  "white-space": "normal",
+                                }}
+                              >
+                                <div className="street">
+                                  {e.tacka} x {e.howMany}
+                                </div>
+                              </IonLabel>
+                            </IonLabel>
+                            <IonItem
+                              className="diet-number"
+                              style={{ "--inner-padding-end": "0" }}
+                            >
+                              <IonLabel style={{ textAlign: "right" }}>
+                                <IconButton
+                                  style={{ color: "black" }}
+                                  onClick={() =>
+                                    presentAlert({
+                                      header: `Czy na pewno chcesz usunąć?`,
+
+                                      cssClass: "custom-alert",
+                                      buttons: [
+                                        {
+                                          text: "Nie",
+                                          cssClass: "alert-button-cancel",
+                                        },
+                                        {
+                                          text: "Tak",
+                                          cssClass: "alert-button-confirm",
+                                          handler: () => {
+                                            let _tempTackiArray = tackiArray;
+                                            _tempTackiArray.splice(
+                                              tackiArray.indexOf(e),
+                                              1
+                                            );
+                                            setTackiArray([..._tempTackiArray]);
+                                          },
+                                        },
+                                      ],
+                                    })
+                                  }
+                                >
+                                  <HighlightOffOutlinedIcon />
+                                </IconButton>
+
+                                <IonItem
+                                  lines="none"
+                                  style={{ textAlign: "right" }}
+                                >
+                                  <IonLabel>
+                                    <div className="town-post">15.07.2022</div>
+                                    <div
+                                      className="town-post"
+                                      style={{ textAlign: "center" }}
+                                    >
+                                      {e.name}
+                                    </div>
+                                  </IonLabel>
+                                </IonItem>
+                              </IonLabel>
+                            </IonItem>
+                          </IonItem>
+                        );
+                      })}
+                    </IonList>
+                  </IonItem>
+                </IonCol>
+              </IonRow>
+            </div>
+          ) : whichGraph === "route" ? (
+            <div>
+              <IonItem lines="none" style={{ textAlign: "center" }}>
+                <IonLabel>
+                  <span>Wybrany dzień: </span>
+
+                  <span
+                    style={{ color: "#5260ff", fontWeight: "600" }}
+                    onClick={() => {
+                      setShowCalendar(true);
+                    }}
+                  >
+                    {chooseDate}
+                  </span>
+
+                  <IonIcon
+                    style={{
+                      fontSize: "30px",
+                      marginLeft: "5px",
+                      verticalAlign: "middle",
+
+                      color: "#5260ff",
+                    }}
+                    icon={calendarOutline}
+                    onClick={() => {
+                      setShowCalendar(true);
+                    }}
+                  />
+                </IonLabel>
+              </IonItem>
+              <IonRow className="ion-justify-content-center">
+              <IonCol sizeMd="auto" size="12">
+              <IonItem
+                  
+                  lines="none"
+                  style={{
+                    width: "1000px",
+                    
+                  }}
+                >
+                  <GraphSelect />
+                </IonItem>
+                </IonCol>
+                <IonCol sizeMd="auto" size="12">
+              
+                  <IonItem style={{ maxHeight: "500px", overflow: "auto" }}><IonList>{deliveryArray.map((e) => {
+                return (
+                  <IonItem className="day-item" button style={{ width: "450px" }}>
+                    <IonLabel className="delivery-info-item">
+                      <div style={{ display: "flex" }}>
+                        <IonLabel>
+                          <div className="address">
+                            <div className="street">{e.address}</div>
+                            <div className="town-post">{e.address2}</div>
+                          </div>
+                        </IonLabel>
+                      </div>
+                      {e.diets.map((_e) => {
+                        return (
+                          <IonList lines="none">
+                            <IonLabel className="diet-item">
+                              <IonItem
+                                style={{
+                                  "--padding-start": "0px",
+                                  "--min-height": "0px",
+                                }}
+                              >
+                                <IonIcon src={chevronForwardOutline} />
+                                <div>{_e}</div>
+                              </IonItem>
+                            </IonLabel>
+                          </IonList>
+                        );
+                      })}
+                    </IonLabel>
+                    <IonItem lines="none">
+                      <div className="icon-time">
+                        <IconButton
+                          id="open-modal"
+                          onClick={() => {
+                            setShowOrderPhoto(true);
+                          }}
+                        >
+                          <PhotoCamera
+                            color={e.isPhoto ? "primary" : "disabled"}
+                            style={{
+                              fontSize: "55px",
+                              marginLeft: "15px",
+                            }}
+                          />
+                        </IconButton>
+
+                        <IonLabel className="delivery-time" color="primary">
+                          {e.isPhoto ? (
+                            <div className="delivery-time-span">{e.time}</div>
+                          ) : (
+                            <></>
+                          )}
+                        </IonLabel>
+                      </div>
+                    </IonItem>
+                  </IonItem>
+                );
+              })}</IonList></IonItem></IonCol></IonRow>
+              
+            </div>
+          ) : whichGraph === "kilometers" ? (
+            <div>
+              <IonRow className="ion-justify-content-center">
+              <IonCol sizeMd="auto" size="12">
+              <IonItem
+                lines="none"
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                <IonLabel>
+                  <span style={{}}>Łącznie przejechanych kilometrów:</span>
+
+                  <span
+                    style={{
+                      fontSize: "35px",
+                      marginLeft: "5px",
+                      color: "#5260ff",
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    {barData.datasets[0].data.reduce(function (x, y) {
+                      return x + y;
+                    })}
+                  </span>
+                </IonLabel>
+              </IonItem>
+              <IonItem
+                lines="none"
+                style={{
+                  height: "750px",
+                  width: "750px",
+                }}
+              >
+                <GraphSelect />
+              </IonItem>
+              </IonCol>
+              <IonCol sizeMd="auto" size="12">
+              <IonItem
+                lines="none"
+                style={{
+                  textAlign: "center",
+                }}
+                >
+                <IonLabel>
+                  <span>Średnia długość trasy:</span>
+                  <span
+                    style={{
+                      color: "#5260ff",
+                      fontSize: "35px",
+                      marginLeft: "10px",
+                      verticalAlign: "middle",
+                    }}
+                    >
+                    {averageKilometersSum} km
+                  </span>
+                </IonLabel>
+              </IonItem>
+
+              <IonItem lines="none" style={{ maxHeight: "750px", overflow: "auto" }}>
+                <IonList>
+                  {barChartData?.labels
+                    .filter((e, i) => {
+                      if (barData.datasets[0].data[i] > 0) {
+                        return e;
+                      }
+                    })
+                    .map((e, i) => {
+                      return (
+                        <IonItem className="day-item" lines="none" style={{ width: "400px" }}>
+                          <IonLabel
+                            style={{
+                              "white-space": "normal",
+                            }}
+                          >
+                            <div className="street">{e}</div>
+                          </IonLabel>
+
+                          <IonLabel
+                            style={{ textAlign: "right", fontSize: "20px" }}
+                          >
+                            <IonLabel>
+                              <span
+                                style={{
+                                  fontSize: "15px",
+                                  opacity: "0.5",
+                                  marginBottom: "2px",
+                                }}
+                              >
+                                Łącznie:{" "}
+                              </span>
+                              {barData.datasets[0].data[i]}
+                            </IonLabel>
+                            <IonLabel>
+                              <span
+                                style={{ fontSize: "15px", opacity: "0.5" }}
+                              >
+                                Średnio:{" "}
+                              </span>
+                              {Math.round(barData.datasets[0].data[i] / 20)}
+                            </IonLabel>
+                          </IonLabel>
+                        </IonItem>
+                      );
+                    })}
+                </IonList>
+              </IonItem>
+              </IonCol>
+              </IonRow>
+              
+                    
             </div>
           ) : (
             <></>
