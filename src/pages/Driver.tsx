@@ -16,6 +16,7 @@ import {
   menuOutline,
   moon,
   reorderFourOutline,
+  searchOutline,
 } from "ionicons/icons";
 import {
   Button,
@@ -356,6 +357,7 @@ const Driver: React.FC = () => {
   const [searchDescriptionValue, setSearchDescriptionValue] =
     useState<string>("");
   const [searchNameValue, setSearchNameValue] = useState<string>("");
+  const [searchAllValue, setSearchAllValue] = useState<string>("");
 
   useEffect(() => {
     setTackiBarChartData(tackiBarData);
@@ -676,104 +678,90 @@ const Driver: React.FC = () => {
                   />
                 </IonLabel>
               </IonItem>
+
               <IonItem
                 className="day-item"
                 lines="none"
                 style={{ width: "500px" }}
               >
                 <IonLabel>
-                  <IonLabel
-                    style={{
-                      "white-space": "normal",
-                      marginBottom: "5px",
-                      paddingTop: "5px",
-                    }}
-                  >
-                    <TextField
-                      autoComplete="off"
-                      label="Tytuł"
-                      onChange={(e) => {
-                        setSearchTitleValue(e.target.value);
-                      }}
-                    />
-                  </IonLabel>
-
-                  <IonLabel>
-                    <IonLabel
-                      style={{
-                        "white-space": "normal",
-                        paddingTop: "5px",
-                      }}
-                    >
-                      <TextField
-                        autoComplete="off"
-                        label="Opis"
-                        onChange={(e) => {
-                          setSearchDescriptionValue(e.target.value);
-                        }}
-                      />
+                  <IonItem lines="none" style={{ textAlign: "center" }}>
+                    <IonLabel>
+                      <span>
+                        Wyszukiwarka
+                        <IonIcon
+                          style={{
+                            fontSize: "20px",
+                            verticalAlign: "middle",
+                            marginLeft: "3px",
+                          }}
+                          icon={searchOutline}
+                        />
+                      </span>
                     </IonLabel>
-                  </IonLabel>
-                </IonLabel>
-
-                <IonLabel
-                  className="diet-number"
-                  style={{ "--inner-padding-end": "0", textAlign: "right" }}
-                >
-                  <IonLabel style={{ textAlign: "center", padding: "19px" }}>
-                    <IonIcon
-                      style={{
-                        fontSize: "30px",
-                        marginLeft: "5px",
-                        verticalAlign: "middle",
-
-                        color: "#5260ff",
-                      }}
-                      icon={calendarOutline}
-                      onClick={() => {
-                        setShowCalendar(true);
-                      }}
-                    />
-                  </IonLabel>
-                  <IonLabel
-                    style={{
-                      paddingTop: "5px",
-                    }}
+                  </IonItem>
+                  <IonItem
+                    class="ion-no-padding"
+                    lines="none"
+                    style={{ "--inner-padding-end": "0" }}
                   >
-                    <TextField
-                      autoComplete="off"
-                      label="Imię"
-                      onChange={(e) => {
-                        setSearchNameValue(e.target.value);
-                      }}
-                    />
-                  </IonLabel>
-                </IonLabel>
-              </IonItem>
-              <IonItem
-                className="day-item"
-                lines="none"
-                style={{ width: "500px" }}
-              >
-                <IonLabel>
-                  <IonLabel>
-                    
-                      <IonLabel>1</IonLabel>
-                    
-                    
-                      <IonLabel>2</IonLabel>
-                    
-                  </IonLabel>
-                  <IonLabel className="diet-number"
-                  style={{ "--inner-padding-end": "0", textAlign: "right" }}>
-                    
-                      <IonLabel>3</IonLabel>
-                    
-                    
-                      <IonLabel>4</IonLabel>
-                    
-                  </IonLabel>
-                  <IonLabel style={{textAlign: 'center'}}>button</IonLabel>
+                    <IonLabel style={{ paddingRight: "10px" }}>
+                      <IonLabel
+                        style={{
+                          marginBottom: "5px",
+                        }}
+                      >
+                        <TextField
+                          autoComplete="off"
+                          label="Tytuł"
+                          onChange={(e) => {
+                            setSearchTitleValue(e.target.value);
+                          }}
+                        />
+                      </IonLabel>
+
+                      <IonLabel
+                        style={{
+                          paddingTop: "5px",
+                        }}
+                      >
+                        <TextField
+                          autoComplete="off"
+                          label="Opis"
+                          onChange={(e) => {
+                            setSearchDescriptionValue(e.target.value);
+                          }}
+                        />
+                      </IonLabel>
+                    </IonLabel>
+                    <IonLabel style={{ paddingLeft: "10px" }}>
+                      <IonLabel
+                        style={{ textAlign: "center", padding: "19px" }}
+                      >
+                        <IonIcon
+                          style={{
+                            fontSize: "30px",
+                            verticalAlign: "middle",
+                            color: "#5260ff",
+                          }}
+                          icon={calendarOutline}
+                          onClick={() => {
+                            setShowCalendar(true);
+                          }}
+                        />
+                      </IonLabel>
+
+                      <IonLabel style={{}}>
+                        <TextField
+                          autoComplete="off"
+                          label="Imię"
+                          onChange={(e) => {
+                            setSearchNameValue(e.target.value);
+                          }}
+                        />
+                      </IonLabel>
+                    </IonLabel>
+                  </IonItem>
                 </IonLabel>
               </IonItem>
 
@@ -841,7 +829,7 @@ const Driver: React.FC = () => {
                                   "white-space": "normal",
                                 }}
                               >
-                                {e.description}
+                                <span> {e.description}</span>
                               </IonLabel>
                             </IonItem>
                           </IonLabel>
@@ -1424,7 +1412,7 @@ const Driver: React.FC = () => {
                                 "white-space": "normal",
                               }}
                             >
-                              {e.description}
+                              <span>{e.description}</span>
                             </IonLabel>
                           </IonItem>
                         </IonLabel>
