@@ -350,6 +350,9 @@ const Driver: React.FC = () => {
   const [commentsArray, setCommentsArray] =
     useState<CommentsArrayType[]>(_commentsArray);
 
+  const [commentsArrayDisplay, setCommentsArrayDisplay] =
+    useState<CommentsArrayType[]>(_commentsArray);
+
   const [tackiArray, setTackiArray] = useState<TackiArrayType[]>(_tackiArray);
   const [kilometersSum, setKilometersSum] = useState<number>(0);
 
@@ -372,6 +375,49 @@ const Driver: React.FC = () => {
   useEffect(() => {
     setLineChartData(lineData);
   }, []);
+
+
+  useEffect(() => {
+
+    let tempCommentsArray = commentsArray;
+    tempCommentsArray = tempCommentsArray.filter((e) => {
+      if (
+        searchTitleValue == "" &&
+        searchDescriptionValue == "" &&
+        searchNameValue == ""
+      ) {
+        return e;
+      } else if (
+        e.title
+          .toLowerCase()
+          .includes(searchTitleValue.toLowerCase()) &&
+        searchDescriptionValue == "" &&
+        searchNameValue == ""
+      ) {
+        return e;
+      } else if (
+        e.description
+          .toLowerCase()
+          .includes(searchDescriptionValue.toLowerCase()) &&
+        searchTitleValue == "" &&
+        searchNameValue == ""
+      ) {
+        return e;
+      } else if (
+        e.name
+          .toLowerCase()
+          .includes(searchNameValue.toLowerCase()) &&
+        searchTitleValue == "" &&
+        searchDescriptionValue == ""
+      ) {
+        return e;
+      }
+    })
+
+    setCommentsArrayDisplay(tempCommentsArray);
+
+  }, [searchTitleValue, searchNameValue, searchDescriptionValue])
+
 
   const GraphSelect = () => {
     switch (whichGraph) {
@@ -766,40 +812,7 @@ const Driver: React.FC = () => {
               </IonItem>
 
               <IonList>
-                {commentsArray
-                  .filter((e) => {
-                    if (
-                      searchTitleValue == "" &&
-                      searchDescriptionValue == "" &&
-                      searchNameValue == ""
-                    ) {
-                      return e;
-                    } else if (
-                      e.title
-                        .toLowerCase()
-                        .includes(searchTitleValue.toLowerCase()) &&
-                      searchDescriptionValue == "" &&
-                      searchNameValue == ""
-                    ) {
-                      return e;
-                    } else if (
-                      e.description
-                        .toLowerCase()
-                        .includes(searchDescriptionValue.toLowerCase()) &&
-                      searchTitleValue == "" &&
-                      searchNameValue == ""
-                    ) {
-                      return e;
-                    } else if (
-                      e.name
-                        .toLowerCase()
-                        .includes(searchNameValue.toLowerCase()) &&
-                      searchTitleValue == "" &&
-                      searchDescriptionValue == ""
-                    ) {
-                      return e;
-                    }
-                  })
+                {commentsArrayDisplay
                   .map((e) => {
                     return (
                       <IonItem
