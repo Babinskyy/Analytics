@@ -238,9 +238,6 @@ const Day: React.FC = () => {
     }
   };
 
-  const GraphSelectMemo = useMemo(() => {
-    return <GraphSelect />;
-  }, [whichGraph]);
 
   return (
     <IonPage>
