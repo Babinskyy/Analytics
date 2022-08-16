@@ -476,7 +476,7 @@ const Driver: React.FC = () => {
                 plugins: {
                   title: {
                     display: true,
-                    text: "Performarance",
+                    text: "Performance",
                   },
                   legend: {
                     display: true,
