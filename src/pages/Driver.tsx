@@ -80,6 +80,7 @@ import { height, width } from "@mui/system";
 
 import { format, parseISO } from "date-fns";
 import plLocale from "date-fns/locale/pl";
+import Header from "../components/Header";
 
 ChartJS.register(...registerables);
 
@@ -515,30 +516,8 @@ const Driver: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton />
-          </IonButtons>
-          <IonTitle slot="start">Statystyki kierowcy 96</IonTitle>
-          <IonButtons slot="end">
-            <IonButton
-              onClick={() => {
-                const bodyClasses = document.querySelector("body");
 
-                if (bodyClasses?.classList.contains("dark")) {
-                  document.body.classList.remove("dark");
-                } else {
-                  document.body.classList.add("dark");
-                }
-              }}
-              style={{ marginRight: "15px" }}
-            >
-              <IonIcon icon={moon} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <Header type="drivers" />
 
       <IonModal
         className="modal-image"
@@ -604,8 +583,20 @@ const Driver: React.FC = () => {
       </IonModal>
 
       <IonContent fullscreen>
-        <IonItem lines="none">
-          <IonLabel>
+
+      <div
+          style={{
+            position: "sticky",
+            top: "0",
+            zIndex: 3,
+            paddingTop: "10px",
+            background: "white",
+          }}
+        >
+
+<IonRow className="ion-justify-content-center">
+            <IonCol size="auto">
+            <IonLabel>
             <IonButton
               shape="round"
               fill={whichGraph === "route" ? "solid" : "outline"}
@@ -651,7 +642,11 @@ const Driver: React.FC = () => {
               Uwagi
             </IonButton>
           </IonLabel>
-        </IonItem>
+            </IonCol>
+            </IonRow>
+
+        </div>
+
 
         {!isPlatform("mobile") ? (
           whichGraph === "comments" ? (

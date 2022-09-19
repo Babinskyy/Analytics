@@ -25,3 +25,27 @@
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
 }
+
+
+// ion-breadcrumbs ion-breadcrumb.breadcrumb-active::part(separator)
+// {
+//     visibility: hidden;
+// }
+
+ion-breadcrumbs ion-breadcrumb.breadcrumb-active
+{
+    font-weight: 700;
+    color: rgb(82, 96, 255);
+}
+
+ion-modal.modal-image {
+    --height: auto;
+    --width: auto;
+}
+// ion-modal.modal-image::part(content) {
+// 	border-top-left-radius: 13px;
+// 	border-top-right-radius: 13px;
+// }
+ion-modal.modal-image ion-img {
+    height: 90vh;
+}

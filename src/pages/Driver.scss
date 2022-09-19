@@ -63,16 +63,3 @@ body.dark .month {
     color: #5260ff;
 }
 
-ion-modal.modal-image {
-	z-index: 20006;
-    height: 100%;
-    --background: none;
-
-}
-ion-modal.modal-image::part(content) {
-	border-top-left-radius: 13px;
-	border-top-right-radius: 13px;
-}
-ion-modal.modal-image ion-img {
-	margin: auto 25px;
-}
