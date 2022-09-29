@@ -35,7 +35,7 @@ import { Button, TextField } from "@mui/material";
 import auth from "./services/auth.service";
 
 import { User } from "./services/userProps";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 
 setupIonicReact();
@@ -51,6 +51,7 @@ const App: React.FC = () => {
   const [presentLoading, dismissLoading] = useIonLoading();
 
   const [showLogin, setShowLogin] = useState(false);
+  // const modalRef = useRef<HTMLIonModalElement>(undefined);
 
   useEffect(() => {
 
@@ -92,6 +93,7 @@ const App: React.FC = () => {
       </IonRouterOutlet>
 
       <IonModal
+        // ref={modalRef}
         isOpen={showLogin}
         canDismiss={false}
         mode="ios"
@@ -146,15 +148,21 @@ const App: React.FC = () => {
               await auth
                 .login(username, password)
                 .then(async (response) => {
-                  console.log(auth);
 
                   const data = response as User;
 
+
+                  console.log("dismiss")
+
                   dismissLoading();
+
+                  setShowLogin(false);
 
                   if (data.jwtToken) 
                   {
                     setShowLogin(false);
+                    
+                    // modalRef.current.dismiss();
                   } else {
                     present("Niepoprawne dane logowanie", [
                       { text: "Zamknij" },
@@ -162,6 +170,7 @@ const App: React.FC = () => {
                   }
                 })
                 .catch((exception) => {
+                  setShowLogin(false);
                   dismissLoading();
                   present("Niepoprawne dane logowanie", [{ text: "Zamknij" }]);
                 });
