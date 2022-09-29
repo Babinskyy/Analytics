@@ -39,6 +39,7 @@ import {
   IonButtons,
   IonCol,
   IonContent,
+  IonDatetime,
   IonHeader,
   IonIcon,
   IonItem,
@@ -65,6 +66,7 @@ import Header from "../components/Header";
 import api from "./../services/api";
 import LoaderContainer from "../components/LoaderContainer";
 import { Virtuoso } from "react-virtuoso";
+import DriversScanTable from "../components/DriversScanTable";
 
 ChartJS.register(...registerables);
 const barData = {
@@ -184,9 +186,8 @@ const Drivers: React.FC = () => {
 
             setDeliveryArrayPolar({
               data: data.datasets[0].data,
-              labels: data.labels
+              labels: data.labels,
             });
-
           });
         }
         break;
@@ -223,23 +224,24 @@ const Drivers: React.FC = () => {
       case "tacki":
         if (tackiBarChartData) {
           return (
-            <Bar
-              height={300}
-              data={tackiBarChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość zniszczonych tacek",
-                  },
-                  legend: {
-                    display: true,
-                    position: "bottom",
-                  },
-                },
-              }}
-            />
+            // <Bar
+            //   height={300}
+            //   data={tackiBarChartData}
+            //   options={{
+            //     indexAxis: "y",
+            //     plugins: {
+            //       title: {
+            //         display: true,
+            //         text: "Ilość zniszczonych tacek",
+            //       },
+            //       legend: {
+            //         display: true,
+            //         position: "bottom",
+            //       },
+            //     },
+            //   }}
+            // />
+            <DriversScanTable />
           );
         } else {
           api.get("/stats/drivers/plates/").then((e) => {
@@ -251,9 +253,8 @@ const Drivers: React.FC = () => {
 
             setDeliveryArrayTacki({
               data: data.datasets[0].data,
-              labels: data.labels
+              labels: data.labels,
             });
-
           });
         }
         break;
@@ -269,44 +270,37 @@ const Drivers: React.FC = () => {
     return <GraphSelect defaultGraph={whichGraph} />;
   }, [whichGraph, polarChartData, tackiBarChartData]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTermLoading, setSearchTermLoading] = useState(false);
 
-  const [searchTerm, setSearchTerm] = useState('')
-  const [searchTermLoading, setSearchTermLoading] = useState(false)
+  const [deliveryArrayPolar, setDeliveryArrayPolar] = useState<any>();
 
-  
-  const [deliveryArrayPolar, setDeliveryArrayPolar] =
-    useState<any>();
-
-    const [deliveryArrayTacki, setDeliveryArrayTacki] =
-    useState<any>();
+  const [deliveryArrayTacki, setDeliveryArrayTacki] = useState<any>();
 
   useEffect(() => {
     setSearchTermLoading(true);
 
-      const delayDebounceFn = setTimeout(() => {
-
-
-        api.get("/stats/drivers/distance", {
+    const delayDebounceFn = setTimeout(() => {
+      api
+        .get("/stats/drivers/distance", {
           params: {
             Search: searchTerm,
           },
-        }).then((e) => {
+        })
+        .then((e) => {
           const data = e.data;
 
           setDeliveryArrayPolar({
             data: data.datasets[0].data,
-            labels: data.labels
+            labels: data.labels,
           });
-
         })
         .finally(() => {
           setSearchTermLoading(false);
         });
-        
+    }, 500);
 
-      }, 500);
-
-      return () => clearTimeout(delayDebounceFn);
+    return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
   return (
@@ -345,7 +339,7 @@ const Drivers: React.FC = () => {
                     setWhichGraph("tacki");
                   }}
                 >
-                  Tacki
+                  Skanowanie
                 </IonButton>
               </IonLabel>
             </IonCol>
@@ -353,22 +347,23 @@ const Drivers: React.FC = () => {
         </div>
 
         <div>
-          <IonRow className="ion-justify-content-center">
+          {memoGraphSelect}
+          {/* <IonRow className="ion-justify-content-center">
             <IonCol sizeMd="auto" size="12">
               <IonItem
-                  className="graph"
-                  lines="none"
-                  style={{
-                    marginBottom: "50px",
-                    width: "750px",
-                    padding: "0 20px",
-                  }}
-                >
-                  {memoGraphSelect}
-                </IonItem>
+                className="graph"
+                lines="none"
+                style={{
+                  marginBottom: "50px",
+                  width: "750px",
+                  padding: "0 20px",
+                }}
+              >
+                {memoGraphSelect}
+              </IonItem>
             </IonCol>
-            <IonCol sizeMd="auto" size="12">
-              {/* <IonItem style={{ width: "400px" }}>
+            <IonCol sizeMd="auto" size="12"> */}
+          {/* <IonItem style={{ width: "400px" }}>
                 <TextField
                   autoComplete="off"
                   id="outlined-basic"
@@ -380,53 +375,61 @@ const Drivers: React.FC = () => {
                   }}
                 />
               </IonItem> */}
-              
 
-              {
-                  polarChartData
-                  ?
-                  <div style={{
-                    width: "400px"
-                  }}>
-
-                  <div>
-                    <TextField
-                    InputProps={{
-                      endAdornment: searchTermLoading ? <div><CircularProgress /></div> : <></>
-                    }}
-                    label="Wyszukaj" variant="filled" style={{
-                      width: "100%",
-                      marginBottom: "15px"
-                    }} 
-                    inputMode="search"
-                    autoComplete="off"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+          {/* {polarChartData ? (
+                <div
+                  style={{
+                    width: "400px",
+                  }}
+                >
+                  {deliveryArrayPolar && whichGraph === "diets" ? (
+                    <Virtuoso
+                      style={{ height: "750px" }}
+                      data={deliveryArrayPolar.data}
+                      itemContent={(i: number, e: any) => {
+                        return (
+                          <IonItem
+                            lines="none"
+                            className="day-item"
+                            button
+                            style={{
+                              "--padding-top": "8px",
+                              "--padding-bottom": "8px",
+                            }}
+                            onClick={() => {
+                              navigate("/driver", "forward", "push");
+                            }}
+                          >
+                            <IonLabel>
+                              <span className="day">
+                                {deliveryArrayPolar.labels[i]}
+                              </span>
+                            </IonLabel>
+                            <IonLabel
+                              style={{ textAlign: "right", fontSize: "20px" }}
+                            >
+                              <span>{whichGraph === "diets" ? e : e}</span>
+                            </IonLabel>
+                          </IonItem>
+                        );
+                      }}
                     />
-                    <IonItem className="list-header" lines="none">
-                <IonLabel>
-                  <div style={{ textAlign: "left", marginLeft: "5px" }}>
-                    Kierowca
-                  </div>
-                </IonLabel>
-                <IonLabel>
-                  <div style={{ textAlign: "right", marginRight: "5px" }}>
-                    {whichGraph === "diets" ? "Kilometry" : "Tacki"}
-                  </div>
-                </IonLabel>
-              </IonItem>
-                  </div>
-                    
-{
-                    deliveryArrayPolar && whichGraph === "diets"
-                    ?
-                    <Virtuoso
-        style={{ height: '750px' }}
-        data={deliveryArrayPolar.data}
-        itemContent={(i: number, e: any) => {
-          return (
-            <IonItem
-              lines="none"
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              ) : (
+                <LoaderContainer height={500} width={400} />
+              )}
+
+              {deliveryArrayTacki && whichGraph != "diets" ? (
+                <Virtuoso
+                  style={{ height: "750px" }}
+                  data={deliveryArrayTacki.data}
+                  itemContent={(i: number, e: any) => {
+                    return (
+                      <IonItem
+                        lines="none"
                         className="day-item"
                         button
                         style={{
@@ -438,77 +441,24 @@ const Drivers: React.FC = () => {
                         }}
                       >
                         <IonLabel>
-                          <span className="day">{deliveryArrayPolar.labels[i]}</span>
+                          <span className="day">
+                            {deliveryArrayTacki.labels[i]}
+                          </span>
                         </IonLabel>
                         <IonLabel
                           style={{ textAlign: "right", fontSize: "20px" }}
                         >
-                          <span>
-                            {whichGraph === "diets"
-                              ? e
-                              : e}
-                          </span>
+                          <span>{whichGraph === "diets" ? e : e}</span>
                         </IonLabel>
                       </IonItem>
-          );
-        }}
-      />
-      :
-      <></>
-                  }
-                  </div>
-                  :
-                  <LoaderContainer height={500} width={400} />
-                  }
+                    );
+                  }}
+                />
+              ) : (
+                <></>
+              )} */}
 
-
-
-                    
-{
-                    deliveryArrayTacki && whichGraph != "diets"
-                    ?
-                    <Virtuoso
-        style={{ height: '750px' }}
-        data={deliveryArrayTacki.data}
-        itemContent={(i: number, e: any) => {
-          return (
-            <IonItem
-              lines="none"
-                        className="day-item"
-                        button
-                        style={{
-                          "--padding-top": "8px",
-                          "--padding-bottom": "8px",
-                        }}
-                        onClick={() => {
-                          navigate("/driver", "forward", "push");
-                        }}
-                      >
-                        <IonLabel>
-                          <span className="day">{deliveryArrayTacki.labels[i]}</span>
-                        </IonLabel>
-                        <IonLabel
-                          style={{ textAlign: "right", fontSize: "20px" }}
-                        >
-                          <span>
-                            {whichGraph === "diets"
-                              ? e
-                              : e}
-                          </span>
-                        </IonLabel>
-                      </IonItem>
-          );
-        }}
-      />
-      :
-      <></>
-                  }
-
-
-
-
-
-              {/* <IonList className="days-list" lines="none">
+          {/* <IonList className="days-list" lines="none">
                 {polarChartData?.labels
                   .map((e: string, i: number) => {
                     return (
@@ -539,8 +489,8 @@ const Drivers: React.FC = () => {
                     );
                   })}
               </IonList> */}
-            </IonCol>
-          </IonRow>
+          {/* </IonCol>
+          </IonRow> */}
         </div>
       </IonContent>
     </IonPage>
