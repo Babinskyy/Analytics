@@ -8,6 +8,7 @@ import {
   caretForward,
   caretForwardOutline,
   checkmarkOutline,
+  chevronForward,
   chevronForwardOutline,
   closeOutline,
   ellipsisVerticalOutline,
@@ -40,6 +41,8 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   IonBackButton,
+  IonBreadcrumb,
+  IonBreadcrumbs,
   IonButton,
   IonButtons,
   IonCheckbox,
@@ -84,6 +87,10 @@ import plLocale from "date-fns/locale/pl";
 import Header from "../components/Header";
 import { Virtuoso } from "react-virtuoso";
 import LoaderContainer from "../components/LoaderContainer";
+import { RouteComponentProps } from "react-router";
+import DriversScanTable from "../components/DriversScanTable";
+import DriverRouteTable from "../components/Driver/DriverRouteTable";
+import DriverDistance from "../components/Driver/DriverDistance";
 
 ChartJS.register(...registerables);
 
@@ -118,7 +125,14 @@ type DeliveryDataType = {
   image: string;
 };
 
-const Driver: React.FC = () => {
+type MatchParamsType = {
+  id: string;
+};
+
+const Driver: React.FC<RouteComponentProps> = ({ match }) => {
+
+  
+
   const _commentsArray: CommentsArrayType[] = [
     {
       title: "Tytuł",
@@ -366,27 +380,28 @@ const Driver: React.FC = () => {
   const GraphSelect = () => {
     switch (whichGraph) {
       case "kilometers":
-        if (barChartData) {
-          return (
-            <Bar
-              height={300}
-              data={barChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość kilometrów",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
-                },
-              }}
-            />
-          );
-        } else return <></>;
+        return <DriverDistance driverName={(match.params as MatchParamsType).id} />
+        // if (barChartData) {
+        //   return (
+        //     <Bar
+        //       height={300}
+        //       data={barChartData}
+        //       options={{
+        //         indexAxis: "y",
+        //         plugins: {
+        //           title: {
+        //             display: true,
+        //             text: "Ilość kilometrów",
+        //           },
+        //           legend: {
+        //             display: false,
+        //             position: "bottom",
+        //           },
+        //         },
+        //       }}
+        //     />
+        //   );
+        // } 
       case "comments":
         return <></>;
       case "tacki":
@@ -414,21 +429,7 @@ const Driver: React.FC = () => {
       case "route":
         if (lineChartData) {
           return (
-            <Line
-              data={lineChartData}
-              options={{
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Performance",
-                  },
-                  legend: {
-                    display: true,
-                    position: "bottom",
-                  },
-                },
-              }}
-            />
+            <DriverRouteTable driverName={(match.params as MatchParamsType).id} />
           );
         } else return <></>;
       default:
@@ -438,7 +439,7 @@ const Driver: React.FC = () => {
 
   const GraphSelectMemo = useMemo(() => {
     return <GraphSelect />;
-  }, [whichGraph]);
+  }, [whichGraph, (match.params as MatchParamsType).id]);
 
   useEffect(() => {
     let tempSum = 0;
@@ -584,841 +585,28 @@ const Driver: React.FC = () => {
               </IonLabel>
             </IonCol>
           </IonRow>
+
+          <IonRow className="ion-justify-content-center">
+            <IonCol size="auto">
+              <IonBreadcrumbs>
+                <IonBreadcrumb separator routerLink="/drivers">
+                  Statystyki roczne
+                  <IonIcon slot="separator" icon={chevronForward}></IonIcon>
+                </IonBreadcrumb>
+                <IonBreadcrumb active routerLink={"/month/" + (match.params as MatchParamsType).id} >
+                  Kierowca - {(match.params as MatchParamsType).id}
+                  <IonIcon slot="separator" icon={chevronForward}></IonIcon>
+                </IonBreadcrumb>
+              </IonBreadcrumbs>
+            </IonCol>
+          </IonRow>
+
         </div>
 
-        {!isPlatform("mobile") ? (
-          whichGraph === "comments" ? (
-            <div>
-              <IonItem
-                style={{ width: "500px" }}
-                className="day-item"
-                button
-                onClick={() => {
-                  presentAlert({
-                    header: "Wypełnij formularz",
-                    buttons: [
-                      {
-                        text: "OK",
-                        handler(value) {
-                          setCommentsArray([
-                            ...commentsArray,
-                            {
-                              title: value[0],
-                              description: value[1],
-                              name: value[2],
-                            },
-                          ]);
-                        },
-                      },
-                    ],
-                    inputs: [
-                      {
-                        placeholder: "Tytuł uwagi",
-                        type: "search",
-                        attributes: {
-                          maxlength: 50,
-                        },
-                      },
-                      {
-                        type: "textarea",
-                        placeholder: "Opis uwagi",
-                      },
-                      {
-                        placeholder: "Imię",
-                        attributes: {
-                          maxlength: 15,
-                        },
-                      },
-                    ],
-                  });
-                }}
-              >
-                <IonLabel>
-                  <span
-                    style={{
-                      textAlign: "center",
-                      fontSize: "22px",
-                    }}
-                  >
-                    Dodaj uwagę
-                  </span>
-                </IonLabel>
 
-                <IonLabel
-                  style={{
-                    textAlign: "right",
-                  }}
-                >
-                  <Add
-                    style={{
-                      fontSize: "40px",
-                      fontWeight: "100px",
-                    }}
-                  />
-                </IonLabel>
-              </IonItem>
+        {GraphSelectMemo}
 
-              <IonItem
-                className="day-item"
-                lines="none"
-                style={{ width: "500px" }}
-              >
-                <IonLabel>
-                  <IonItem lines="none" style={{ textAlign: "center" }}>
-                    <IonLabel>
-                      <span>
-                        Wyszukiwarka
-                        <IonIcon
-                          style={{
-                            fontSize: "20px",
-                            verticalAlign: "middle",
-                            marginLeft: "3px",
-                          }}
-                          icon={searchOutline}
-                        />
-                      </span>
-                    </IonLabel>
-                  </IonItem>
-                  <IonItem
-                    class="ion-no-padding"
-                    lines="none"
-                    style={{ "--inner-padding-end": "0" }}
-                  >
-                    <IonLabel style={{ paddingRight: "10px" }}>
-                      <IonLabel
-                        style={{
-                          marginBottom: "5px",
-                        }}
-                      >
-                        <TextField
-                          autoComplete="off"
-                          label="Tytuł"
-                          onChange={(e) => {
-                            setSearchTitleValue(e.target.value);
-                          }}
-                        />
-                      </IonLabel>
 
-                      <IonLabel
-                        style={{
-                          paddingTop: "5px",
-                        }}
-                      >
-                        <TextField
-                          autoComplete="off"
-                          label="Opis"
-                          onChange={(e) => {
-                            setSearchDescriptionValue(e.target.value);
-                          }}
-                        />
-                      </IonLabel>
-                    </IonLabel>
-                    <IonLabel style={{ paddingLeft: "10px" }}>
-                      <IonLabel
-                        style={{ textAlign: "center", padding: "19px" }}
-                      >
-                        <IonIcon
-                          style={{
-                            fontSize: "30px",
-                            verticalAlign: "middle",
-                            color: "#5260ff",
-                          }}
-                          icon={calendarOutline}
-                          onClick={() => {
-                            setShowCalendar(true);
-                          }}
-                        />
-                      </IonLabel>
-
-                      <IonLabel style={{}}>
-                        <TextField
-                          autoComplete="off"
-                          label="Imię"
-                          onChange={(e) => {
-                            setSearchNameValue(e.target.value);
-                          }}
-                        />
-                      </IonLabel>
-                    </IonLabel>
-                  </IonItem>
-                </IonLabel>
-              </IonItem>
-
-              <IonList>
-                {commentsArrayDisplay.map((e) => {
-                  return (
-                    <IonItem
-                      className="day-item"
-                      lines="none"
-                      style={{ width: "500px" }}
-                    >
-                      <IonLabel>
-                        <IonLabel
-                          style={{
-                            "white-space": "normal",
-                          }}
-                        >
-                          <div className="street">{e.title}</div>
-                        </IonLabel>
-
-                        <IonLabel>
-                          <IonItem
-                            lines="none"
-                            style={{
-                              "--padding-start": "0px",
-                              "--min-height": "0px",
-                            }}
-                          >
-                            <IonLabel
-                              style={{
-                                "white-space": "normal",
-                              }}
-                            >
-                              <span> {e.description}</span>
-                            </IonLabel>
-                          </IonItem>
-                        </IonLabel>
-                      </IonLabel>
-                      <IonItem
-                        className="diet-number"
-                        style={{ "--inner-padding-end": "0" }}
-                      >
-                        <IonLabel style={{ textAlign: "right" }}>
-                          <IconButton
-                            style={{ color: "black" }}
-                            onClick={() =>
-                              presentAlert({
-                                header: `Czy na pewno chcesz usunąć uwagę ${e.title}?`,
-
-                                cssClass: "custom-alert",
-                                buttons: [
-                                  {
-                                    text: "Nie",
-                                    cssClass: "alert-button-cancel",
-                                  },
-                                  {
-                                    text: "Tak",
-                                    cssClass: "alert-button-confirm",
-                                    handler: () => {
-                                      let _tempCommentsArray = commentsArray;
-                                      _tempCommentsArray.splice(
-                                        commentsArray.indexOf(e),
-                                        1
-                                      );
-                                      setCommentsArray([..._tempCommentsArray]);
-                                    },
-                                  },
-                                ],
-                              })
-                            }
-                          >
-                            <HighlightOffOutlinedIcon />
-                          </IconButton>
-
-                          <IonItem lines="none" style={{ textAlign: "right" }}>
-                            <IonLabel>
-                              <div className="town-post">{chooseDate}</div>
-                              <div
-                                className="town-post"
-                                style={{ textAlign: "center" }}
-                              >
-                                {e.name}
-                              </div>
-                            </IonLabel>
-                          </IonItem>
-                        </IonLabel>
-                      </IonItem>
-                    </IonItem>
-                  );
-                })}
-              </IonList>
-            </div>
-          ) : whichGraph === "route" ? (
-            routeChart ? (
-              <div
-                style={{
-                  width: "600px",
-                }}
-              >
-                <div>
-                  <TextField
-                    InputProps={{
-                      endAdornment: searchTermLoading ? (
-                        <div>
-                          <CircularProgress />
-                        </div>
-                      ) : (
-                        <></>
-                      ),
-                    }}
-                    label="Wyszukaj"
-                    variant="filled"
-                    style={{
-                      width: "100%",
-                      marginBottom: "15px",
-                    }}
-                    inputMode="search"
-                    autoComplete="off"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-
-                {deliveryArray ? (
-                  <Virtuoso
-                    style={{ height: "750px" }}
-                    data={routeChart}
-                    itemContent={(index, e: DeliveryDataType) => {
-                      return (
-                        <IonItem
-                          className="day-item"
-                          style={{ maxWidth: "600px" }}
-                        >
-                          <IonLabel className="delivery-info-item">
-                            <div style={{ display: "flex" }}>
-                              <IonLabel>
-                                <div className="address">
-                                  <div className="street"></div>
-                                  <div className="town-post"></div>
-                                </div>
-                              </IonLabel>
-                            </div>
-                            {e.diets.map((_e) => {
-                              return (
-                                <IonList lines="none">
-                                  <IonLabel className="diet-item">
-                                    <IonItem
-                                      style={{
-                                        "--padding-start": "0px",
-                                        "--min-height": "0px",
-                                      }}
-                                    >
-                                      <IonIcon src={chevronForwardOutline} />
-                                      <div>{_e}</div>
-                                    </IonItem>
-                                  </IonLabel>
-                                </IonList>
-                              );
-                            })}
-                          </IonLabel>
-                          <IonItem lines="none">
-                            <div className="icon-time">
-                              <IconButton
-                                id="open-modal"
-                                onClick={() => {
-                                  setOrderImage(e.image);
-                                  setShowOrderPhoto(true);
-                                }}
-                              >
-                                <PhotoCamera
-                                  color={e.image ? "primary" : "disabled"}
-                                  style={{
-                                    fontSize: "55px",
-                                    marginLeft: "15px",
-                                  }}
-                                />
-                              </IconButton>
-
-                              <IonLabel
-                                className="delivery-time"
-                                color="primary"
-                              >
-                                {e.image ? (
-                                  <div className="delivery-time-span">
-                                    {e.time}
-                                  </div>
-                                ) : (
-                                  <></>
-                                )}
-                              </IonLabel>
-                            </div>
-                          </IonItem>
-                        </IonItem>
-                      );
-                    }}
-                  />
-                ) : (
-                  <></>
-                )}
-              </div>
-            ) : (
-              <LoaderContainer height={500} width={400} />
-            )
-          ) : whichGraph === "kilometers" ? (
-            <div>
-              <IonRow className="ion-justify-content-center">
-                <IonCol sizeMd="auto" size="12">
-                  <IonItem
-                    lines="none"
-                    style={{
-                      textAlign: "center",
-                    }}
-                  >
-                    <IonLabel>
-                      <span style={{}}>Łącznie przejechanych kilometrów:</span>
-
-                      <span
-                        style={{
-                          fontSize: "35px",
-                          marginLeft: "5px",
-                          color: "#5260ff",
-                          verticalAlign: "middle",
-                        }}
-                      >
-                        {barData.datasets[0].data.reduce(function (x, y) {
-                          return x + y;
-                        })}
-                      </span>
-                    </IonLabel>
-                  </IonItem>
-                  <IonItem
-                    lines="none"
-                    style={{
-                      height: "750px",
-                      width: "750px",
-                    }}
-                  >
-                    <GraphSelect />
-                  </IonItem>
-                </IonCol>
-                <IonCol sizeMd="auto" size="12">
-                  <IonItem
-                    lines="none"
-                    style={{
-                      textAlign: "center",
-                    }}
-                  >
-                    <IonLabel>
-                      <span>Średnia długość trasy:</span>
-                      <span
-                        style={{
-                          color: "#5260ff",
-                          fontSize: "35px",
-                          marginLeft: "10px",
-                          verticalAlign: "middle",
-                        }}
-                      >
-                        {averageKilometersSum} km
-                      </span>
-                    </IonLabel>
-                  </IonItem>
-
-                  <IonItem
-                    lines="none"
-                    style={{ maxHeight: "750px", overflow: "auto" }}
-                  >
-                    <IonList>
-                      {barChartData?.labels
-                        .filter((e, i) => {
-                          if (barData.datasets[0].data[i] > 0) {
-                            return e;
-                          }
-                        })
-                        .map((e, i) => {
-                          return (
-                            <IonItem
-                              className="day-item"
-                              lines="none"
-                              style={{ width: "400px" }}
-                            >
-                              <IonLabel
-                                style={{
-                                  "white-space": "normal",
-                                }}
-                              >
-                                <div className="street">{e}</div>
-                              </IonLabel>
-
-                              <IonLabel
-                                style={{ textAlign: "right", fontSize: "20px" }}
-                              >
-                                <IonLabel>
-                                  <span
-                                    style={{
-                                      fontSize: "15px",
-                                      opacity: "0.5",
-                                      marginBottom: "2px",
-                                    }}
-                                  >
-                                    Łącznie:{" "}
-                                  </span>
-                                  {barData.datasets[0].data[i]}
-                                </IonLabel>
-                                <IonLabel>
-                                  <span
-                                    style={{ fontSize: "15px", opacity: "0.5" }}
-                                  >
-                                    Średnio:{" "}
-                                  </span>
-                                  {Math.round(barData.datasets[0].data[i] / 20)}
-                                </IonLabel>
-                              </IonLabel>
-                            </IonItem>
-                          );
-                        })}
-                    </IonList>
-                  </IonItem>
-                </IonCol>
-              </IonRow>
-            </div>
-          ) : (
-            <></>
-          )
-        ) : whichGraph === "comments" ? (
-          <div>
-            <IonItem
-              className="day-item"
-              button
-              onClick={() => {
-                presentAlert({
-                  header: "Wypełnij formularz",
-                  buttons: [
-                    {
-                      text: "OK",
-                      handler(value) {
-                        setCommentsArray([
-                          ...commentsArray,
-                          {
-                            title: value[0],
-                            description: value[1],
-                            name: value[2],
-                          },
-                        ]);
-                      },
-                    },
-                  ],
-                  inputs: [
-                    {
-                      placeholder: "Tytuł uwagi",
-                      type: "search",
-                      attributes: {
-                        maxlength: 50,
-                      },
-                    },
-                    {
-                      type: "textarea",
-                      placeholder: "Opis uwagi",
-                    },
-                    {
-                      placeholder: "Imię",
-                      attributes: {
-                        maxlength: 15,
-                      },
-                    },
-                  ],
-                });
-              }}
-            >
-              <IonLabel>
-                <div
-                  style={{
-                    textAlign: "center",
-                    fontSize: "22px",
-                  }}
-                >
-                  Dodaj uwagę
-                </div>
-              </IonLabel>
-
-              <IonLabel
-                style={{
-                  textAlign: "right",
-                }}
-              >
-                <Add
-                  style={{
-                    fontSize: "40px",
-                    fontWeight: "100px",
-                  }}
-                />
-              </IonLabel>
-            </IonItem>
-            <IonItem>
-              <IonList>
-                {commentsArray.map((e) => {
-                  return (
-                    <IonItem className="day-item" lines="none">
-                      <IonLabel>
-                        <IonLabel
-                          style={{
-                            "white-space": "normal",
-                          }}
-                        >
-                          <div className="street">{e.title}</div>
-                        </IonLabel>
-
-                        <IonLabel>
-                          <IonItem
-                            lines="none"
-                            style={{
-                              "--padding-start": "0px",
-                              "--min-height": "0px",
-                            }}
-                          >
-                            <IonLabel
-                              style={{
-                                "white-space": "normal",
-                              }}
-                            >
-                              <span>{e.description}</span>
-                            </IonLabel>
-                          </IonItem>
-                        </IonLabel>
-                      </IonLabel>
-                      <IonItem
-                        className="diet-number"
-                        style={{ "--inner-padding-end": "0" }}
-                      >
-                        <IonLabel style={{ textAlign: "right" }}>
-                          <IconButton
-                            style={{ color: "black" }}
-                            onClick={() =>
-                              presentAlert({
-                                header: `Czy na pewno chcesz usunąć uwagę ${e.title}?`,
-
-                                cssClass: "custom-alert",
-                                buttons: [
-                                  {
-                                    text: "Nie",
-                                    cssClass: "alert-button-cancel",
-                                  },
-                                  {
-                                    text: "Tak",
-                                    cssClass: "alert-button-confirm",
-                                    handler: () => {
-                                      let _tempCommentsArray = commentsArray;
-                                      _tempCommentsArray.splice(
-                                        commentsArray.indexOf(e),
-                                        1
-                                      );
-                                      setCommentsArray([..._tempCommentsArray]);
-                                    },
-                                  },
-                                ],
-                              })
-                            }
-                          >
-                            <HighlightOffOutlinedIcon />
-                          </IconButton>
-
-                          <IonItem lines="none" style={{ textAlign: "right" }}>
-                            <IonLabel>
-                              <div className="town-post">{chooseDate}</div>
-                              <div
-                                className="town-post"
-                                style={{ textAlign: "center" }}
-                              >
-                                {e.name}
-                              </div>
-                            </IonLabel>
-                          </IonItem>
-                        </IonLabel>
-                      </IonItem>
-                    </IonItem>
-                  );
-                })}
-              </IonList>
-            </IonItem>
-          </div>
-        ) : whichGraph === "route" ? (
-          <div>
-            <IonItem lines="none" style={{ textAlign: "center" }}>
-              <IonLabel>
-                <span>Wybrany dzień: </span>
-
-                <span
-                  style={{ color: "#5260ff", fontWeight: "600" }}
-                  onClick={() => {
-                    setShowCalendar(true);
-                  }}
-                >
-                  {chooseDate}
-                </span>
-
-                <IonIcon
-                  style={{
-                    fontSize: "30px",
-                    marginLeft: "5px",
-                    verticalAlign: "middle",
-
-                    color: "#5260ff",
-                  }}
-                  icon={calendarOutline}
-                  onClick={() => {
-                    setShowCalendar(true);
-                  }}
-                />
-              </IonLabel>
-            </IonItem>
-            <Line
-              data={lineChartData}
-              options={{
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Performarance",
-                  },
-                  legend: {
-                    display: true,
-                    position: "bottom",
-                  },
-                },
-              }}
-            />
-
-            {/* {deliveryArray.map((e) => {
-              return (
-                <IonItem className="day-item" button onClick={() => {}}>
-                  <IonLabel className="delivery-info-item">
-                    <div style={{ display: "flex" }}>
-                      <IonLabel>
-                        <div className="address">
-                          <div className="street">{e.address}</div>
-                          <div className="town-post">{e.address2}</div>
-                        </div>
-                      </IonLabel>
-                    </div>
-                    {e.diets.map((_e) => {
-                      return (
-                        <IonList lines="none">
-                          <IonLabel className="diet-item">
-                            <IonItem
-                              style={{
-                                "--padding-start": "0px",
-                                "--min-height": "0px",
-                              }}
-                            >
-                              <IonIcon src={chevronForwardOutline} />
-                              <div>{_e}</div>
-                            </IonItem>
-                          </IonLabel>
-                        </IonList>
-                      );
-                    })}
-                  </IonLabel>
-                  <IonItem lines="none">
-                    <div className="icon-time">
-                      <IconButton
-                        id="open-modal"
-                        onClick={() => {
-                          setShowOrderPhoto(true);
-                        }}
-                      >
-                        <PhotoCamera
-                          color={e.isPhoto ? "primary" : "disabled"}
-                          style={{
-                            fontSize: "55px",
-                            marginLeft: "15px",
-                          }}
-                        />
-                      </IconButton>
-
-                      <IonLabel className="delivery-time" color="primary">
-                        {e.isPhoto ? (
-                          <div className="delivery-time-span">{e.time}</div>
-                        ) : (
-                          <></>
-                        )}
-                      </IonLabel>
-                    </div>
-                  </IonItem>
-                </IonItem>
-              );
-            })} */}
-          </div>
-        ) : whichGraph === "kilometers" ? (
-          <div>
-            <IonItem lines="none">
-              <IonLabel>
-                <span style={{}}>Łącznie przejechanych kilometrów:</span>
-
-                <span
-                  style={{
-                    fontSize: "35px",
-                    marginLeft: "5px",
-                    color: "#5260ff",
-                    verticalAlign: "middle",
-                  }}
-                >
-                  {barData.datasets[0].data.reduce(function (x, y) {
-                    return x + y;
-                  })}
-                </span>
-              </IonLabel>
-            </IonItem>
-            <IonItem
-              lines="none"
-              style={{
-                height: "394px",
-              }}
-            >
-              {GraphSelectMemo}
-            </IonItem>
-            <IonItem
-              lines="none"
-              style={{
-                textAlign: "center",
-              }}
-            >
-              <IonLabel>
-                <span>Średnia długość trasy:</span>
-                <span
-                  style={{
-                    color: "#5260ff",
-                    fontSize: "35px",
-                    marginLeft: "10px",
-                    verticalAlign: "middle",
-                  }}
-                >
-                  {averageKilometersSum} km
-                </span>
-              </IonLabel>
-            </IonItem>
-
-            {barChartData?.labels
-              .filter((e, i) => {
-                if (barData.datasets[0].data[i] > 0) {
-                  return e;
-                }
-              })
-              .map((e, i) => {
-                return (
-                  <IonItem className="day-item" lines="none">
-                    <IonLabel
-                      style={{
-                        "white-space": "normal",
-                      }}
-                    >
-                      <div className="street">{e}</div>
-                    </IonLabel>
-
-                    <IonLabel style={{ textAlign: "right", fontSize: "20px" }}>
-                      <IonLabel>
-                        <span
-                          style={{
-                            fontSize: "15px",
-                            opacity: "0.5",
-                            marginBottom: "2px",
-                          }}
-                        >
-                          Łącznie:{" "}
-                        </span>
-                        {barData.datasets[0].data[i]}
-                      </IonLabel>
-                      <IonLabel>
-                        <span style={{ fontSize: "15px", opacity: "0.5" }}>
-                          Średnio:{" "}
-                        </span>
-                        {Math.round(barData.datasets[0].data[i] / 20)}
-                      </IonLabel>
-                    </IonLabel>
-                  </IonItem>
-                );
-              })}
-          </div>
-        ) : (
-          <></>
-        )}
       </IonContent>
     </IonPage>
   );

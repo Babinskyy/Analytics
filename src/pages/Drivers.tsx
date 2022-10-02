@@ -4,6 +4,7 @@ import {
   caretForward,
   caretForwardOutline,
   checkmarkOutline,
+  chevronForward,
   chevronForwardOutline,
   handRight,
   moon,
@@ -35,6 +36,8 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import {
   IonBackButton,
+  IonBreadcrumb,
+  IonBreadcrumbs,
   IonButton,
   IonButtons,
   IonCol,
@@ -67,6 +70,7 @@ import api from "./../services/api";
 import LoaderContainer from "../components/LoaderContainer";
 import { Virtuoso } from "react-virtuoso";
 import DriversScanTable from "../components/DriversScanTable";
+import Distance from "../components/Drivers/Distance";
 
 ChartJS.register(...registerables);
 const barData = {
@@ -156,41 +160,7 @@ const Drivers: React.FC = () => {
   const GraphSelect: React.FC<GraphSelectType> = ({ defaultGraph }) => {
     switch (defaultGraph ? defaultGraph : whichGraph) {
       case "diets":
-        if (polarChartData) {
-          return (
-            <Bar
-              height={600}
-              data={polarChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość przejechanych kilometrów",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
-                },
-              }}
-            />
-          );
-        } else {
-          api.get("/stats/drivers/distance/").then((e) => {
-            const data = e.data;
-
-            console.log(data);
-
-            setPolarChartData(data);
-
-            setDeliveryArrayPolar({
-              data: data.datasets[0].data,
-              labels: data.labels,
-            });
-          });
-        }
-        break;
+        return <Distance />
       case "area":
         if (polarChartData) {
           return (
@@ -222,42 +192,7 @@ const Drivers: React.FC = () => {
         }
         break;
       case "tacki":
-        if (tackiBarChartData) {
-          return (
-            // <Bar
-            //   height={300}
-            //   data={tackiBarChartData}
-            //   options={{
-            //     indexAxis: "y",
-            //     plugins: {
-            //       title: {
-            //         display: true,
-            //         text: "Ilość zniszczonych tacek",
-            //       },
-            //       legend: {
-            //         display: true,
-            //         position: "bottom",
-            //       },
-            //     },
-            //   }}
-            // />
-            <DriversScanTable />
-          );
-        } else {
-          api.get("/stats/drivers/plates/").then((e) => {
-            const data = e.data;
-
-            console.log(data);
-
-            setTackiBarChartData(data);
-
-            setDeliveryArrayTacki({
-              data: data.datasets[0].data,
-              labels: data.labels,
-            });
-          });
-        }
-        break;
+        return  <DriversScanTable />
 
       default:
         return <LoaderContainer height={500} />;
@@ -344,6 +279,18 @@ const Drivers: React.FC = () => {
               </IonLabel>
             </IonCol>
           </IonRow>
+
+          <IonRow className="ion-justify-content-center">
+            <IonCol size="auto">
+              <IonBreadcrumbs>
+                <IonBreadcrumb active routerLink="/drivers">
+                  Statystyki roczne
+                  <IonIcon slot="separator" icon={chevronForward}></IonIcon>
+                </IonBreadcrumb>
+              </IonBreadcrumbs>
+            </IonCol>
+          </IonRow>
+
         </div>
 
         <div>

@@ -22,6 +22,7 @@ import {
   reorderFourOutline,
 } from "ionicons/icons";
 import { useContext } from "react";
+import Login from "./Login";
 
 type Props = {
   type: "diets" | "drivers";
@@ -33,9 +34,12 @@ const Header: React.FC<Props> = ({ type }) => {
   return (
     <IonHeader>
       <IonToolbar>
-        <IonButtons slot="start">
+
+        <Login />
+
+        {/* <IonButtons slot="start">
           <IonBackButton />
-        </IonButtons>
+        </IonButtons> */}
         <IonTitle>
           <IonButton
             fill={type == "diets" ? "solid" : "outline"}

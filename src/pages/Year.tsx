@@ -64,6 +64,7 @@ import { Chart as ChartJS, registerables } from "chart.js";
 import { Bar, PolarArea, Doughnut } from "react-chartjs-2";
 import Header from "../components/Header";
 import LoaderContainer from "../components/LoaderContainer";
+import { Container } from "@mui/system";
 ChartJS.register(...registerables);
 
 const barData = {
@@ -363,22 +364,21 @@ const Year: React.FC = () => {
           </IonRow>
         </div>
 
-        {!isPlatform("mobile") ? (
-          <div>
-            <IonRow className="ion-justify-content-center">
-              <IonCol sizeMd="auto" size="12">
+          <Container>
+
+          <IonRow className="ion-justify-content-center">
+              <IonCol size="7">
                 <IonItem
                   lines="none"
                   style={{
                     marginBottom: "50px",
-                    width: "750px",
                     padding: "0 20px",
                   }}
                 >
                   {memoGraphSelect}
                 </IonItem>
               </IonCol>
-              <IonCol sizeMd="auto" size="12">
+              <IonCol size="5">
                 <div
                   style={{
                     position: "sticky",
@@ -393,7 +393,7 @@ const Year: React.FC = () => {
                     </IonLabel>
                     <IonLabel>
                       <div style={{ textAlign: "right", marginRight: "30px" }}>
-                        Diety
+                        Ilość diet
                       </div>
                     </IonLabel>
                   </IonItem>
@@ -450,82 +450,10 @@ const Year: React.FC = () => {
                 </div>
               </IonCol>
             </IonRow>
-          </div>
-        ) : (
-          <div>
-            <IonItem
-              className="graph"
-              lines="none"
-              style={{
-                height: "392.727px",
-                width: "392.727px",
-              }}
-            >
-              {memoGraphSelect}
-            </IonItem>
-            <IonItem lines="none" style={{ textAlign: "center" }}>
-              <IonLabel>
-                <span>Łącznie dostarczonych diet:</span>
 
-                <span
-                  style={{
-                    fontSize: "35px",
-                    marginLeft: "5px",
-                    color: "#5260ff",
-                    verticalAlign: "middle",
-                  }}
-                >
-                  {barData.datasets[0].data.reduce(function (x, y) {
-                    return x + y;
-                  })}
-                </span>
-              </IonLabel>
-            </IonItem>
+          </Container>
 
-            <IonItem
-              className="list-header"
-              lines="none"
-              style={{ maxWidth: "600px", margin: "auto" }}
-            >
-              <IonLabel>
-                <div style={{ textAlign: "left", marginLeft: "5px" }}>
-                  Miesiąc
-                </div>
-              </IonLabel>
-              <IonLabel>
-                <div style={{ textAlign: "right", marginRight: "5px" }}>
-                  Ilość wydanych diet
-                </div>
-              </IonLabel>
-            </IonItem>
-            <IonList className="days-list" lines="none">
-              {barData.labels.map((e, i) => {
-                return barData.datasets[0].data[i] > 0 ? (
-                  <IonItem
-                    className="day-item"
-                    style={{ maxWidth: "600px" }}
-                    button
-                    onClick={() => {
-                      navigate("/month", "forward", "push");
-                    }}
-                  >
-                    <IonLabel>
-                      <div className="day">{e}</div>
-                      <div className="date">{barData.date[i]}</div>
-                    </IonLabel>
-                    <IonLabel>
-                        <div style={{ textAlign: "right", fontSize: "20px" }}>
-                          {barData.datasets[0].data[i]}
-                        </div>
-                      </IonLabel>
-                  </IonItem>
-                ) : (
-                  <></>
-                );
-              })}
-            </IonList>
-          </div>
-        )}
+    
       </IonContent>
     </IonPage>
   );
