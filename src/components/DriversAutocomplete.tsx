@@ -83,7 +83,7 @@ const DriversAutocomplete: React.FC<Props> = ({ setDriver, width, fullWidth = fa
           className="shadow-mui"
           {...params}
           label="Kierowca"
-          fullWidth={fullWidth}
+          fullWidth={true}
           InputProps={{
             ...params.InputProps,
             autoComplete: 'off',
