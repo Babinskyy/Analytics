@@ -9,7 +9,8 @@ const instance = axios.create({
   timeoutErrorMessage: "Za długi czas oczekiwania",
   withCredentials: true,
   // baseURL: "https://broccoliapi.ebert.link",
-  baseURL: "https://localhost:55931",
+  // baseURL: "https://localhost:55931",
+  baseURL: "https://broccoli-demo.azurewebsites.net",
   headers: {
     "Content-Type": "application/json",
   },
