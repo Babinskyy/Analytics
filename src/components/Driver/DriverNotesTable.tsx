@@ -347,7 +347,7 @@ const DriverNotesTable: React.FC<ContainerProps> = ({ driverName }) => {
                   firstDayOfWeek={1}
                   style={{
                     position: "sticky",
-                    top: "75px",
+                    top: "125px",
                     margin: "auto",
                   }}
                   value={date}
