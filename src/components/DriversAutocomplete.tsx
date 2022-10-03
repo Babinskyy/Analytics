@@ -19,9 +19,10 @@ import api from "./../services/api";
 type Props = {
   setDriver: React.Dispatch<React.SetStateAction<string>>;
   width?: string;
+  fullWidth?: boolean;
 };
 
-const DriversAutocomplete: React.FC<Props> = ({ setDriver, width }) => {
+const DriversAutocomplete: React.FC<Props> = ({ setDriver, width, fullWidth = false }) => {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState<readonly string[]>([]);
   const loading = open && options.length === 0;
@@ -82,6 +83,7 @@ const DriversAutocomplete: React.FC<Props> = ({ setDriver, width }) => {
           className="shadow-mui"
           {...params}
           label="Kierowca"
+          fullWidth={fullWidth}
           InputProps={{
             ...params.InputProps,
             autoComplete: 'off',

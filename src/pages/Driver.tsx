@@ -91,6 +91,7 @@ import { RouteComponentProps } from "react-router";
 import DriversScanTable from "../components/DriversScanTable";
 import DriverRouteTable from "../components/Driver/DriverRouteTable";
 import DriverDistance from "../components/Driver/DriverDistance";
+import DriverNotesTable from "../components/Driver/DriverNotesTable";
 
 ChartJS.register(...registerables);
 
@@ -403,29 +404,34 @@ const Driver: React.FC<RouteComponentProps> = ({ match }) => {
         //   );
         // } 
       case "comments":
-        return <></>;
+        return (
+          <DriverNotesTable driverName={(match.params as MatchParamsType).id} />
+        );
       case "tacki":
-        if (tackiBarChartData) {
-          return (
-            <Bar
-              height={300}
-              data={tackiBarChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość zniszczonych tacek",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
-                },
-              }}
-            />
-          );
-        } else return <></>;
+        // if (tackiBarChartData) {
+        //   return (
+        //     <Bar
+        //       height={300}
+        //       data={tackiBarChartData}
+        //       options={{
+        //         indexAxis: "y",
+        //         plugins: {
+        //           title: {
+        //             display: true,
+        //             text: "Ilość zniszczonych tacek",
+        //           },
+        //           legend: {
+        //             display: false,
+        //             position: "bottom",
+        //           },
+        //         },
+        //       }}
+        //     />
+        //   );
+        // } else return <></>;
+        return (
+          <DriverNotesTable driverName={(match.params as MatchParamsType).id} />
+        );
       case "route":
         if (lineChartData) {
           return (
