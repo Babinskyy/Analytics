@@ -403,11 +403,11 @@ const Driver: React.FC<RouteComponentProps> = ({ match }) => {
         //     />
         //   );
         // } 
-      case "comments":
-        return (
-          <DriverNotesTable driverName={(match.params as MatchParamsType).id} />
-        );
-      case "tacki":
+      // case "comments":
+      //   return (
+      //     <DriverNotesTable driverName={(match.params as MatchParamsType).id} />
+      //   );
+      //case "tacki":
         // if (tackiBarChartData) {
         //   return (
         //     <Bar
@@ -429,9 +429,9 @@ const Driver: React.FC<RouteComponentProps> = ({ match }) => {
         //     />
         //   );
         // } else return <></>;
-        return (
-          <DriverNotesTable driverName={(match.params as MatchParamsType).id} />
-        );
+        // return (
+        //   <DriverNotesTable driverName={(match.params as MatchParamsType).id} />
+        // );
       case "route":
         if (lineChartData) {
           return (
@@ -577,7 +577,7 @@ const Driver: React.FC<RouteComponentProps> = ({ match }) => {
                 >
                   Tacki
                 </IonButton> */}
-                <IonButton
+                {/* <IonButton
                   shape="round"
                   fill={whichGraph === "comments" ? "solid" : "outline"}
                   color={"tertiary"}
@@ -587,7 +587,7 @@ const Driver: React.FC<RouteComponentProps> = ({ match }) => {
                   }}
                 >
                   Uwagi
-                </IonButton>
+                </IonButton> */}
               </IonLabel>
             </IonCol>
           </IonRow>

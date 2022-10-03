@@ -71,6 +71,7 @@ import LoaderContainer from "../components/LoaderContainer";
 import { Virtuoso } from "react-virtuoso";
 import DriversScanTable from "../components/DriversScanTable";
 import Distance from "../components/Drivers/Distance";
+import DriverNotesTable from "../components/Driver/DriverNotesTable";
 
 ChartJS.register(...registerables);
 const barData = {
@@ -193,7 +194,8 @@ const Drivers: React.FC = () => {
         break;
       case "tacki":
         return  <DriversScanTable />
-
+      case "notes":
+        return  <DriverNotesTable />
       default:
         return <LoaderContainer height={500} />;
     }
@@ -275,6 +277,17 @@ const Drivers: React.FC = () => {
                   }}
                 >
                   Skanowanie
+                </IonButton>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "notes" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("notes");
+                  }}
+                >
+                  Uwagi
                 </IonButton>
               </IonLabel>
             </IonCol>

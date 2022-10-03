@@ -47,7 +47,7 @@ type ContainerProps = {
   driverName: string;
 };
 
-const DriverNotesTable: React.FC<ContainerProps> = ({ driverName }) => {
+const DriverNotesTable: React.FC = () => {
   const [_rows, _setRows] = useState<DriversNotesTableProps[]>([]);
   const [rows, setRows] = useState<DriversNotesTableProps[]>([]);
 
@@ -81,7 +81,7 @@ const DriverNotesTable: React.FC<ContainerProps> = ({ driverName }) => {
       .finally(() => {
         dismissLoading();
       });
-  }, [date, driverName]);
+  }, [date]);
 
   useEffect(() => {
     if (!availableDays) {
@@ -89,7 +89,7 @@ const DriverNotesTable: React.FC<ContainerProps> = ({ driverName }) => {
         setAvailableDays(response.data);
       });
     }
-  }, [driverName]);
+  }, []);
 
   const [showOrderPhoto, setShowOrderPhoto] = useState(false);
   const [orderImage, setOrderImage] = useState("");
