@@ -355,7 +355,7 @@ const Year: React.FC = () => {
           <IonRow className="ion-justify-content-center">
             <IonCol size="auto">
               <IonBreadcrumbs>
-                <IonBreadcrumb active routerLink="/year">
+                <IonBreadcrumb active routerLink="/">
                   Statystyki roczne
                   <IonIcon slot="separator" icon={chevronForward}></IonIcon>
                 </IonBreadcrumb>

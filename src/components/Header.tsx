@@ -46,7 +46,7 @@ const Header: React.FC<Props> = ({ type }) => {
             color="tertiary"
             className="double-button-first"
             onClick={() => {
-              navigate("/year", "forward", "push");
+              navigate("/", "forward", "push");
             }}
           >
             Diety

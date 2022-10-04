@@ -404,7 +404,7 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
           <IonRow className="ion-justify-content-center">
             <IonCol size="auto">
               <IonBreadcrumbs>
-                <IonBreadcrumb separator routerLink="/year">
+                <IonBreadcrumb separator routerLink="/">
                   Statystyki roczne
                   <IonIcon slot="separator" icon={chevronForward}></IonIcon>
                 </IonBreadcrumb>
