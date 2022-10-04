@@ -60,13 +60,11 @@ const App: React.FC = () => {
           <Route exact path="/driver/:id" component={Driver} />
           <Route exact path="/day/:month/:id" component={Day} />
           <Route exact path="/month/:id" component={Month} />
-          <Route exact path="/year">
-            <Year />
-          </Route>
+          <Route exact path="/" component={Year} />
 
-          <Route exact path="/">
+          {/* <Route exact path="/">
             <Redirect to="/Year" />
-          </Route>
+          </Route> */}
 
           
 
