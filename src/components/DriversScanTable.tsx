@@ -272,6 +272,7 @@ const DriversScanTable: React.FC<ContainerProps> = () => {
                   <TableBody>
                     {rows.map((row) => (
                       <TableRow
+                        className="row-hover"
                         key={row.driverId}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
