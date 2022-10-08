@@ -218,13 +218,13 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
 
   useIonViewDidLeave(() => {
 
-    setBarChartData(null);
+    // setBarChartData(null);
     setPolarChartData(null);
     setDoughnutChartData(null);
 
   });
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
 
     api
     .get("/stats/month/bar/" + (match.params as MatchParamsType).id)
@@ -239,7 +239,7 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
   setPolarChartData(null);
   setDoughnutChartData(null);
 
-  })
+  }, [(match.params as MatchParamsType).id])
 
   type GraphSelectType = {
     defaultGraph?: string;
