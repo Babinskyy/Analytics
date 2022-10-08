@@ -55,14 +55,14 @@ canvas {
 }
 
 
-.row-hover {
-    transition: box-shadow .1s ease-in-out,transform .1s ease-in-out;
-    will-change: box-shadow,transform;
-    cursor: pointer;
-}
+// .row-hover {
+//     transition: box-shadow .1s ease-in-out,transform .1s ease-in-out;
+//     will-change: box-shadow,transform;
+//     cursor: pointer;
+// }
 
-.row-hover:hover {
-    box-shadow: 0 2px 8px 0 rgb(99 99 99 / 20%);
-    transform: scale(1.03);
-    background: rgb(255 255 255);
-}
+// .row-hover:hover {
+//     box-shadow: 0 2px 8px 0 rgba(99, 99, 99, 0.2);
+//     transform: scale(1.03);
+//     background: rgb(255, 255, 255);
+// }
