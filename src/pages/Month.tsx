@@ -51,6 +51,8 @@ import {
   useIonViewWillEnter,
   IonBreadcrumbs,
   IonBreadcrumb,
+  useIonViewWillLeave,
+  useIonViewDidLeave,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
 import "./Month.scss";
@@ -214,20 +216,30 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
 
   // }, [(match.params as MatchParamsType).id]);
 
-  useIonViewWillEnter(() => {
-    api
-      .get("/stats/month/bar/" + (match.params as MatchParamsType).id)
-      .then((e) => {
-        const data = e.data;
+  useIonViewDidLeave(() => {
 
-        console.log(data);
-
-        setBarChartData(data);
-      });
-
+    setBarChartData(null);
     setPolarChartData(null);
     setDoughnutChartData(null);
+
   });
+
+  useEffect(() => {
+
+    api
+    .get("/stats/month/bar/" + (match.params as MatchParamsType).id)
+    .then((e) => {
+      const data = e.data;
+
+      console.log(data);
+
+      setBarChartData(data);
+    });
+
+  setPolarChartData(null);
+  setDoughnutChartData(null);
+
+  }, [(match.params as MatchParamsType).id])
 
   type GraphSelectType = {
     defaultGraph?: string;
