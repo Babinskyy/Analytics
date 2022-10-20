@@ -1,4 +1,4 @@
-.graph-button{
+.graph-button {
     margin-right: 4px;
     font-size: 14px;
 }
@@ -32,8 +32,7 @@
 //     visibility: hidden;
 // }
 
-ion-breadcrumbs ion-breadcrumb.breadcrumb-active
-{
+ion-breadcrumbs ion-breadcrumb.breadcrumb-active {
     font-weight: 700;
     color: rgb(82, 96, 255);
 }
@@ -42,6 +41,7 @@ ion-modal.modal-image {
     --height: auto;
     --width: auto;
 }
+
 // ion-modal.modal-image::part(content) {
 // 	border-top-left-radius: 13px;
 // 	border-top-right-radius: 13px;
@@ -66,3 +66,10 @@ canvas {
 //     transform: scale(1.03);
 //     background: rgb(255, 255, 255);
 // }
+.navigation-bar {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    padding-top: 10px;
+    background: white;
+}

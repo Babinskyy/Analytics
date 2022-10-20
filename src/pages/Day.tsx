@@ -72,8 +72,6 @@ import { Chart as ChartJS, registerables } from "chart.js";
 
 import { Doughnut, PolarArea, Bar, Chart, Pie } from "react-chartjs-2";
 
-
-
 import { format, parseISO } from "date-fns";
 import plLocale from "date-fns/locale/pl";
 import Header from "../components/Header";
@@ -81,7 +79,7 @@ import { RouteComponentProps } from "react-router";
 
 import api from "./../services/api";
 
-import { Virtuoso } from 'react-virtuoso';
+import { Virtuoso } from "react-virtuoso";
 import LoaderContainer from "../components/LoaderContainer";
 
 ChartJS.register(...registerables);
@@ -117,14 +115,12 @@ type DeliveryDataType = {
 type MatchParamsType = {
   id: string;
   month: string;
-}
+};
 
 const Day: React.FC<RouteComponentProps> = ({ match }) => {
-
   const [orderImage, setOrderImage] = useState("");
-  
-  const [deliveryArray, setDeliveryArray] =
-    useState<DeliveryDataType[]>();
+
+  const [deliveryArray, setDeliveryArray] = useState<DeliveryDataType[]>();
 
   const [polarChartData, setPolarChartData] = useState<any>();
   const [doughnutChartData, setDoughnutChartData] = useState<any>();
@@ -132,7 +128,9 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
 
   const [showOrderPhoto, setShowOrderPhoto] = useState(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  const [chooseDate, setChooseDate] = useState<string>((match.params as MatchParamsType).id);
+  const [chooseDate, setChooseDate] = useState<string>(
+    (match.params as MatchParamsType).id
+  );
 
   // useEffect(() => {
 
@@ -143,24 +141,20 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
   //     console.log(data)
 
   //     setDoughnutChartData(data);
-      
+
   //   })
 
   // }, [(match.params as MatchParamsType).id]);
 
-
   useIonViewDidLeave(() => {
-
     setWhichGraph("types");
 
     setDeliveryArray(undefined);
     setDoughnutChartData(undefined);
     setPolarChartData(undefined);
-
-  })
+  });
 
   useIonViewWillEnter(() => {
-
     api
       .get("/stats/day/data/" + (match.params as MatchParamsType).id, {
         params: {
@@ -175,8 +169,7 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
       .finally(() => {
         setSearchTermLoading(false);
       });
-
-  })
+  });
 
   type GraphSelectType = {
     defaultGraph?: string;
@@ -205,18 +198,16 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
               }}
             />
           );
-        }
-        else
-        {
-          api.get("/stats/day/polar/" + (match.params as MatchParamsType).id).then((e) => {
+        } else {
+          api
+            .get("/stats/day/polar/" + (match.params as MatchParamsType).id)
+            .then((e) => {
+              const data = e.data;
 
-            const data = e.data;
-      
-            console.log(data);
-      
-            setPolarChartData(data);
-            
-          })
+              console.log(data);
+
+              setPolarChartData(data);
+            });
         }
         break;
       case "types":
@@ -224,7 +215,7 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
           return (
             <Doughnut
               style={{
-                maxHeight: "650px"
+                maxHeight: "650px",
               }}
               data={doughnutChartData}
               options={{
@@ -241,62 +232,54 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
               }}
             />
           );
-        }
-        else
-        {
-          api.get("/stats/day/doughnut/" + (match.params as MatchParamsType).id).then((e) => {
+        } else {
+          api
+            .get("/stats/day/doughnut/" + (match.params as MatchParamsType).id)
+            .then((e) => {
+              const data = e.data;
 
-            const data = e.data;
-      
-            console.log(data)
-      
-            setDoughnutChartData(data);
-            
-          })
-        };
+              console.log(data);
+
+              setDoughnutChartData(data);
+            });
+        }
         break;
       default:
         return <LoaderContainer height={500} />;
     }
 
     return <LoaderContainer height={500} />;
-
   };
 
-
-  const [searchTerm, setSearchTerm] = useState('')
-  const [searchTermLoading, setSearchTermLoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTermLoading, setSearchTermLoading] = useState(false);
 
   useEffect(() => {
     setSearchTermLoading(true);
 
-      const delayDebounceFn = setTimeout(() => {
-        api
-          .get("/stats/day/data/" + (match.params as MatchParamsType).id, {
-            params: {
-              Search: searchTerm,
-            },
-          })
-          .then((e) => {
-            const data = e.data;
+    const delayDebounceFn = setTimeout(() => {
+      api
+        .get("/stats/day/data/" + (match.params as MatchParamsType).id, {
+          params: {
+            Search: searchTerm,
+          },
+        })
+        .then((e) => {
+          const data = e.data;
 
-            setDeliveryArray(data);
-          })
-          .finally(() => {
-            setSearchTermLoading(false);
-          });
-      }, 500);
+          setDeliveryArray(data);
+        })
+        .finally(() => {
+          setSearchTermLoading(false);
+        });
+    }, 500);
 
-      return () => clearTimeout(delayDebounceFn);
+    return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
-
-
-
 
   const memoGraphSelect = useMemo(() => {
     return <GraphSelect defaultGraph={whichGraph} />;
   }, [whichGraph, polarChartData, doughnutChartData]);
-
 
   return (
     <IonPage>
@@ -362,42 +345,33 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
       </IonModal>
 
       <IonContent fullscreen>
-        
-      <div
-          style={{
-            position: "sticky",
-            top: "0",
-            zIndex: 3,
-            paddingTop: "10px",
-            background: "white",
-          }}
-        >
+        <div className="navigation-bar">
           <IonRow className="ion-justify-content-center">
             <IonCol size="auto">
-            <IonLabel>
-            <IonButton
-              shape="round"
-              fill={whichGraph === "types" ? "solid" : "outline"}
-              color={"tertiary"}
-              className="graph-button"
-              onClick={() => {
-                setWhichGraph("types");
-              }}
-            >
-              Typy
-            </IonButton>
-            <IonButton
-              shape="round"
-              fill={whichGraph === "area" ? "solid" : "outline"}
-              color={"tertiary"}
-              className="graph-button"
-              onClick={() => {
-                setWhichGraph("area");
-              }}
-            >
-              Rejony
-            </IonButton>
-          </IonLabel>
+              <IonLabel>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "types" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("types");
+                  }}
+                >
+                  Typy
+                </IonButton>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "area" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("area");
+                  }}
+                >
+                  Rejony
+                </IonButton>
+              </IonLabel>
             </IonCol>
           </IonRow>
 
@@ -408,11 +382,16 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
                   Statystyki roczne
                   <IonIcon slot="separator" icon={chevronForward}></IonIcon>
                 </IonBreadcrumb>
-                <IonBreadcrumb separator routerLink={"/month/" + (match.params as MatchParamsType).month} >
+                <IonBreadcrumb
+                  separator
+                  routerLink={
+                    "/month/" + (match.params as MatchParamsType).month
+                  }
+                >
                   Miesięczne - {(match.params as MatchParamsType).month}
                   <IonIcon slot="separator" icon={chevronForward}></IonIcon>
                 </IonBreadcrumb>
-                <IonBreadcrumb active >
+                <IonBreadcrumb active>
                   Dzienne - {(match.params as MatchParamsType).id}
                   <IonIcon slot="separator" icon={chevronForward}></IonIcon>
                 </IonBreadcrumb>
@@ -420,7 +399,6 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
             </IonCol>
           </IonRow>
         </div>
-
 
         <IonItem lines="none" style={{ textAlign: "center" }}>
           <IonLabel>
@@ -434,7 +412,7 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
             >
               {chooseDate}
             </span>
-{/* 
+            {/* 
             <IonIcon
               style={{
                 fontSize: "30px",
@@ -450,131 +428,132 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
             /> */}
           </IonLabel>
         </IonItem>
-            <IonRow className="ion-justify-content-center">
-              <IonCol sizeMd="auto" size="12">
-                <IonItem
-                  lines="none"
-                  style={{
-                    height: "750px",
-                    width: "750px",
-                  }}
-                >
-                  {memoGraphSelect}
-                </IonItem>
-              </IonCol>
-              <IonCol sizeMd="auto" size="12">
-                
-                
-                  {
-                  doughnutChartData
-                  ?
-                  <div style={{
-                    width: "600px"
-                  }}>
-
-                  <div>
-                    <TextField
+        <IonRow className="ion-justify-content-center">
+          <IonCol sizeMd="auto" size="12">
+            <IonItem
+              lines="none"
+              style={{
+                height: "750px",
+                width: "750px",
+                "--background": "transparent",
+              }}
+            >
+              {memoGraphSelect}
+            </IonItem>
+          </IonCol>
+          <IonCol sizeMd="auto" size="12">
+            {doughnutChartData ? (
+              <div
+                style={{
+                  width: "600px",
+                }}
+              >
+                <div>
+                  <TextField
                     InputProps={{
-                      endAdornment: searchTermLoading ? <div><CircularProgress /></div> : <></>
+                      endAdornment: searchTermLoading ? (
+                        <div>
+                          <CircularProgress />
+                        </div>
+                      ) : (
+                        <></>
+                      ),
                     }}
-                    label="Wyszukaj" variant="filled" style={{
+                    label="Wyszukaj"
+                    variant="filled"
+                    style={{
                       width: "100%",
-                      marginBottom: "15px"
-                    }} 
+                      marginBottom: "15px",
+                    }}
                     inputMode="search"
                     autoComplete="off"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                    
-{
-                    deliveryArray
-                    ?
-                    <Virtuoso
-        style={{ height: '750px' }}
-        data={deliveryArray}
-        itemContent={(index, e: DeliveryDataType) => {
-          return (
-            <IonItem
-              className="day-item"
-              style={{ maxWidth: "600px" }}
-            >
-              <IonLabel className="delivery-info-item">
-                <div style={{ display: "flex" }}>
-                  <IonLabel>
-                    <div className="address">
-                      <div className="street">{e.address1}</div>
-                      <div className="town-post">{e.address2}</div>
-                    </div>
-                  </IonLabel>
+                  />
                 </div>
-                {e.diets.map((_e) => {
-                  return (
-                    <IonList lines="none">
-                      <IonLabel className="diet-item">
+
+                {deliveryArray ? (
+                  <Virtuoso
+                    style={{ height: "750px" }}
+                    data={deliveryArray}
+                    itemContent={(index, e: DeliveryDataType) => {
+                      return (
                         <IonItem
-                          style={{
-                            "--padding-start": "0px",
-                            "--min-height": "0px",
-                          }}
+                          className="day-item"
+                          style={{ maxWidth: "600px" }}
                         >
-                          <IonIcon src={chevronForwardOutline} />
-                          <div>{_e}</div>
+                          <IonLabel className="delivery-info-item">
+                            <div style={{ display: "flex" }}>
+                              <IonLabel>
+                                <div className="address">
+                                  <div className="street">{e.address1}</div>
+                                  <div className="town-post">{e.address2}</div>
+                                </div>
+                              </IonLabel>
+                            </div>
+                            {e.diets.map((_e) => {
+                              return (
+                                <IonList lines="none">
+                                  <IonLabel className="diet-item">
+                                    <IonItem
+                                      style={{
+                                        "--padding-start": "0px",
+                                        "--min-height": "0px",
+                                      }}
+                                    >
+                                      <IonIcon src={chevronForwardOutline} />
+                                      <div>{_e}</div>
+                                    </IonItem>
+                                  </IonLabel>
+                                </IonList>
+                              );
+                            })}
+                          </IonLabel>
+                          <IonItem lines="none">
+                            <div className="icon-time">
+                              <IconButton
+                                id="open-modal"
+                                onClick={() => {
+                                  setOrderImage(e.image);
+                                  setShowOrderPhoto(true);
+                                }}
+                              >
+                                <PhotoCamera
+                                  color={e.image ? "primary" : "disabled"}
+                                  style={{
+                                    fontSize: "55px",
+                                    marginLeft: "15px",
+                                  }}
+                                />
+                              </IconButton>
+
+                              <IonLabel
+                                className="delivery-time"
+                                color="primary"
+                              >
+                                {e.image ? (
+                                  <div className="delivery-time-span">
+                                    {e.time}
+                                  </div>
+                                ) : (
+                                  <></>
+                                )}
+                              </IonLabel>
+                            </div>
+                          </IonItem>
                         </IonItem>
-                      </IonLabel>
-                    </IonList>
-                  );
-                })}
-              </IonLabel>
-              <IonItem lines="none">
-                <div className="icon-time">
-                  <IconButton
-                    id="open-modal"
-                    onClick={() => {
-                      setOrderImage(e.image);
-                      setShowOrderPhoto(true);
+                      );
                     }}
-                  >
-                    <PhotoCamera
-                      color={e.image ? "primary" : "disabled"}
-                      style={{
-                        fontSize: "55px",
-                        marginLeft: "15px",
-                      }}
-                    />
-                  </IconButton>
-
-                  <IonLabel
-                    className="delivery-time"
-                    color="primary"
-                  >
-                    {e.image ? (
-                      <div className="delivery-time-span">
-                        {e.time}
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </IonLabel>
-                </div>
-              </IonItem>
-            </IonItem>
-          );
-        }}
-      />
-      :
-      <></>
-                  }
-                  </div>
-                  :
-                  <LoaderContainer height={500} width={400} />
-                  }
-
-
-              </IonCol>
-            </IonRow>
-       
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+            ) : (
+              <LoaderContainer height={500} width={400} />
+            )}
+          </IonCol>
+        </IonRow>
       </IonContent>
     </IonPage>
   );

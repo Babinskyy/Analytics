@@ -34,7 +34,6 @@ const Header: React.FC<Props> = ({ type }) => {
   return (
     <IonHeader>
       <IonToolbar>
-
         <Login />
 
         {/* <IonButtons slot="start">
@@ -62,22 +61,22 @@ const Header: React.FC<Props> = ({ type }) => {
             Kierowcy
           </IonButton>
         </IonTitle>
-        {/* <IonButtons slot="end">
-            <IonButton
-              onClick={() => {
-                const bodyClasses = document.querySelector("body");
+        <IonButtons slot="end">
+          <IonButton
+            onClick={() => {
+              const bodyClasses = document.querySelector("body");
 
-                if (bodyClasses?.classList.contains("dark")) {
-                  document.body.classList.remove("dark");
-                } else {
-                  document.body.classList.add("dark");
-                }
-              }}
-              style={{ marginRight: "15px" }}
-            >
-              <IonIcon icon={moon} />
-            </IonButton>
-          </IonButtons> */}
+              if (bodyClasses?.classList.contains("dark")) {
+                document.body.classList.remove("dark");
+              } else {
+                document.body.classList.add("dark");
+              }
+            }}
+            style={{ marginRight: "15px" }}
+          >
+            <IonIcon icon={moon} />
+          </IonButton>
+        </IonButtons>
       </IonToolbar>
     </IonHeader>
   );

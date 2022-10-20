@@ -131,9 +131,6 @@ type MatchParamsType = {
 };
 
 const Driver: React.FC<RouteComponentProps> = ({ match }) => {
-
-  
-
   const _commentsArray: CommentsArrayType[] = [
     {
       title: "Tytuł",
@@ -381,61 +378,65 @@ const Driver: React.FC<RouteComponentProps> = ({ match }) => {
   const GraphSelect = () => {
     switch (whichGraph) {
       case "kilometers":
-        return <DriverDistance driverName={(match.params as MatchParamsType).id} />
-        // if (barChartData) {
-        //   return (
-        //     <Bar
-        //       height={300}
-        //       data={barChartData}
-        //       options={{
-        //         indexAxis: "y",
-        //         plugins: {
-        //           title: {
-        //             display: true,
-        //             text: "Ilość kilometrów",
-        //           },
-        //           legend: {
-        //             display: false,
-        //             position: "bottom",
-        //           },
-        //         },
-        //       }}
-        //     />
-        //   );
-        // } 
+        return (
+          <DriverDistance driverName={(match.params as MatchParamsType).id} />
+        );
+      // if (barChartData) {
+      //   return (
+      //     <Bar
+      //       height={300}
+      //       data={barChartData}
+      //       options={{
+      //         indexAxis: "y",
+      //         plugins: {
+      //           title: {
+      //             display: true,
+      //             text: "Ilość kilometrów",
+      //           },
+      //           legend: {
+      //             display: false,
+      //             position: "bottom",
+      //           },
+      //         },
+      //       }}
+      //     />
+      //   );
+      // }
       // case "comments":
       //   return (
       //     <DriverNotesTable driverName={(match.params as MatchParamsType).id} />
       //   );
       //case "tacki":
-        // if (tackiBarChartData) {
-        //   return (
-        //     <Bar
-        //       height={300}
-        //       data={tackiBarChartData}
-        //       options={{
-        //         indexAxis: "y",
-        //         plugins: {
-        //           title: {
-        //             display: true,
-        //             text: "Ilość zniszczonych tacek",
-        //           },
-        //           legend: {
-        //             display: false,
-        //             position: "bottom",
-        //           },
-        //         },
-        //       }}
-        //     />
-        //   );
-        // } else return <></>;
-        // return (
-        //   <DriverNotesTable driverName={(match.params as MatchParamsType).id} />
-        // );
+      // if (tackiBarChartData) {
+      //   return (
+      //     <Bar
+      //       height={300}
+      //       data={tackiBarChartData}
+      //       options={{
+      //         indexAxis: "y",
+      //         plugins: {
+      //           title: {
+      //             display: true,
+      //             text: "Ilość zniszczonych tacek",
+      //           },
+      //           legend: {
+      //             display: false,
+      //             position: "bottom",
+      //           },
+      //         },
+      //       }}
+      //     />
+      //   );
+      // } else return <></>;
+      // return (
+      //   <DriverNotesTable driverName={(match.params as MatchParamsType).id} />
+      // );
       case "route":
         if (lineChartData) {
           return (
-            <DriverRouteTable driverName={(match.params as MatchParamsType).id} />
+            <DriverRouteTable
+              driverName={(match.params as MatchParamsType).id}
+            />
           );
         } else return <></>;
       default:
@@ -532,15 +533,7 @@ const Driver: React.FC<RouteComponentProps> = ({ match }) => {
       </IonModal>
 
       <IonContent fullscreen>
-        <div
-          style={{
-            position: "sticky",
-            top: "0",
-            zIndex: 3,
-            paddingTop: "10px",
-            background: "white",
-          }}
-        >
+        <div className="navigation-bar">
           <IonRow className="ion-justify-content-center">
             <IonCol size="auto">
               <IonLabel>
@@ -599,20 +592,19 @@ const Driver: React.FC<RouteComponentProps> = ({ match }) => {
                   Statystyki roczne
                   <IonIcon slot="separator" icon={chevronForward}></IonIcon>
                 </IonBreadcrumb>
-                <IonBreadcrumb active routerLink={"/month/" + (match.params as MatchParamsType).id} >
+                <IonBreadcrumb
+                  active
+                  routerLink={"/month/" + (match.params as MatchParamsType).id}
+                >
                   Kierowca - {(match.params as MatchParamsType).id}
                   <IonIcon slot="separator" icon={chevronForward}></IonIcon>
                 </IonBreadcrumb>
               </IonBreadcrumbs>
             </IonCol>
           </IonRow>
-
         </div>
 
-
         {GraphSelectMemo}
-
-
       </IonContent>
     </IonPage>
   );

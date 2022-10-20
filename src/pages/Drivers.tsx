@@ -161,7 +161,7 @@ const Drivers: React.FC = () => {
   const GraphSelect: React.FC<GraphSelectType> = ({ defaultGraph }) => {
     switch (defaultGraph ? defaultGraph : whichGraph) {
       case "diets":
-        return <Distance />
+        return <Distance />;
       case "area":
         if (polarChartData) {
           return (
@@ -193,9 +193,9 @@ const Drivers: React.FC = () => {
         }
         break;
       case "tacki":
-        return  <DriversScanTable />
+        return <DriversScanTable />;
       case "notes":
-        return  <DriverNotesTable />
+        return <DriverNotesTable />;
       default:
         return <LoaderContainer height={500} />;
     }
@@ -244,15 +244,7 @@ const Drivers: React.FC = () => {
     <IonPage className="month">
       <Header type="drivers" />
       <IonContent fullscreen>
-        <div
-          style={{
-            position: "sticky",
-            top: "0",
-            zIndex: 3,
-            paddingTop: "10px",
-            background: "white",
-          }}
-        >
+        <div className="navigation-bar">
           <IonRow className="ion-justify-content-center">
             <IonCol size="auto">
               <IonLabel>
@@ -303,7 +295,6 @@ const Drivers: React.FC = () => {
               </IonBreadcrumbs>
             </IonCol>
           </IonRow>
-
         </div>
 
         <div>

@@ -1,67 +1,71 @@
 body.dark .month {
-    
-    .address-item{
-        
+
+    .address-item {
+
         border-bottom: 1px solid rgb(49, 49, 49);
-        
-        
+
+
     }
 
 }
 
 
-.address-item{
-    
+.address-item {
+
     padding-bottom: 0px;
     /* padding-top: 10px; */
     max-width: 100%;
-   
-    
-    
-    
+
+
+
+
 }
-.address{
+
+.address {
     margin-bottom: 0px;
     margin-top: 10px;
-    
-    
+
+
 }
 
 
-.street{
+.street {
     font-size: 24px;
     font-weight: 550;
     padding-bottom: 5px;
 }
-.town-post{
-    opacity: 0.5; 
-}
-.diet-item{    
-    letter-spacing: 1.5px;
-}
-.list-header{
-    
-    text-align: center;
-    letter-spacing: 1.5px;
-    
+
+.town-post {
+    opacity: 0.5;
 }
 
-.delivery-time-span{
+.diet-item {
+    letter-spacing: 1.5px;
+}
+
+.list-header {
+
+    text-align: center;
+    letter-spacing: 1.5px;
+
+}
+
+.delivery-time-span {
     font-size: 35px;
     text-align: center;
-    
-    
+
+
 }
 
-.icon-time{
-    
-    
+.icon-time {
+
+
     top: 10px;
     height: 150px;
     width: 100px;
     padding-top: 20px;
 }
-.MuiIconButton-colorSecondary{
+
+.MuiIconButton-colorSecondary {
     color: #5260ff;
 }
-

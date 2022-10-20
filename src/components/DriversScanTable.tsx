@@ -73,8 +73,7 @@ const DriversScanTable: React.FC<ContainerProps> = () => {
   const [warehouseDetailsModalOpen, setWarehouseDetailsModalOpen] =
     useState(false);
 
-  const [warehouseData, setWarehouseData] =
-    useState<DriversWarehouseProps>();
+  const [warehouseData, setWarehouseData] = useState<DriversWarehouseProps>();
 
   useEffect(() => {
     if (!warehouseDetailsModalOpen) {
@@ -174,7 +173,8 @@ const DriversScanTable: React.FC<ContainerProps> = () => {
                       sx={{
                         "&:last-child td, &:last-child th": { border: 0 },
                         td: {
-                          borderRight: "1px solid rgba(224, 224, 224, 1) !important",
+                          borderRight:
+                            "1px solid rgba(224, 224, 224, 1) !important",
                         },
                       }}
                     >

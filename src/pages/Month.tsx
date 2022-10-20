@@ -217,29 +217,25 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
   // }, [(match.params as MatchParamsType).id]);
 
   useIonViewDidLeave(() => {
-
     // setBarChartData(null);
     setPolarChartData(null);
     setDoughnutChartData(null);
-
   });
 
   useEffect(() => {
-
     api
-    .get("/stats/month/bar/" + (match.params as MatchParamsType).id)
-    .then((e) => {
-      const data = e.data;
+      .get("/stats/month/bar/" + (match.params as MatchParamsType).id)
+      .then((e) => {
+        const data = e.data;
 
-      console.log(data);
+        console.log(data);
 
-      setBarChartData(data);
-    });
+        setBarChartData(data);
+      });
 
-  setPolarChartData(null);
-  setDoughnutChartData(null);
-
-  }, [(match.params as MatchParamsType).id])
+    setPolarChartData(null);
+    setDoughnutChartData(null);
+  }, [(match.params as MatchParamsType).id]);
 
   type GraphSelectType = {
     defaultGraph?: string;
@@ -358,15 +354,7 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
     <IonPage className="month">
       <Header type="diets" />
       <IonContent fullscreen>
-        <div
-          style={{
-            position: "sticky",
-            top: "0",
-            zIndex: 3,
-            paddingTop: "10px",
-            background: "white",
-          }}
-        >
+        <div className="navigation-bar">
           <IonRow className="ion-justify-content-center">
             <IonCol size="auto">
               <IonLabel>
@@ -414,7 +402,10 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                   Statystyki roczne
                   <IonIcon slot="separator" icon={chevronForward}></IonIcon>
                 </IonBreadcrumb>
-                <IonBreadcrumb active routerLink={"/month/" + (match.params as MatchParamsType).id} >
+                <IonBreadcrumb
+                  active
+                  routerLink={"/month/" + (match.params as MatchParamsType).id}
+                >
                   Miesięczne - {(match.params as MatchParamsType).id}
                   <IonIcon slot="separator" icon={chevronForward}></IonIcon>
                 </IonBreadcrumb>
@@ -434,6 +425,7 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                     marginBottom: "50px",
                     width: "750px",
                     padding: "0 20px",
+                    "--background": "transparent",
                   }}
                 >
                   {memoGraphSelect}
@@ -446,7 +438,11 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                     top: "47px",
                   }}
                 >
-                  <IonItem className="list-header" lines="none">
+                  <IonItem
+                    className="list-header"
+                    lines="none"
+                    style={{ "--background": "transparent" }}
+                  >
                     <IonLabel>
                       <div style={{ textAlign: "left", marginLeft: "10px" }}>
                         Miesiąc
@@ -458,12 +454,13 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                       </div>
                     </IonLabel>
                   </IonItem>
-                  <IonItem
-                    style={{ maxHeight: "750px", overflow: "auto" }}
-                    lines="none"
-                  >
+                  <div style={{ maxHeight: "750px", overflow: "auto" }}>
                     {barChartData ? (
-                      <IonList className="days-list" lines="none">
+                      <IonList
+                        className="days-list"
+                        lines="none"
+                        style={{ background: "transparent" }}
+                      >
                         {barChartData?.labels.map((e: any, i: number) => {
                           return barData.datasets[0].data[i] > 0 ? (
                             <IonItem
@@ -472,7 +469,10 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                               button
                               onClick={() => {
                                 navigate(
-                                  "/day/" + (match.params as MatchParamsType).id + "/" + barChartData.date[i],
+                                  "/day/" +
+                                    (match.params as MatchParamsType).id +
+                                    "/" +
+                                    barChartData.date[i],
                                   "forward",
                                   "push"
                                 );
@@ -499,15 +499,15 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                                 </div>
                               </IonLabel>
                               <IonLabel>
-                                  <div
-                                    style={{
-                                      textAlign: "right",
-                                      fontSize: "20px",
-                                    }}
-                                  >
-                                    {barChartData.datasets[0].data[i]}
-                                  </div>
-                                </IonLabel>
+                                <div
+                                  style={{
+                                    textAlign: "right",
+                                    fontSize: "20px",
+                                  }}
+                                >
+                                  {barChartData.datasets[0].data[i]}
+                                </div>
+                              </IonLabel>
                             </IonItem>
                           ) : (
                             <></>
@@ -517,7 +517,7 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                     ) : (
                       <LoaderContainer height={500} width={400} />
                     )}
-                  </IonItem>
+                  </div>
                 </div>
               </IonCol>
             </IonRow>
@@ -547,10 +547,10 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                       <div className="date">{barData.date[i]}</div>
                     </IonLabel>
                     <IonLabel>
-                        <div style={{ textAlign: "right", fontSize: "20px" }}>
-                          {barChartData.datasets[0].data[i]}
-                        </div>
-                     </IonLabel>
+                      <div style={{ textAlign: "right", fontSize: "20px" }}>
+                        {barChartData.datasets[0].data[i]}
+                      </div>
+                    </IonLabel>
                   </IonItem>
                 );
               })}
