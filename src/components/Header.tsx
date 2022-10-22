@@ -8,6 +8,7 @@ import {
   IonToolbar,
   NavContext,
 } from "@ionic/react";
+import { IconButton, useTheme } from "@mui/material";
 
 import {
   arrowUpOutline,
@@ -21,8 +22,17 @@ import {
   moonOutline,
   reorderFourOutline,
 } from "ionicons/icons";
-import { useContext } from "react";
+import { createContext, useContext } from "react";
 import Login from "./Login";
+
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+
+import {
+  GlobalStateProvider,
+  useGlobalState,
+  GlobalStateInterface,
+} from "./../GlobalStateProvider";
 
 type Props = {
   type: "diets" | "drivers";
@@ -30,6 +40,8 @@ type Props = {
 
 const Header: React.FC<Props> = ({ type }) => {
   const { navigate } = useContext(NavContext);
+
+  const { state, setState } = useGlobalState();
 
   return (
     <IonHeader>
@@ -62,7 +74,8 @@ const Header: React.FC<Props> = ({ type }) => {
           </IonButton>
         </IonTitle>
         <IonButtons slot="end">
-          <IonButton
+          <IconButton
+            sx={{ ml: 1 }}
             onClick={() => {
               const bodyClasses = document.querySelector("body");
 
@@ -71,11 +84,18 @@ const Header: React.FC<Props> = ({ type }) => {
               } else {
                 document.body.classList.add("dark");
               }
+
+              setState((prev) => ({
+                ...prev,
+                ...{
+                  mode: state.mode === "dark" ? "light" : "dark",
+                },
+              }));
             }}
-            style={{ marginRight: "15px" }}
+            color="inherit"
           >
-            <IonIcon icon={moon} />
-          </IonButton>
+            {state.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
         </IonButtons>
       </IonToolbar>
     </IonHeader>

@@ -41,25 +41,35 @@ import Month from "./pages/Month";
 import Year from "./pages/Year";
 import Driver from "./pages//Driver";
 import Drivers from "./pages//Drivers";
-import { Button, createTheme, TextField, ThemeProvider } from "@mui/material";
+import { Button, createTheme, PaletteMode, TextField, ThemeProvider } from "@mui/material";
 
 import auth from "./services/auth.service";
 
 import { User } from "./services/userProps";
-import { useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import Login from "./components/Login";
+import { useTheme } from "@emotion/react";
+import Mode from "./theme/Mode";
+
 
 setupIonicReact();
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
-
 const App: React.FC = () => {
+
+  const [mode, setMode] = useState<any>('light');
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+      }),
+    [mode],
+  );
+
   return (
-    <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={theme}>
+        <Mode setMode={setMode} />
       <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>
