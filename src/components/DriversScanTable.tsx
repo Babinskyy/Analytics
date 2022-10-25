@@ -229,12 +229,12 @@ const DriversScanTable: React.FC<ContainerProps> = () => {
       </IonModal>
 
       <IonRow className="ion-justify-content-between">
-        <IonCol size="12" sizeMd="8">
-          <IonRow className="ion-justify-content-between">
-            <IonCol size="6">
+        <IonCol size="12" sizeMd="8" className="order-2 order-md-1">
+          <IonRow className="justify-content-center justify-content-md-between">
+            <IonCol size="12" sizeMd="auto">
               <RegionAutocomplete setRegion={setRegion} />
             </IonCol>
-            <IonCol size="auto">
+            <IonCol size="12" sizeMd="auto">
               <DriversAutocomplete setDriver={setDriver} />
             </IonCol>
           </IonRow>
@@ -335,7 +335,7 @@ const DriversScanTable: React.FC<ContainerProps> = () => {
             </IonCol>
           </IonRow>
         </IonCol>
-        <IonCol size="12" sizeMd="4">
+        <IonCol size="12" sizeMd="4" className="order-1 order-md-2">
           <h2 style={{ textAlign: "center" }}>
             Data dostawy:{" "}
             <strong>

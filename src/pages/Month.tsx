@@ -539,7 +539,14 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                     style={{ maxWidth: "600px" }}
                     button
                     onClick={() => {
-                      navigate("/day", "forward", "push");
+                      navigate(
+                        "/day/" +
+                          (match.params as MatchParamsType).id +
+                          "/" +
+                          barChartData.date[i],
+                        "forward",
+                        "push"
+                      );
                     }}
                   >
                     <IonLabel>

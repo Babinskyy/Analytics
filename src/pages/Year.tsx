@@ -273,42 +273,44 @@ const Year: React.FC = () => {
       <IonContent fullscreen>
         <div className="navigation-bar">
           <IonRow className="ion-justify-content-center">
-            <IonCol size="auto">
-              <IonLabel className="">
-                <IonButton
-                  shape="round"
-                  fill={whichGraph === "amount" ? "solid" : "outline"}
-                  color={"tertiary"}
-                  className="graph-button"
-                  onClick={() => {
-                    setWhichGraph("amount");
-                  }}
-                >
-                  Ilość
-                </IonButton>
-                <IonButton
-                  shape="round"
-                  fill={whichGraph === "types" ? "solid" : "outline"}
-                  color={"tertiary"}
-                  className="graph-button"
-                  onClick={() => {
-                    setWhichGraph("types");
-                  }}
-                >
-                  Typy
-                </IonButton>
-                <IonButton
-                  shape="round"
-                  fill={whichGraph === "area" ? "solid" : "outline"}
-                  color={"tertiary"}
-                  className="graph-button"
-                  onClick={() => {
-                    setWhichGraph("area");
-                  }}
-                >
-                  Rejony
-                </IonButton>
-              </IonLabel>
+            <IonCol size="auto" style={{ padding: "0" }}>
+              <IonButton
+                shape="round"
+                fill={whichGraph === "amount" ? "solid" : "outline"}
+                color={"tertiary"}
+                className="graph-button"
+                onClick={() => {
+                  setWhichGraph("amount");
+                }}
+              >
+                Ilość
+              </IonButton>
+            </IonCol>
+            <IonCol size="auto" style={{ padding: "0" }}>
+              <IonButton
+                shape="round"
+                fill={whichGraph === "types" ? "solid" : "outline"}
+                color={"tertiary"}
+                className="graph-button"
+                onClick={() => {
+                  setWhichGraph("types");
+                }}
+              >
+                Typy
+              </IonButton>
+            </IonCol>
+            <IonCol size="auto" style={{ padding: "0" }}>
+              <IonButton
+                shape="round"
+                fill={whichGraph === "area" ? "solid" : "outline"}
+                color={"tertiary"}
+                className="graph-button"
+                onClick={() => {
+                  setWhichGraph("area");
+                }}
+              >
+                Rejony
+              </IonButton>
             </IonCol>
           </IonRow>
 
@@ -325,8 +327,8 @@ const Year: React.FC = () => {
         </div>
 
         <Container>
-          <IonRow className="ion-justify-content-center">
-            <IonCol size="7">
+          <IonRow className="ion-justify-content-center ">
+            <IonCol size="12" sizeMd="7">
               <div
                 style={{
                   marginBottom: "50px",
@@ -336,7 +338,7 @@ const Year: React.FC = () => {
                 {memoGraphSelect}
               </div>
             </IonCol>
-            <IonCol size="5">
+            <IonCol size="12" sizeMd="5">
               <div
                 style={{
                   position: "sticky",

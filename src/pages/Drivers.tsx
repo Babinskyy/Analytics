@@ -246,42 +246,44 @@ const Drivers: React.FC = () => {
       <IonContent fullscreen>
         <div className="navigation-bar">
           <IonRow className="ion-justify-content-center">
-            <IonCol size="auto">
-              <IonLabel>
-                <IonButton
-                  shape="round"
-                  fill={whichGraph === "diets" ? "solid" : "outline"}
-                  color={"tertiary"}
-                  className="graph-button"
-                  onClick={() => {
-                    setWhichGraph("diets");
-                  }}
-                >
-                  Dystans
-                </IonButton>
-                <IonButton
-                  shape="round"
-                  fill={whichGraph === "tacki" ? "solid" : "outline"}
-                  color={"tertiary"}
-                  className="graph-button"
-                  onClick={() => {
-                    setWhichGraph("tacki");
-                  }}
-                >
-                  Skanowanie
-                </IonButton>
-                <IonButton
-                  shape="round"
-                  fill={whichGraph === "notes" ? "solid" : "outline"}
-                  color={"tertiary"}
-                  className="graph-button"
-                  onClick={() => {
-                    setWhichGraph("notes");
-                  }}
-                >
-                  Uwagi
-                </IonButton>
-              </IonLabel>
+            <IonCol size="auto" style={{ padding: "0" }}>
+              <IonButton
+                shape="round"
+                fill={whichGraph === "diets" ? "solid" : "outline"}
+                color={"tertiary"}
+                className="graph-button"
+                onClick={() => {
+                  setWhichGraph("diets");
+                }}
+              >
+                Dystans
+              </IonButton>
+            </IonCol>
+            <IonCol size="auto" style={{ padding: "0" }}>
+              <IonButton
+                shape="round"
+                fill={whichGraph === "tacki" ? "solid" : "outline"}
+                color={"tertiary"}
+                className="graph-button"
+                onClick={() => {
+                  setWhichGraph("tacki");
+                }}
+              >
+                Skanowanie
+              </IonButton>
+            </IonCol>
+            <IonCol size="auto" style={{ padding: "0" }}>
+              <IonButton
+                shape="round"
+                fill={whichGraph === "notes" ? "solid" : "outline"}
+                color={"tertiary"}
+                className="graph-button"
+                onClick={() => {
+                  setWhichGraph("notes");
+                }}
+              >
+                Uwagi
+              </IonButton>
             </IonCol>
           </IonRow>
 

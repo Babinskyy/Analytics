@@ -22,7 +22,11 @@ type Props = {
   fullWidth?: boolean;
 };
 
-const DriversAutocomplete: React.FC<Props> = ({ setDriver, width, fullWidth = false }) => {
+const DriversAutocomplete: React.FC<Props> = ({
+  setDriver,
+  width,
+  fullWidth = false,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState<readonly string[]>([]);
   const loading = open && options.length === 0;
@@ -59,7 +63,13 @@ const DriversAutocomplete: React.FC<Props> = ({ setDriver, width, fullWidth = fa
       }}
       noOptionsText="Nie znaleziono"
       // id={v4()}
-      sx={{ width: width ? width : 300 }}
+      sx={{
+        width: {
+          xs: "100%",
+          sm: "100%",
+          md: width ? width : 300,
+        },
+      }}
       open={open}
       onOpen={() => {
         setOpen(true);
@@ -86,7 +96,7 @@ const DriversAutocomplete: React.FC<Props> = ({ setDriver, width, fullWidth = fa
           fullWidth={true}
           InputProps={{
             ...params.InputProps,
-            autoComplete: 'off',
+            autoComplete: "off",
             endAdornment: (
               <React.Fragment>
                 {loading ? (

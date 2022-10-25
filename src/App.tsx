@@ -33,7 +33,11 @@ import "./theme/variables.css";
 
 import "./theme/Global.scss";
 
+import "./theme/Responsive.scss";
+
 import "./theme/Darek.scss";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import "./theme/fonts.css";
 import Day from "./pages/Day";
@@ -41,22 +45,33 @@ import Month from "./pages/Month";
 import Year from "./pages/Year";
 import Driver from "./pages//Driver";
 import Drivers from "./pages//Drivers";
-import { Button, createTheme, PaletteMode, TextField, ThemeProvider } from "@mui/material";
+import {
+  Button,
+  createTheme,
+  PaletteMode,
+  TextField,
+  ThemeProvider,
+} from "@mui/material";
 
 import auth from "./services/auth.service";
 
 import { User } from "./services/userProps";
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Login from "./components/Login";
 import { useTheme } from "@emotion/react";
 import Mode from "./theme/Mode";
 
-
 setupIonicReact();
 
 const App: React.FC = () => {
-
-  const [mode, setMode] = useState<any>('light');
+  const [mode, setMode] = useState<any>("light");
   const theme = useMemo(
     () =>
       createTheme({
@@ -64,12 +79,12 @@ const App: React.FC = () => {
           mode,
         },
       }),
-    [mode],
+    [mode]
   );
 
   return (
-      <ThemeProvider theme={theme}>
-        <Mode setMode={setMode} />
+    <ThemeProvider theme={theme}>
+      <Mode setMode={setMode} />
       <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>

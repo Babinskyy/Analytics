@@ -57,7 +57,13 @@ const RegionAutocomplete: React.FC<Props> = ({ setRegion }) => {
       }}
       noOptionsText="Nie znaleziono"
       // id={v4()}
-      sx={{ width: 300 }}
+      sx={{
+        width: {
+          xs: "100%",
+          sm: "100%",
+          md: 300,
+        },
+      }}
       open={open}
       onOpen={() => {
         setOpen(true);
@@ -83,7 +89,7 @@ const RegionAutocomplete: React.FC<Props> = ({ setRegion }) => {
           label="Region"
           InputProps={{
             ...params.InputProps,
-            autoComplete: 'off',
+            autoComplete: "off",
             endAdornment: (
               <React.Fragment>
                 {loading ? (
