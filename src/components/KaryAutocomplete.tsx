@@ -46,8 +46,8 @@ const KaryAutocomplete: React.FC<Props> = ({
       "Niedowóz",
       "Zły adres",
       "Pomylona kaloryczność",
-      "Pomylona typ diety",
-      "uszkodzona dieta",
+      "Pomylony typ diety",
+      "Uszkodzona dieta",
     ]);
 
     return () => {
