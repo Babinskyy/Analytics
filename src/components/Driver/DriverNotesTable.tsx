@@ -21,6 +21,7 @@ import {
   IonLabel,
   IonModal,
   IonRow,
+  useIonAlert,
   useIonLoading,
   useIonViewWillEnter,
 } from "@ionic/react";
@@ -31,8 +32,9 @@ import RegionAutocomplete from "./../RegionAutocomplete";
 import { useEffect, useRef, useState } from "react";
 import DriversAutocomplete from "./../DriversAutocomplete";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import { closeOutline, trash } from "ionicons/icons";
+import { closeOutline, createOutline, trash } from "ionicons/icons";
 import Add from "@mui/icons-material/Add";
+import KaryAutocomplete from "../KaryAutocomplete";
 
 type DriversNotesTableProps = {
   id: number;
@@ -62,6 +64,10 @@ const DriverNotesTable: React.FC = () => {
   const [availableDays, setAvailableDays] = useState<string[]>();
 
   const [presentLoading, dismissLoading] = useIonLoading();
+
+  const [presentAlert] = useIonAlert();
+
+  const [handlerMessage, setHandlerMessage] = useState("");
 
   useEffect(() => {
     presentLoading();
@@ -155,6 +161,9 @@ const DriverNotesTable: React.FC = () => {
                 <DriversAutocomplete fullWidth setDriver={setDriver} />
               </IonCol>
               <IonCol size="6">
+                <KaryAutocomplete fullWidth setTitle={setTitle} />
+              </IonCol>
+              {/* <IonCol size="4">
                 <TextField
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -162,7 +171,7 @@ const DriverNotesTable: React.FC = () => {
                   fullWidth
                   label="Tytuł"
                 ></TextField>
-              </IonCol>
+              </IonCol> */}
             </IonRow>
             <IonRow style={{ marginTop: "10px" }}>
               <IonCol size="12">
@@ -268,37 +277,95 @@ const DriverNotesTable: React.FC = () => {
                         <TableCell align="center">{row.description}</TableCell>
                         <TableCell align="center">{row.date}</TableCell>
 
-                        <TableCell style={{ width: "60px" }} align="right"><Button style={{
-                          minWidth: "10px",
-                          height: "28px"
-                        }} color="error" variant="contained" onClick={() => {
+                        <TableCell style={{ width: "60px" }} align="right">
+                          <Button
+                            style={{
+                              minWidth: "10px",
+                              height: "28px",
+                            }}
+                            color="error"
+                            variant="contained"
+                            onClick={() => {
+                              presentAlert({
+                                // header: "Alert",
+                                subHeader:
+                                  "Czy na pewno chcesz usunąć tę uwagę?",
+                                // message: "This is an alert!",
+                                buttons: [
+                                  {
+                                    text: "Cancel",
+                                    role: "cancel",
+                                    handler: () => {
+                                      setHandlerMessage("Alert canceled");
+                                    },
+                                  },
+                                  {
+                                    text: "TAK",
+                                    role: "confirm",
+                                    handler: () => {
+                                      presentLoading();
 
-                          presentLoading();
+                                      api
+                                        .delete("stats/driver/note/" + row.id)
+                                        .then((response) => {
+                                          api
+                                            .get(
+                                              "stats/drivers/notes"
+                                              // {
+                                              //   params: {
+                                              //     DriverId: ""
+                                              //   },
+                                              // }
+                                            )
+                                            .then((response) => {
+                                              _setRows(response.data);
+                                            })
+                                            .finally(() => {
+                                              dismissLoading();
+                                            });
+                                        })
+                                        .catch(() => {
+                                          dismissLoading();
+                                        });
+                                    },
+                                  },
+                                ],
+                              });
+                            }}
+                          >
+                            <IonIcon src={trash} />
+                          </Button>
 
-                    api
-                      .delete("stats/driver/note/" + row.id,)
-                      .then((response) => {
-                        api
-                          .get(
-                            "stats/drivers/notes"
-                            // {
-                            //   params: {
-                            //     DriverId: ""
-                            //   },
-                            // }
-                          )
-                          .then((response) => {
-                            _setRows(response.data);
-                          })
-                          .finally(() => {
-                            dismissLoading();
-                          });
-                      })
-                      .catch(() => {
-                        dismissLoading();
-                      });
-
-                        }} ><IonIcon src={trash} /></Button></TableCell>
+                          <Button
+                            style={{
+                              marginTop: "2px",
+                              minWidth: "10px",
+                              height: "28px",
+                            }}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                              presentAlert({
+                                header: "Edytuj uwagę",
+                                buttons: [
+                                  { text: "Cancel", role: "cancel" },
+                                  { text: "Edytuj", role: "confirm" },
+                                ],
+                                inputs: [
+                                  {
+                                    placeholder: "Tytuł",
+                                  },
+                                  {
+                                    type: "textarea",
+                                    placeholder: "Opis",
+                                  },
+                                ],
+                              });
+                            }}
+                          >
+                            <IonIcon src={createOutline} />
+                          </Button>
+                        </TableCell>
 
                         {/* <TableCell
                           style={{

@@ -17,13 +17,13 @@ import api from "./../services/api";
 // import { v4 as uuidv4, v4 } from "uuid";
 
 type Props = {
-  setDriver: React.Dispatch<React.SetStateAction<string>>;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
   width?: string;
   fullWidth?: boolean;
 };
 
-const DriversAutocomplete: React.FC<Props> = ({
-  setDriver,
+const KaryAutocomplete: React.FC<Props> = ({
+  setTitle,
   width,
   fullWidth = false,
 }) => {
@@ -38,11 +38,17 @@ const DriversAutocomplete: React.FC<Props> = ({
       return undefined;
     }
 
-    api.get("autocomplete/drivers").then((response) => {
-      setOptions(response.data);
-    });
+    // api.get("autocomplete/drivers").then((response) => {
+    //   setOptions(response.data);
+    // });
 
-    setOptions(["1", "2"]);
+    setOptions([
+      "Niedowóz",
+      "Zły adres",
+      "Pomylona kaloryczność",
+      "Pomylona typ diety",
+      "uszkodzona dieta",
+    ]);
 
     return () => {
       active = false;
@@ -84,7 +90,7 @@ const DriversAutocomplete: React.FC<Props> = ({
         return option;
       }}
       onChange={(event, value) => {
-        setDriver(value ?? "");
+        setTitle(value ?? "");
       }}
       options={options}
       loading={loading}
@@ -94,7 +100,7 @@ const DriversAutocomplete: React.FC<Props> = ({
           type={"search"}
           className="shadow-mui"
           {...params}
-          label="Kierowca"
+          label="Tytuł"
           fullWidth={true}
           InputProps={{
             ...params.InputProps,
@@ -114,4 +120,4 @@ const DriversAutocomplete: React.FC<Props> = ({
   );
 };
 
-export default DriversAutocomplete;
+export default KaryAutocomplete;

@@ -81,6 +81,7 @@ import api from "./../services/api";
 
 import { Virtuoso } from "react-virtuoso";
 import LoaderContainer from "../components/LoaderContainer";
+import { Container } from "@mui/system";
 
 ChartJS.register(...registerables);
 const doughnutData = {
@@ -428,132 +429,132 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
             /> */}
           </IonLabel>
         </IonItem>
-        <IonRow className="ion-justify-content-center">
-          <IonCol sizeMd="auto" size="12">
-            <IonItem
-              lines="none"
-              style={{
-                height: "750px",
-                width: "750px",
-                "--background": "transparent",
-              }}
-            >
-              {memoGraphSelect}
-            </IonItem>
-          </IonCol>
-          <IonCol sizeMd="auto" size="12">
-            {doughnutChartData ? (
-              <div
+        <Container>
+          <IonRow className="ion-justify-content-center">
+            <IonCol sizeMd="7" size="12">
+              <IonItem
+                lines="none"
                 style={{
-                  width: "600px",
+                  maxHeight: "750px",
+                  maxWidth: "750px",
+                  "--background": "transparent",
                 }}
               >
+                {memoGraphSelect}
+              </IonItem>
+            </IonCol>
+            <IonCol sizeMd="5" size="12">
+              {doughnutChartData ? (
                 <div>
-                  <TextField
-                    InputProps={{
-                      endAdornment: searchTermLoading ? (
-                        <div>
-                          <CircularProgress />
-                        </div>
-                      ) : (
-                        <></>
-                      ),
-                    }}
-                    label="Wyszukaj"
-                    variant="filled"
-                    style={{
-                      width: "100%",
-                      marginBottom: "15px",
-                    }}
-                    inputMode="search"
-                    autoComplete="off"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
+                  <div>
+                    <TextField
+                      InputProps={{
+                        endAdornment: searchTermLoading ? (
+                          <div>
+                            <CircularProgress />
+                          </div>
+                        ) : (
+                          <></>
+                        ),
+                      }}
+                      label="Wyszukaj"
+                      variant="filled"
+                      style={{
+                        width: "100%",
+                        marginBottom: "15px",
+                      }}
+                      inputMode="search"
+                      autoComplete="off"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
 
-                {deliveryArray ? (
-                  <Virtuoso
-                    style={{ height: "750px" }}
-                    data={deliveryArray}
-                    itemContent={(index, e: DeliveryDataType) => {
-                      return (
-                        <IonItem
-                          className="day-item"
-                          style={{ maxWidth: "600px" }}
-                        >
-                          <IonLabel className="delivery-info-item">
-                            <div style={{ display: "flex" }}>
-                              <IonLabel>
-                                <div className="address">
-                                  <div className="street">{e.address1}</div>
-                                  <div className="town-post">{e.address2}</div>
-                                </div>
-                              </IonLabel>
-                            </div>
-                            {e.diets.map((_e) => {
-                              return (
-                                <IonList lines="none">
-                                  <IonLabel className="diet-item">
-                                    <IonItem
-                                      style={{
-                                        "--padding-start": "0px",
-                                        "--min-height": "0px",
-                                      }}
-                                    >
-                                      <IonIcon src={chevronForwardOutline} />
-                                      <div>{_e}</div>
-                                    </IonItem>
-                                  </IonLabel>
-                                </IonList>
-                              );
-                            })}
-                          </IonLabel>
-                          <IonItem lines="none">
-                            <div className="icon-time">
-                              <IconButton
-                                id="open-modal"
-                                onClick={() => {
-                                  setOrderImage(e.image);
-                                  setShowOrderPhoto(true);
-                                }}
-                              >
-                                <PhotoCamera
-                                  color={e.image ? "primary" : "disabled"}
-                                  style={{
-                                    fontSize: "55px",
-                                    marginLeft: "15px",
-                                  }}
-                                />
-                              </IconButton>
-
-                              <IonLabel
-                                className="delivery-time"
-                                color="primary"
-                              >
-                                {e.image ? (
-                                  <div className="delivery-time-span">
-                                    {e.time}
+                  {deliveryArray ? (
+                    <Virtuoso
+                      style={{ height: "750px" }}
+                      data={deliveryArray}
+                      itemContent={(index, e: DeliveryDataType) => {
+                        return (
+                          <IonItem
+                            className="day-item"
+                            style={{ maxWidth: "600px" }}
+                          >
+                            <IonLabel className="delivery-info-item">
+                              <div style={{ display: "flex" }}>
+                                <IonLabel>
+                                  <div className="address">
+                                    <div className="street">{e.address1}</div>
+                                    <div className="town-post">
+                                      {e.address2}
+                                    </div>
                                   </div>
-                                ) : (
-                                  <></>
-                                )}
-                              </IonLabel>
-                            </div>
+                                </IonLabel>
+                              </div>
+                              {e.diets.map((_e) => {
+                                return (
+                                  <IonList lines="none">
+                                    <IonLabel className="diet-item">
+                                      <IonItem
+                                        style={{
+                                          "--padding-start": "0px",
+                                          "--min-height": "0px",
+                                        }}
+                                      >
+                                        <IonIcon src={chevronForwardOutline} />
+                                        <div>{_e}</div>
+                                      </IonItem>
+                                    </IonLabel>
+                                  </IonList>
+                                );
+                              })}
+                            </IonLabel>
+                            <IonItem lines="none">
+                              <div className="icon-time">
+                                <IconButton
+                                  id="open-modal"
+                                  onClick={() => {
+                                    setOrderImage(e.image);
+                                    setShowOrderPhoto(true);
+                                  }}
+                                >
+                                  <PhotoCamera
+                                    color={e.image ? "primary" : "disabled"}
+                                    style={{
+                                      fontSize: "55px",
+                                      marginLeft: "15px",
+                                    }}
+                                  />
+                                </IconButton>
+
+                                <IonLabel
+                                  className="delivery-time"
+                                  color="primary"
+                                >
+                                  {e.image ? (
+                                    <div className="delivery-time-span">
+                                      {e.time}
+                                    </div>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </IonLabel>
+                              </div>
+                            </IonItem>
                           </IonItem>
-                        </IonItem>
-                      );
-                    }}
-                  />
-                ) : (
-                  <></>
-                )}
-              </div>
-            ) : (
-              <LoaderContainer height={500} width={400} />
-            )}
-          </IonCol>
-        </IonRow>
+                        );
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              ) : (
+                <LoaderContainer height={500} width={400} />
+              )}
+            </IonCol>
+          </IonRow>
+        </Container>
       </IonContent>
     </IonPage>
   );
