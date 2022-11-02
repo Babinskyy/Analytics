@@ -42,8 +42,6 @@ const DriversAutocomplete: React.FC<Props> = ({
       setOptions(response.data);
     });
 
-    setOptions(["1", "2"]);
-
     return () => {
       active = false;
     };
