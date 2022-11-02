@@ -293,14 +293,14 @@ const DriverNotesTable: React.FC = () => {
                                 // message: "This is an alert!",
                                 buttons: [
                                   {
-                                    text: "Cancel",
+                                    text: "Anuluj",
                                     role: "cancel",
                                     handler: () => {
                                       setHandlerMessage("Alert canceled");
                                     },
                                   },
                                   {
-                                    text: "TAK",
+                                    text: "Usuń",
                                     role: "confirm",
                                     handler: () => {
                                       presentLoading();
