@@ -64,6 +64,8 @@ import { Bar, PolarArea, Doughnut } from "react-chartjs-2";
 import Header from "../components/Header";
 import LoaderContainer from "../components/LoaderContainer";
 import { Container } from "@mui/system";
+import DriversScanTable from "../components/DriversScanTable";
+import Raports from "../components/Raports";
 ChartJS.register(...registerables);
 
 const barData = {
@@ -199,6 +201,11 @@ const Year: React.FC = () => {
           });
         }
         break;
+      case "raports":
+        {
+          return <Raports />;
+        }
+        break;
       case "amount":
         if (barChartData) {
           return (
@@ -273,6 +280,19 @@ const Year: React.FC = () => {
       <IonContent fullscreen>
         <div className="navigation-bar">
           <IonRow className="ion-justify-content-center">
+            {/* <IonCol size="auto" style={{ padding: "0" }}>
+              <IonButton
+                shape="round"
+                fill={whichGraph === "raports" ? "solid" : "outline"}
+                color={"tertiary"}
+                className="graph-button"
+                onClick={() => {
+                  setWhichGraph("raports");
+                }}
+              >
+                Raporty
+              </IonButton>
+            </IonCol> */}
             <IonCol size="auto" style={{ padding: "0" }}>
               <IonButton
                 shape="round"
@@ -328,7 +348,7 @@ const Year: React.FC = () => {
 
         <Container>
           <IonRow className="ion-justify-content-center ">
-            <IonCol size="12" sizeMd="7">
+            <IonCol size="12" sizeMd={whichGraph == "raports" ? "12" : "7"}>
               <div
                 style={{
                   marginBottom: "50px",
@@ -338,77 +358,81 @@ const Year: React.FC = () => {
                 {memoGraphSelect}
               </div>
             </IonCol>
-            <IonCol size="12" sizeMd="5">
-              <div
-                style={{
-                  position: "sticky",
-                  top: "47px",
-                }}
-              >
-                <IonItem
-                  className="list-header"
-                  lines="none"
-                  style={{ "--background": "transparent" }}
+            {whichGraph == "raports" ? (
+              <></>
+            ) : (
+              <IonCol size="12" sizeMd="5">
+                <div
+                  style={{
+                    position: "sticky",
+                    top: "47px",
+                  }}
                 >
-                  <IonLabel>
-                    <div style={{ textAlign: "left" }}>Miesiąc</div>
-                  </IonLabel>
-                  <IonLabel>
-                    <div style={{ textAlign: "right" }}>Ilość diet</div>
-                  </IonLabel>
-                </IonItem>
-                <div style={{ maxHeight: "750px", overflow: "auto" }}>
-                  {barChartData ? (
-                    <IonList
-                      style={{ background: "transparent" }}
-                      className="days-list"
-                      lines="none"
-                    >
-                      {barChartData.labels.map((e: any, i: number) => {
-                        return barChartData.datasets[0].data[i] > 0 ? (
-                          <IonItem
-                            className="day-item"
-                            button
-                            onClick={() => {
-                              navigate("/month/" + e, "forward", "push");
-                            }}
-                          >
-                            <IonLabel>
-                              <div
-                                style={{
-                                  fontSize: "24px",
-                                  fontWeight: "550",
-                                  paddingBottom: "5px",
-                                }}
-                              >
-                                {e}
-                              </div>
-                              <div style={{ opacity: "0.5" }}>
-                                {barChartData.date[i]}
-                              </div>
-                            </IonLabel>
-                            <IonLabel>
-                              <div
-                                style={{
-                                  textAlign: "right",
-                                  fontSize: "20px",
-                                }}
-                              >
-                                {barChartData.datasets[0].data[i]}
-                              </div>
-                            </IonLabel>
-                          </IonItem>
-                        ) : (
-                          <></>
-                        );
-                      })}
-                    </IonList>
-                  ) : (
-                    <LoaderContainer height={500} width={400} />
-                  )}
+                  <IonItem
+                    className="list-header"
+                    lines="none"
+                    style={{ "--background": "transparent" }}
+                  >
+                    <IonLabel>
+                      <div style={{ textAlign: "left" }}>Miesiąc</div>
+                    </IonLabel>
+                    <IonLabel>
+                      <div style={{ textAlign: "right" }}>Ilość diet</div>
+                    </IonLabel>
+                  </IonItem>
+                  <div style={{ maxHeight: "750px", overflow: "auto" }}>
+                    {barChartData ? (
+                      <IonList
+                        style={{ background: "transparent" }}
+                        className="days-list"
+                        lines="none"
+                      >
+                        {barChartData.labels.map((e: any, i: number) => {
+                          return barChartData.datasets[0].data[i] > 0 ? (
+                            <IonItem
+                              className="day-item"
+                              button
+                              onClick={() => {
+                                navigate("/month/" + e, "forward", "push");
+                              }}
+                            >
+                              <IonLabel>
+                                <div
+                                  style={{
+                                    fontSize: "24px",
+                                    fontWeight: "550",
+                                    paddingBottom: "5px",
+                                  }}
+                                >
+                                  {e}
+                                </div>
+                                <div style={{ opacity: "0.5" }}>
+                                  {barChartData.date[i]}
+                                </div>
+                              </IonLabel>
+                              <IonLabel>
+                                <div
+                                  style={{
+                                    textAlign: "right",
+                                    fontSize: "20px",
+                                  }}
+                                >
+                                  {barChartData.datasets[0].data[i]}
+                                </div>
+                              </IonLabel>
+                            </IonItem>
+                          ) : (
+                            <></>
+                          );
+                        })}
+                      </IonList>
+                    ) : (
+                      <LoaderContainer height={500} width={400} />
+                    )}
+                  </div>
                 </div>
-              </div>
-            </IonCol>
+              </IonCol>
+            )}
           </IonRow>
         </Container>
       </IonContent>

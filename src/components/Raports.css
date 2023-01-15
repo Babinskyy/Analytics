@@ -1,0 +1,5 @@
+.janek-shadow {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;    
+    border-radius: 9px;
+    border: 1px solid rgba(224, 224, 224, 1);
+}

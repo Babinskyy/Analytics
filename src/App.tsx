@@ -91,6 +91,7 @@ const App: React.FC = () => {
             <Route exact path="/drivers">
               <Drivers />
             </Route>
+
             <Route exact path="/driver/:id" component={Driver} />
             <Route exact path="/day/:month/:id" component={Day} />
             <Route exact path="/month/:id" component={Month} />
