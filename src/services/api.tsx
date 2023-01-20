@@ -2,7 +2,7 @@ import axios from "axios";
 import TokenService from "./token.service";
 import { User } from "./userProps";
 import { Network } from "@capacitor/network";
-import { Storage } from "@capacitor/storage";
+import { Preferences } from "@capacitor/preferences";
 
 const instance = axios.create({
   // timeout: 15000,
@@ -53,10 +53,10 @@ instance.interceptors.response.use(
           //   window.location.replace("/login");
           // }
 
-          const { value } = await Storage.get({ key: "OfflineRequests" });
-          await Storage.clear();
+          const { value } = await Preferences.get({ key: "OfflineRequests" });
+          await Preferences.clear();
           if (value) {
-            await Storage.set({
+            await Preferences.set({
               key: "OfflineRequests",
               value: value,
             });
