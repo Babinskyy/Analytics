@@ -29,7 +29,7 @@
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.2",
-    "chart.js": "^4.2.0",
+    "chart.js": "^3.8.0",
     "date-fns": "^2.29.1",
     "ionicons": "^5.4.0",
     "node-sass": "^7.0.1",
