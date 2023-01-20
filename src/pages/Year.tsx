@@ -150,7 +150,7 @@ const Year: React.FC = () => {
   const [barChartData, setBarChartData] = useState<any>();
   const [polarChartData, setPolarChartData] = useState<any>();
   const [doughnutChartData, setDoughnutChartData] = useState<any>();
-  const [whichGraph, setWhichGraph] = useState<string>("amount");
+  const [whichGraph, setWhichGraph] = useState<string>("raports");
 
   useEffect(() => {
     //setBarChartData(barData);
@@ -280,7 +280,7 @@ const Year: React.FC = () => {
       <IonContent fullscreen>
         <div className="navigation-bar">
           <IonRow className="ion-justify-content-center">
-            {/* <IonCol size="auto" style={{ padding: "0" }}>
+            <IonCol size="auto" style={{ padding: "0" }}>
               <IonButton
                 shape="round"
                 fill={whichGraph === "raports" ? "solid" : "outline"}
@@ -292,7 +292,7 @@ const Year: React.FC = () => {
               >
                 Raporty
               </IonButton>
-            </IonCol> */}
+            </IonCol>
             <IonCol size="auto" style={{ padding: "0" }}>
               <IonButton
                 shape="round"

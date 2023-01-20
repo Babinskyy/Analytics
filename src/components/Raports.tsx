@@ -27,9 +27,33 @@ import { Container } from "@mui/system";
 
 import api from "./../services/api";
 import RegionAutocomplete from "./RegionAutocomplete";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DriversAutocomplete from "./DriversAutocomplete";
 import OrderExampleImage from "./dostawa.jpg";
+import { Virtuoso } from "react-virtuoso";
+
+type AnalyticsReportResponse = {
+  allDeliveries: number;
+  allDeliveriesSameAddress: number;
+  allDeliveriesDone: number;
+  allDeliveriesUndelivered: number;
+  routesAddresses: AnalyticsReportAddressGroupedResponse[];
+}
+
+type AnalyticsReportAddressGroupedResponse = {
+  value: AnalyticsReportAddressResponse;
+  count: number;
+}
+
+type AnalyticsReportAddressResponse = {
+  id: number;
+  imageCreated: string;
+  street: string;
+  houseNumber: string;
+  city: string;
+  region: string;
+  postCode: string;
+}
 
 type DriversScanTableProps = {
   routeId: string;
@@ -63,6 +87,9 @@ type DriversWarehouseProps = {
 interface ContainerProps {}
 
 const Raports: React.FC<ContainerProps> = () => {
+
+  const [analyticsReportResponse, setAnalyticsReportResponse] = useState<AnalyticsReportResponse>();
+
   const [_rows, _setRows] = useState<DriversScanTableProps[]>([]);
   const [rows, setRows] = useState<DriversScanTableProps[]>([]);
 
@@ -81,6 +108,16 @@ const Raports: React.FC<ContainerProps> = () => {
     useState<boolean>(false);
   const [isDietsModalOpen, setIsDietsModalOpen] = useState<boolean>(false);
 
+
+  useEffect(() => {
+
+    api.get("AnalyticsReport").then((response) => {
+      setAnalyticsReportResponse(response.data);
+    });
+
+  }, [])
+
+
   useEffect(() => {
     if (!availableDays) {
       api.get("report/available-days").then((response) => {
@@ -93,6 +130,26 @@ const Raports: React.FC<ContainerProps> = () => {
       });
     }
   }, []);
+
+  
+
+  const [reportCalendarDates, setReportCalendarDates] = useState<string[]>();
+
+  const reportCalendarRef = useRef<HTMLIonDatetimeElement>(null);
+
+  const DaysInWeek = (current: Date) => {
+
+    console.log(current);
+
+    var week = new Array<string>();
+    // Starting Monday not Sunday
+    current.setDate(current.getDate() - current.getDay() + 1);
+    for (var i = 0; i < 7; i++) {
+      week.push((new Date(current)).toISOString());
+      current.setDate(current.getDate() + 1);
+    }
+    return week;
+  };
 
   return (
     <>
@@ -343,6 +400,7 @@ const Raports: React.FC<ContainerProps> = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell align="center">Wszystkie dostawy</TableCell>
+                      <TableCell align="center">Wszystkie dostawy na ten sam adres</TableCell>
                       <TableCell align="center">Dostawy zrealizowane</TableCell>
                       <TableCell align="center">
                         Dostawy niezrealizowane
@@ -358,7 +416,16 @@ const Raports: React.FC<ContainerProps> = () => {
                         }}
                         align="center"
                       >
-                        145 234
+                        {analyticsReportResponse?.allDeliveries}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontWeight: "500",
+                          letterSpacing: "1px",
+                        }}
+                        align="center"
+                      >
+                        {analyticsReportResponse?.allDeliveriesSameAddress}
                       </TableCell>
                       <TableCell
                         style={{
@@ -369,7 +436,7 @@ const Raports: React.FC<ContainerProps> = () => {
                         }}
                         align="center"
                       >
-                        141 223
+                        {analyticsReportResponse?.allDeliveriesDone}
                       </TableCell>
                       <TableCell
                         align="center"
@@ -378,7 +445,7 @@ const Raports: React.FC<ContainerProps> = () => {
                           color: "bf4343",
                         }}
                       >
-                        4 011
+                        {analyticsReportResponse?.allDeliveriesUndelivered}
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -401,15 +468,24 @@ const Raports: React.FC<ContainerProps> = () => {
           </IonRow>
           <IonRow>
             <IonCol size="12" className="order-2 order-md-1">
-              <IonList
+              {/* <IonList
                 style={{
                   textAlign: "center",
                   justifyContent: "center",
                   maxHeight: "50vh",
                   overflow: "auto",
                 }}
-              >
-                <IonItem
+              > */}
+{
+  analyticsReportResponse
+  ?
+<Virtuoso
+  data={analyticsReportResponse.routesAddresses}
+        style={{ height: '700px' }}
+        itemContent={(index, data) => {
+          return (
+            <div style={{ height: '90px' }}>
+              <IonItem
                   lines="none"
                   style={{
                     boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
@@ -418,6 +494,7 @@ const Raports: React.FC<ContainerProps> = () => {
                     width: "90%",
                     marginLeft: "auto",
                     marginRight: "auto",
+                    marginTop: "5px"
                   }}
                   onClick={() => {
                     setIsDetailsModalOpen(true);
@@ -425,295 +502,121 @@ const Raports: React.FC<ContainerProps> = () => {
                 >
                   <IonLabel>
                     <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
+                      {data.value.street}{" "}{data.value.houseNumber}
                     </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
+                    <div>{data.value.city}{" "}{data.value.postCode}</div>
                   </IonLabel>
 
-                  <IonLabel style={{ textAlign: "right" }}>
+                  <IonLabel style={{ textAlign: "right", maxWidth: "110px" }}>
                     <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
+                    <div style={{ fontSize: "25px", fontWeight: "600" }}>{data.count}</div>
                   </IonLabel>
                 </IonItem>
-                <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
-                    </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
-                  </IonLabel>
+            </div>
+          );
+        }}
+      />
+      :
+      <></>
+}
 
-                  <IonLabel style={{ textAlign: "right" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
-                  </IonLabel>
-                </IonItem>
-                <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
-                    </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
-                  </IonLabel>
 
-                  <IonLabel style={{ textAlign: "right" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
-                  </IonLabel>
-                </IonItem>
-                <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
-                    </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
-                  </IonLabel>
-
-                  <IonLabel style={{ textAlign: "right" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
-                  </IonLabel>
-                </IonItem>
-                <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
-                    </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
-                  </IonLabel>
-
-                  <IonLabel style={{ textAlign: "right" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
-                  </IonLabel>
-                </IonItem>
-                <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
-                    </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
-                  </IonLabel>
-
-                  <IonLabel style={{ textAlign: "right" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
-                  </IonLabel>
-                </IonItem>
-                <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
-                    </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
-                  </IonLabel>
-
-                  <IonLabel style={{ textAlign: "right" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
-                  </IonLabel>
-                </IonItem>
-                <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
-                    </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
-                  </IonLabel>
-
-                  <IonLabel style={{ textAlign: "right" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
-                  </IonLabel>
-                </IonItem>
-                <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
-                    </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
-                  </IonLabel>
-
-                  <IonLabel style={{ textAlign: "right" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
-                  </IonLabel>
-                </IonItem>
-                <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      Marszałkowska 155/23
-                    </div>
-                    <div>Dąbrowa Górnicza 04-122</div>
-                  </IonLabel>
-
-                  <IonLabel style={{ textAlign: "right" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>4</div>
-                  </IonLabel>
-                </IonItem>
-              </IonList>
+                
+              {/* </IonList> */}
             </IonCol>
           </IonRow>
         </IonCol>
         <IonCol size="12" sizeMd="4" className="order-1 order-md-2">
           <h2 style={{ textAlign: "center" }}>
-            Zakres dat: <br />
-            <strong>07.01 - 14.01 2023</strong>
+            Zakres dostaw: <br />
+            
+            {
+              reportCalendarDates
+              ?
+              <strong>{new Date(reportCalendarDates[0]).toLocaleDateString('pl-pl', { year:"numeric", month:"short", day:"numeric"})  + " - " + new Date(reportCalendarDates[reportCalendarDates.length - 1]).toLocaleDateString('pl-pl', { year:"numeric", month:"short", day:"numeric"})}</strong>
+              :
+              <></>
+            }
+            
           </h2>
           {availableDays && date ? (
             <IonDatetime
+              ref={reportCalendarRef}
+              multiple
               firstDayOfWeek={1}
               style={{
                 position: "sticky",
                 top: "125px",
                 margin: "auto",
               }}
-              value={date.toISOString()}
+              value={reportCalendarDates}
               presentation="date"
               mode="ios"
-              className="janek-shadow"
-              onIonChange={(e) => {
-                if (e.target.value) {
-                  setDate(new Date(e.target.value as string));
-                  console.log(new Date(e.target.value as string));
-                }
-              }}
-              isDateEnabled={(e) => {
-                let today = new Date();
-                let tomorrow = new Date();
-                tomorrow.setDate(today.getDate() + 1);
+              className="janek-shadow report-calendar"
+              isDateEnabled={(date) => {
 
-                const valueDate = new Date(e);
-
-                if (
-                  valueDate <= tomorrow &&
-                  availableDays.includes(
-                    valueDate.toISOString().replace(".000Z", "")
-                  )
-                ) {
+                if(!reportCalendarDates)
+                {
                   return true;
-                } else {
-                  return false;
                 }
+
+                const tempDate = new Date(date);
+
+                for(let n of reportCalendarDates)
+                {
+
+                  const nDate = new Date(n);
+
+                  if (
+                    nDate.getFullYear() === tempDate.getFullYear() &&
+                    nDate.getMonth() === tempDate.getMonth() &&
+                    nDate.getDate() === tempDate.getDate()
+                  ) {
+                    return false;
+                  }
+
+                }
+
+                return true;
+
+                
+
               }}
+              onIonChange={(e) => {
+                if (!e.target.value)
+                {
+                  return;
+                }
+
+                const val = e.target.value as string[];
+
+                if(val.length == 7)
+                {
+                  return;
+                }
+
+                const daysInWeek = DaysInWeek(new Date(val[val.length - 1]));
+                setReportCalendarDates(daysInWeek);   
+
+              }}
+              // isDateEnabled={(e) => {
+              //   let today = new Date();
+              //   let tomorrow = new Date();
+              //   tomorrow.setDate(today.getDate() + 1);
+
+              //   const valueDate = new Date(e);
+
+              //   if (
+              //     valueDate <= tomorrow &&
+              //     availableDays.includes(
+              //       valueDate.toISOString().replace(".000Z", "")
+              //     )
+              //   ) {
+              //     return true;
+              //   } else {
+              //     return false;
+              //   }
+              // }}
             />
           ) : (
             <></>
