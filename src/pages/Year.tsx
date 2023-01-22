@@ -346,7 +346,7 @@ const Year: React.FC = () => {
           </IonRow>
         </div>
 
-        <Container>
+        <Container maxWidth={"xl"}>
           <IonRow className="ion-justify-content-center ">
             <IonCol size="12" sizeMd={whichGraph == "raports" ? "12" : "7"}>
               <div

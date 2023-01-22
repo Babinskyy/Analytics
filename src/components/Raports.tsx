@@ -8,6 +8,8 @@ import {
   Paper,
   Autocomplete,
   TextField,
+  Button,
+  IconButton,
 } from "@mui/material";
 import "./Raports.css";
 import {
@@ -32,27 +34,43 @@ import DriversAutocomplete from "./DriversAutocomplete";
 import OrderExampleImage from "./dostawa.jpg";
 import { Virtuoso } from "react-virtuoso";
 
+import {
+  DataGridPro,
+  GridColDef,
+  GridColumnHeaderParams,
+  GridRenderCellParams,
+  GridRowParams,
+  GridSelectionModel,
+  GridValueGetterParams,
+} from "@mui/x-data-grid-pro";
+
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+
 type AnalyticsReportResponse = {
   allDeliveries: number;
   allDeliveriesSameAddress: number;
   allDeliveriesDone: number;
   allDeliveriesUndelivered: number;
-  routesAddresses: AnalyticsReportAddressGroupedResponse[];
-}
-
-type AnalyticsReportAddressGroupedResponse = {
-  value: AnalyticsReportAddressResponse;
-  count: number;
+  routesAddresses: AnalyticsReportAddressResponse[];
 }
 
 type AnalyticsReportAddressResponse = {
-  id: number;
-  imageCreated: string;
+  id: string;
+  deliveries: AnalyticsReportAddressDataResponse[];
   street: string;
   houseNumber: string;
   city: string;
   region: string;
   postCode: string;
+  count: number;
+  deliveryDoneCount: number;
+  undeliveryCount: number;
+}
+
+type AnalyticsReportAddressDataResponse = {
+  id: number;
+  // deliveryDate: string;
+  imageCreated: boolean;
 }
 
 type DriversScanTableProps = {
@@ -78,11 +96,13 @@ type DriversWarehouseDietProps = {
   color: string;
 };
 
-type DriversWarehouseProps = {
-  driverName: string;
-  deliveryDate: string;
-  stops: DriversWarehouseDietProps[];
-};
+// type DriversWarehouseProps = {
+//   driverName: string;
+//   deliveryDate: string;
+//   stops: DriversWarehouseDietProps[];
+// };
+
+
 
 interface ContainerProps {}
 
@@ -109,13 +129,102 @@ const Raports: React.FC<ContainerProps> = () => {
   const [isDietsModalOpen, setIsDietsModalOpen] = useState<boolean>(false);
 
 
-  useEffect(() => {
-
-    api.get("AnalyticsReport").then((response) => {
-      setAnalyticsReportResponse(response.data);
-    });
-
-  }, [])
+  const columns: GridColDef[] = [
+    // {
+    //   field: "id",
+    //   headerName: "Id",
+    //   maxWidth: 150,
+    //   flex: 1,
+    //   editable: false,
+    //   sortable: false,
+    //   disableColumnMenu: true
+    // },
+    {
+      field: "region",
+      headerName: "Region",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "postCode",
+      headerName: "Kod pocztowy",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "city",
+      headerName: "Miasto",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "street",
+      headerName: "Ulica",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "houseNumber",
+      headerName: "Numer domu",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "deliveryStatus",
+      headerName: "Statusy dostaw",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: false,
+      disableColumnMenu: true,
+      align: "center",
+      headerAlign: "center",
+      // cellClassName: "d-block",
+      renderCell: (params: GridRenderCellParams<Date>) => (
+        <>
+          {params.row.deliveryDoneCount > 0 ? (
+            <span className="delivery-done-count">
+              {params.row.deliveryDoneCount}
+            </span>
+          ) : (
+            <></>
+          )}
+          {params.row.undeliveryCount > 0 ? (
+            <span className="undelivery-count">{params.row.undeliveryCount}</span>
+          ) : (
+            <></>
+          )}
+        </>
+      ),
+    },
+    {
+      field: "actions",
+      headerName: "",
+      maxWidth: 70,
+      flex: 1,
+      editable: false,
+      sortable: false,
+      disableColumnMenu: true,
+      renderCell: (params: GridRenderCellParams<Date>) => (
+        <IconButton onClick={() => setIsDetailsModalOpen(true)} color="primary" aria-label="upload picture" component="label"><KeyboardArrowRightIcon/></IconButton>
+      )
+    },
+  ];
 
 
   useEffect(() => {
@@ -131,12 +240,6 @@ const Raports: React.FC<ContainerProps> = () => {
     }
   }, []);
 
-  
-
-  const [reportCalendarDates, setReportCalendarDates] = useState<string[]>();
-
-  const reportCalendarRef = useRef<HTMLIonDatetimeElement>(null);
-
   const DaysInWeek = (current: Date) => {
 
     console.log(current);
@@ -150,6 +253,23 @@ const Raports: React.FC<ContainerProps> = () => {
     }
     return week;
   };
+
+
+  const [reportCalendarDates, setReportCalendarDates] = useState<string[]>(DaysInWeek(new Date()));
+  const reportCalendarRef = useRef<HTMLIonDatetimeElement>(null);
+
+  useEffect(() => {
+
+    api.get("AnalyticsReport", {
+      params: {
+        firstDate: reportCalendarDates[0],
+        lastDate: reportCalendarDates[reportCalendarDates.length - 1],
+      }
+    }).then((response) => {
+      setAnalyticsReportResponse(response.data);
+    });
+
+  }, [reportCalendarDates])
 
   return (
     <>
@@ -178,6 +298,7 @@ const Raports: React.FC<ContainerProps> = () => {
                   <span style={{ fontSize: "20px", fontWeight: "600" }}>3</span>
                 </div>
                 <Container
+                  
                   style={{
                     display: "flex",
                     flexDirection: "row",
@@ -400,7 +521,7 @@ const Raports: React.FC<ContainerProps> = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell align="center">Wszystkie dostawy</TableCell>
-                      <TableCell align="center">Wszystkie dostawy na ten sam adres</TableCell>
+                      <TableCell align="center">Ilość adresów</TableCell>
                       <TableCell align="center">Dostawy zrealizowane</TableCell>
                       <TableCell align="center">
                         Dostawy niezrealizowane
@@ -441,8 +562,9 @@ const Raports: React.FC<ContainerProps> = () => {
                       <TableCell
                         align="center"
                         style={{
+                          fontWeight: "500",
                           padding: "0",
-                          color: "bf4343",
+                          color: "#bf4343",
                         }}
                       >
                         {analyticsReportResponse?.allDeliveriesUndelivered}
@@ -453,7 +575,7 @@ const Raports: React.FC<ContainerProps> = () => {
               </TableContainer>
             </IonCol>
           </IonRow>
-          <IonRow>
+          {/* <IonRow>
             <IonCol size="12" className="order-2 order-md-1">
               <div
                 style={{
@@ -465,18 +587,39 @@ const Raports: React.FC<ContainerProps> = () => {
                 Dostawy:
               </div>
             </IonCol>
-          </IonRow>
+          </IonRow> */}
           <IonRow>
             <IonCol size="12" className="order-2 order-md-1">
-              {/* <IonList
-                style={{
-                  textAlign: "center",
-                  justifyContent: "center",
-                  maxHeight: "50vh",
-                  overflow: "auto",
-                }}
-              > */}
-{
+              
+              {
+                analyticsReportResponse
+                ?
+                analyticsReportResponse.routesAddresses.length > 0
+                ?
+<div className="janek-shadow mt-4">
+<DataGridPro
+  style={{
+    height: "850px"
+  }}
+  // rowHeight={120}
+ rows={analyticsReportResponse.routesAddresses}
+        columns={columns}
+        hideFooter
+        // pageSize={5}
+        // rowsPerPageOptions={[5]}
+        checkboxSelection
+        disableSelectionOnClick
+       />
+</div>
+:
+<></>
+       :
+       <></>
+              }
+
+
+
+{/* {
   analyticsReportResponse
   ?
 <Virtuoso
@@ -502,9 +645,9 @@ const Raports: React.FC<ContainerProps> = () => {
                 >
                   <IonLabel>
                     <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      {data.value.street}{" "}{data.value.houseNumber}
+                      {data.street}{" "}{data.houseNumber}
                     </div>
-                    <div>{data.value.city}{" "}{data.value.postCode}</div>
+                    <div>{data.city}{" "}{data.postCode}</div>
                   </IonLabel>
 
                   <IonLabel style={{ textAlign: "right", maxWidth: "110px" }}>
@@ -518,7 +661,7 @@ const Raports: React.FC<ContainerProps> = () => {
       />
       :
       <></>
-}
+} */}
 
 
                 

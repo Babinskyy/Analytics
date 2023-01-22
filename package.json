@@ -18,6 +18,7 @@
     "@ionic/storage": "^3.0.6",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.9.1",
+    "@mui/x-data-grid-pro": "^5.17.20",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
