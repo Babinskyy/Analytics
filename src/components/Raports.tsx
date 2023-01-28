@@ -10,9 +10,11 @@ import {
   TextField,
   Button,
   IconButton,
+  TextareaAutosize,
 } from "@mui/material";
 import "./Raports.css";
 import {
+  IonButton,
   IonCol,
   IonContent,
   IonDatetime,
@@ -22,6 +24,9 @@ import {
   IonList,
   IonModal,
   IonRow,
+  IonSelect,
+  IonSelectOption,
+  IonTextarea,
   useIonLoading,
   useIonViewWillEnter,
 } from "@ionic/react";
@@ -30,7 +35,7 @@ import { Container } from "@mui/system";
 import api from "./../services/api";
 import RegionAutocomplete from "./RegionAutocomplete";
 import { useEffect, useRef, useState } from "react";
-import DriversAutocomplete from "./DriversAutocomplete";
+
 import OrderExampleImage from "./dostawa.jpg";
 import { Virtuoso } from "react-virtuoso";
 
@@ -38,13 +43,22 @@ import {
   DataGridPro,
   GridColDef,
   GridColumnHeaderParams,
+  GridFeatureMode,
+  GridFilterModel,
+  gridFilterModelSelector,
+  GridLinkOperator,
   GridRenderCellParams,
   GridRowParams,
   GridSelectionModel,
+  GridToolbar,
   GridValueGetterParams,
+  useGridApiRef,
 } from "@mui/x-data-grid-pro";
 
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import DefaultAutocomplete from "./DefaultAutocomplete";
+import DeliveryTypeSelect from "./DeliveryTypeSelect";
+import CompanySelect from "./CompanySelect";
 
 type AnalyticsReportResponse = {
   allDeliveries: number;
@@ -52,7 +66,7 @@ type AnalyticsReportResponse = {
   allDeliveriesDone: number;
   allDeliveriesUndelivered: number;
   routesAddresses: AnalyticsReportAddressResponse[];
-}
+};
 
 type AnalyticsReportAddressResponse = {
   id: string;
@@ -65,13 +79,13 @@ type AnalyticsReportAddressResponse = {
   count: number;
   deliveryDoneCount: number;
   undeliveryCount: number;
-}
+};
 
 type AnalyticsReportAddressDataResponse = {
   id: number;
   // deliveryDate: string;
   imageCreated: boolean;
-}
+};
 
 type DriversScanTableProps = {
   routeId: string;
@@ -85,36 +99,74 @@ type DriversScanTableProps = {
   undone: number;
 };
 
-type DriversWarehouseDietProps = {
-  id: number;
-  guid: string;
-  shortGuid: string;
-  dietCode: string;
-  dietName: string;
-  isScanned: number;
-  scannedDate: string;
-  color: string;
-};
-
-// type DriversWarehouseProps = {
-//   driverName: string;
-//   deliveryDate: string;
-//   stops: DriversWarehouseDietProps[];
-// };
-
-
-
 interface ContainerProps {}
 
 const Raports: React.FC<ContainerProps> = () => {
+  const apiRef = useGridApiRef();
 
-  const [analyticsReportResponse, setAnalyticsReportResponse] = useState<AnalyticsReportResponse>();
+  const [analyticsReportResponse, setAnalyticsReportResponse] =
+    useState<AnalyticsReportResponse>();
 
   const [_rows, _setRows] = useState<DriversScanTableProps[]>([]);
   const [rows, setRows] = useState<DriversScanTableProps[]>([]);
 
   const [region, setRegion] = useState<string>("");
-  const [driver, setDriver] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
+  const [company, setCompany] = useState<string>("");
+
+  const [filterModel, setFilterModel] = useState<GridFilterModel | undefined>({
+    items: [],
+    linkOperator: GridLinkOperator.And,
+  });
+
+  useEffect(() => {
+    if (apiRef.current && status && filterModel) {
+      if (status == "unrealized") {
+        let tempFilterModelItems = filterModel.items.filter((e) => e.id != 1);
+
+        tempFilterModelItems.push({
+          id: 1,
+          columnField: "undeliveryCount",
+          operatorValue: ">",
+          value: 0,
+        });
+
+        setFilterModel({
+          ...filterModel,
+          items: tempFilterModelItems,
+        });
+      } else if (status == "realized") {
+        let tempFilterModelItems = filterModel.items.filter((e) => e.id != 1);
+
+        tempFilterModelItems.push({
+          id: 1,
+          columnField: "deliveryDoneCount",
+          operatorValue: ">",
+          value: 0,
+        });
+
+        setFilterModel({
+          ...filterModel,
+          items: tempFilterModelItems,
+        });
+      } else {
+        setFilterModel({
+          ...filterModel,
+          items: filterModel.items.filter((e) => e.id != 1),
+        });
+      }
+
+      //apiRef.current.forceUpdate();
+    }
+
+    console.log(filterModel);
+  }, [status]);
+
+  // useEffect(() => {
+  //   if (apiRef.current && filterModel && status) {
+  //     apiRef.current.setFilterModel(filterModel);
+  //   }
+  // }, [filterModel]);
 
   const [date, setDate] = useState<Date>();
 
@@ -128,17 +180,7 @@ const Raports: React.FC<ContainerProps> = () => {
     useState<boolean>(false);
   const [isDietsModalOpen, setIsDietsModalOpen] = useState<boolean>(false);
 
-
   const columns: GridColDef[] = [
-    // {
-    //   field: "id",
-    //   headerName: "Id",
-    //   maxWidth: 150,
-    //   flex: 1,
-    //   editable: false,
-    //   sortable: false,
-    //   disableColumnMenu: true
-    // },
     {
       field: "region",
       headerName: "Region",
@@ -185,6 +227,28 @@ const Raports: React.FC<ContainerProps> = () => {
       disableColumnMenu: true,
     },
     {
+      field: "deliveryDoneCount",
+      headerName: "Dowiezione",
+      // maxWidth: 0,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+      hide: true,
+      type: "number",
+    },
+    {
+      field: "undeliveryCount",
+      headerName: "Niedowiezione",
+      // maxWidth: 0,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+      hide: true,
+      type: "number",
+    },
+    {
       field: "deliveryStatus",
       headerName: "Statusy dostaw",
       maxWidth: 150,
@@ -205,7 +269,9 @@ const Raports: React.FC<ContainerProps> = () => {
             <></>
           )}
           {params.row.undeliveryCount > 0 ? (
-            <span className="undelivery-count">{params.row.undeliveryCount}</span>
+            <span className="undelivery-count">
+              {params.row.undeliveryCount}
+            </span>
           ) : (
             <></>
           )}
@@ -221,11 +287,17 @@ const Raports: React.FC<ContainerProps> = () => {
       sortable: false,
       disableColumnMenu: true,
       renderCell: (params: GridRenderCellParams<Date>) => (
-        <IconButton onClick={() => setIsDetailsModalOpen(true)} color="primary" aria-label="upload picture" component="label"><KeyboardArrowRightIcon/></IconButton>
-      )
+        <IconButton
+          onClick={() => setIsDetailsModalOpen(true)}
+          color="primary"
+          aria-label="upload picture"
+          component="label"
+        >
+          <KeyboardArrowRightIcon />
+        </IconButton>
+      ),
     },
   ];
-
 
   useEffect(() => {
     if (!availableDays) {
@@ -241,35 +313,60 @@ const Raports: React.FC<ContainerProps> = () => {
   }, []);
 
   const DaysInWeek = (current: Date) => {
-
-    console.log(current);
+    // console.log(current);
 
     var week = new Array<string>();
     // Starting Monday not Sunday
     current.setDate(current.getDate() - current.getDay() + 1);
     for (var i = 0; i < 7; i++) {
-      week.push((new Date(current)).toISOString());
+      week.push(new Date(current).toISOString());
       current.setDate(current.getDate() + 1);
     }
     return week;
   };
 
-
-  const [reportCalendarDates, setReportCalendarDates] = useState<string[]>(DaysInWeek(new Date()));
+  const [reportCalendarDates, setReportCalendarDates] = useState<string[]>(
+    DaysInWeek(new Date())
+  );
   const reportCalendarRef = useRef<HTMLIonDatetimeElement>(null);
 
   useEffect(() => {
+    api
+      .get("AnalyticsReport", {
+        params: {
+          firstDate: reportCalendarDates[0],
+          lastDate: reportCalendarDates[reportCalendarDates.length - 1],
+        },
+      })
+      .then((response) => {
+        setAnalyticsReportResponse(response.data);
+      });
+  }, [reportCalendarDates]);
 
-    api.get("AnalyticsReport", {
-      params: {
-        firstDate: reportCalendarDates[0],
-        lastDate: reportCalendarDates[reportCalendarDates.length - 1],
-      }
-    }).then((response) => {
-      setAnalyticsReportResponse(response.data);
-    });
+  // const onRowsSelectionHandler = (ids: any) => {
+  //   const selectedRowsData = ids.map((id: any) =>
+  //     analyticsReportResponse?.routesAddresses.find((row) => row.id === id)
+  //   );
+  //   console.log(selectedRowsData);
 
-  }, [reportCalendarDates])
+  //   selectedRowsData.map((e: any) => {
+  //     let tempRow = [e.region, e.postCode, e.city, e.street, e.houseNumber];
+  //     // setSelectedRows()
+  //   });
+  // };
+
+  interface RowType {
+    region: string;
+    postCode: string;
+    city: string;
+    street: string;
+    houseNumber: string;
+  }
+  // const [selectedRows, setSelectedRows] = useState<RowType>();
+
+  const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+
+  const [text, setText] = useState<string>();
 
   return (
     <>
@@ -298,7 +395,6 @@ const Raports: React.FC<ContainerProps> = () => {
                   <span style={{ fontSize: "20px", fontWeight: "600" }}>3</span>
                 </div>
                 <Container
-                  
                   style={{
                     display: "flex",
                     flexDirection: "row",
@@ -314,7 +410,11 @@ const Raports: React.FC<ContainerProps> = () => {
                   >
                     <div>15.12.2023</div>
                     <div
-                      style={{ color: "blue", fontWeight: "700" }}
+                      style={{
+                        color: "blue",
+                        fontWeight: "700",
+                        fontSize: "15px",
+                      }}
                       onClick={() => {
                         setIsDietsModalOpen(true);
                         setIsDetailsModalOpen(false);
@@ -339,7 +439,11 @@ const Raports: React.FC<ContainerProps> = () => {
                   >
                     <div>15.12.2023</div>
                     <div
-                      style={{ color: "blue", fontWeight: "700" }}
+                      style={{
+                        color: "blue",
+                        fontWeight: "700",
+                        fontSize: "15px",
+                      }}
                       onClick={() => {
                         setIsDietsModalOpen(true);
                         setIsDetailsModalOpen(false);
@@ -364,7 +468,11 @@ const Raports: React.FC<ContainerProps> = () => {
                   >
                     <div>15.12.2023</div>
                     <div
-                      style={{ color: "blue", fontWeight: "700" }}
+                      style={{
+                        color: "blue",
+                        fontWeight: "700",
+                        fontSize: "15px",
+                      }}
                       onClick={() => {
                         setIsDietsModalOpen(true);
                         setIsDetailsModalOpen(false);
@@ -389,7 +497,11 @@ const Raports: React.FC<ContainerProps> = () => {
                   >
                     <div>15.12.2023</div>
                     <div
-                      style={{ color: "blue", fontWeight: "700" }}
+                      style={{
+                        color: "blue",
+                        fontWeight: "700",
+                        fontSize: "15px",
+                      }}
                       onClick={() => {
                         setIsDietsModalOpen(true);
                         setIsDetailsModalOpen(false);
@@ -414,7 +526,11 @@ const Raports: React.FC<ContainerProps> = () => {
                   >
                     <div>15.12.2023</div>
                     <div
-                      style={{ color: "blue", fontWeight: "700" }}
+                      style={{
+                        color: "blue",
+                        fontWeight: "700",
+                        fontSize: "15px",
+                      }}
                       onClick={() => {
                         setIsDietsModalOpen(true);
                         setIsDetailsModalOpen(false);
@@ -575,195 +691,237 @@ const Raports: React.FC<ContainerProps> = () => {
               </TableContainer>
             </IonCol>
           </IonRow>
-          {/* <IonRow>
-            <IonCol size="12" className="order-2 order-md-1">
-              <div
-                style={{
-                  textAlign: "center",
-                  fontSize: "35px",
-                  fontWeight: "600",
-                }}
-              >
-                Dostawy:
-              </div>
+          <IonRow
+            style={{ marginTop: "20px" }}
+            className={"ion-justify-content-between"}
+          >
+            <IonCol size="auto">
+              <CompanySelect company={company} setCompany={setCompany} />
             </IonCol>
-          </IonRow> */}
+            <IonCol size="auto">
+              <RegionAutocomplete setRegion={setRegion} />
+            </IonCol>
+            <IonCol size="auto">
+              <DeliveryTypeSelect status={status} setStatus={setStatus} />
+            </IonCol>
+          </IonRow>
           <IonRow>
             <IonCol size="12" className="order-2 order-md-1">
-              
-              {
-                analyticsReportResponse
-                ?
-                analyticsReportResponse.routesAddresses.length > 0
-                ?
-<div className="janek-shadow mt-4">
-<DataGridPro
-  style={{
-    height: "850px"
-  }}
-  // rowHeight={120}
- rows={analyticsReportResponse.routesAddresses}
-        columns={columns}
-        hideFooter
-        // pageSize={5}
-        // rowsPerPageOptions={[5]}
-        checkboxSelection
-        disableSelectionOnClick
-       />
-</div>
-:
-<></>
-       :
-       <></>
-              }
-
-
-
-{/* {
-  analyticsReportResponse
-  ?
-<Virtuoso
-  data={analyticsReportResponse.routesAddresses}
-        style={{ height: '700px' }}
-        itemContent={(index, data) => {
-          return (
-            <div style={{ height: '90px' }}>
-              <IonItem
-                  lines="none"
-                  style={{
-                    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-                    borderRadius: "9px",
-                    marginBottom: "15px",
-                    width: "90%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    marginTop: "5px"
-                  }}
-                  onClick={() => {
-                    setIsDetailsModalOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>
-                      {data.street}{" "}{data.houseNumber}
-                    </div>
-                    <div>{data.city}{" "}{data.postCode}</div>
-                  </IonLabel>
-
-                  <IonLabel style={{ textAlign: "right", maxWidth: "110px" }}>
-                    <div>Ilość dostaw:</div>
-                    <div style={{ fontSize: "25px", fontWeight: "600" }}>{data.count}</div>
-                  </IonLabel>
-                </IonItem>
-            </div>
-          );
-        }}
-      />
-      :
-      <></>
-} */}
-
-
-                
-              {/* </IonList> */}
+              {analyticsReportResponse ? (
+                analyticsReportResponse.routesAddresses.length > 0 ? (
+                  <div className="janek-shadow mt-4">
+                    <DataGridPro
+                      filterModel={filterModel}
+                      onSelectionModelChange={(newSelectionModel, details) => {
+                        setSelectionModel(newSelectionModel);
+                      }}
+                      selectionModel={selectionModel}
+                      apiRef={apiRef}
+                      style={{
+                        height: "850px",
+                      }}
+                      // rowHeight={120}
+                      rows={analyticsReportResponse.routesAddresses}
+                      columns={columns}
+                      hideFooter
+                      // pageSize={5}
+                      // rowsPerPageOptions={[5]}
+                      disableSelectionOnClick
+                      checkboxSelection
+                      // onSelectionModelChange={(ids) =>
+                      //   onRowsSelectionHandler(ids)
+                      // }
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )
+              ) : (
+                <></>
+              )}
             </IonCol>
           </IonRow>
         </IonCol>
         <IonCol size="12" sizeMd="4" className="order-1 order-md-2">
-          <h2 style={{ textAlign: "center" }}>
-            Zakres dostaw: <br />
-            
-            {
-              reportCalendarDates
-              ?
-              <strong>{new Date(reportCalendarDates[0]).toLocaleDateString('pl-pl', { year:"numeric", month:"short", day:"numeric"})  + " - " + new Date(reportCalendarDates[reportCalendarDates.length - 1]).toLocaleDateString('pl-pl', { year:"numeric", month:"short", day:"numeric"})}</strong>
-              :
-              <></>
-            }
-            
-          </h2>
-          {availableDays && date ? (
-            <IonDatetime
-              ref={reportCalendarRef}
-              multiple
-              firstDayOfWeek={1}
+          <div
+            style={{
+              position: "sticky",
+              top: "125px",
+              margin: "auto",
+            }}
+          >
+            <h2
               style={{
-                position: "sticky",
-                top: "125px",
-                margin: "auto",
+                textAlign: "center",
               }}
-              value={reportCalendarDates}
-              presentation="date"
-              mode="ios"
-              className="janek-shadow report-calendar"
-              isDateEnabled={(date) => {
-
-                if(!reportCalendarDates)
-                {
-                  return true;
-                }
-
-                const tempDate = new Date(date);
-
-                for(let n of reportCalendarDates)
-                {
-
-                  const nDate = new Date(n);
-
-                  if (
-                    nDate.getFullYear() === tempDate.getFullYear() &&
-                    nDate.getMonth() === tempDate.getMonth() &&
-                    nDate.getDate() === tempDate.getDate()
-                  ) {
-                    return false;
+            >
+              Zakres dostaw: <br />
+              {reportCalendarDates ? (
+                <strong>
+                  {new Date(reportCalendarDates[0]).toLocaleDateString(
+                    "pl-pl",
+                    {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    }
+                  ) +
+                    " - " +
+                    new Date(
+                      reportCalendarDates[reportCalendarDates.length - 1]
+                    ).toLocaleDateString("pl-pl", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                </strong>
+              ) : (
+                <></>
+              )}
+            </h2>
+            {availableDays && date ? (
+              <IonDatetime
+                ref={reportCalendarRef}
+                multiple
+                firstDayOfWeek={1}
+                style={{
+                  margin: "auto",
+                }}
+                value={reportCalendarDates}
+                presentation="date"
+                mode="ios"
+                className="janek-shadow report-calendar"
+                isDateEnabled={(date) => {
+                  if (!reportCalendarDates) {
+                    return true;
                   }
 
-                }
+                  const tempDate = new Date(date);
 
-                return true;
+                  for (let n of reportCalendarDates) {
+                    const nDate = new Date(n);
 
-                
+                    if (
+                      nDate.getFullYear() === tempDate.getFullYear() &&
+                      nDate.getMonth() === tempDate.getMonth() &&
+                      nDate.getDate() === tempDate.getDate()
+                    ) {
+                      return false;
+                    }
+                  }
 
-              }}
-              onIonChange={(e) => {
-                if (!e.target.value)
-                {
-                  return;
-                }
+                  return true;
+                }}
+                onIonChange={(e) => {
+                  if (!e.target.value) {
+                    return;
+                  }
 
-                const val = e.target.value as string[];
+                  const val = e.target.value as string[];
 
-                if(val.length == 7)
-                {
-                  return;
-                }
+                  if (val.length == 7) {
+                    return;
+                  }
 
-                const daysInWeek = DaysInWeek(new Date(val[val.length - 1]));
-                setReportCalendarDates(daysInWeek);   
+                  const daysInWeek = DaysInWeek(new Date(val[val.length - 1]));
+                  setReportCalendarDates(daysInWeek);
+                }}
+              />
+            ) : (
+              <></>
+            )}
+            <div style={{ textAlign: "center", marginTop: "25px" }}>
+              <h2>Zgłoś uwagę</h2>
+              <IonList style={{ textAlign: "center" }}>
+                {analyticsReportResponse ? (
+                  selectionModel.map((e) => {
+                    return (
+                      // <IonItem
+                      //   style={{
+                      //     padding: "5px",
+                      //     maxWidth: "300px",
+                      //     marginTop: "5px",
+                      //     margin: "auto",
+                      //   }}
+                      //   className={"janek-shadow"}
+                      //   lines={"none"}
+                      // >
+                      //   {
+                      //     analyticsReportResponse.routesAddresses.find(
+                      //       (k) => k.id == e
+                      //     )?.region
+                      //   }{" "}
+                      //   {
+                      //     analyticsReportResponse.routesAddresses.find(
+                      //       (k) => k.id == e
+                      //     )?.postCode
+                      //   }{" "}
+                      //   {
+                      //     analyticsReportResponse.routesAddresses.find(
+                      //       (k) => k.id == e
+                      //     )?.city
+                      //   }{" "}
+                      //   {
+                      //     analyticsReportResponse.routesAddresses.find(
+                      //       (k) => k.id == e
+                      //     )?.street
+                      //   }{" "}
+                      //   {
+                      //     analyticsReportResponse.routesAddresses.find(
+                      //       (k) => k.id == e
+                      //     )?.houseNumber
+                      //   }
+                      // </IonItem>
+                      <IonItem className="" style={{ padding: "7px" }}>
+                        <IonLabel className="janek-shadow">
+                          <div style={{ display: "flex" }}>
+                            <IonLabel>
+                              <div>
+                                <div>
+                                  {
+                                    analyticsReportResponse.routesAddresses.find(
+                                      (k) => k.id == e
+                                    )?.street
+                                  }{" "}
+                                  {
+                                    analyticsReportResponse.routesAddresses.find(
+                                      (k) => k.id == e
+                                    )?.houseNumber
+                                  }
+                                </div>
+                                <div className="town-post">
+                                  {
+                                    analyticsReportResponse.routesAddresses.find(
+                                      (k) => k.id == e
+                                    )?.postCode
+                                  }{" "}
+                                  {
+                                    analyticsReportResponse.routesAddresses.find(
+                                      (k) => k.id == e
+                                    )?.city
+                                  }
+                                </div>
+                              </div>
+                            </IonLabel>
+                          </div>
+                        </IonLabel>
+                      </IonItem>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+              </IonList>
 
-              }}
-              // isDateEnabled={(e) => {
-              //   let today = new Date();
-              //   let tomorrow = new Date();
-              //   tomorrow.setDate(today.getDate() + 1);
-
-              //   const valueDate = new Date(e);
-
-              //   if (
-              //     valueDate <= tomorrow &&
-              //     availableDays.includes(
-              //       valueDate.toISOString().replace(".000Z", "")
-              //     )
-              //   ) {
-              //     return true;
-              //   } else {
-              //     return false;
-              //   }
-              // }}
-            />
-          ) : (
-            <></>
-          )}
+              <TextareaAutosize
+                color="neutral"
+                minRows={2}
+                style={{ width: "300px" }}
+              />
+              <br />
+              <IonButton style={{ textAlign: "center" }}>Wyślij</IonButton>
+            </div>
+          </div>
         </IonCol>
       </IonRow>
     </>
