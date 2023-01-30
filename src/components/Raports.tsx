@@ -18,6 +18,7 @@ import {
   IonCol,
   IonContent,
   IonDatetime,
+  IonIcon,
   IonImg,
   IonItem,
   IonLabel,
@@ -59,6 +60,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import DefaultAutocomplete from "./DefaultAutocomplete";
 import DeliveryTypeSelect from "./DeliveryTypeSelect";
 import CompanySelect from "./CompanySelect";
+import { downloadOutline } from "ionicons/icons";
 
 type AnalyticsReportResponse = {
   allDeliveries: number;
@@ -155,12 +157,33 @@ const Raports: React.FC<ContainerProps> = () => {
           items: filterModel.items.filter((e) => e.id != 1),
         });
       }
-
-      //apiRef.current.forceUpdate();
     }
-
-    console.log(filterModel);
   }, [status]);
+
+  useEffect(() => {
+    if (apiRef.current && filterModel) {
+      if (region) {
+        let tempFilterModelItems = filterModel.items.filter((e) => e.id != 2);
+
+        tempFilterModelItems.push({
+          id: 2,
+          columnField: "region",
+          operatorValue: "equals",
+          value: region,
+        });
+
+        setFilterModel({
+          ...filterModel,
+          items: tempFilterModelItems,
+        });
+      } else {
+        setFilterModel({
+          ...filterModel,
+          items: filterModel.items.filter((e) => e.id != 2),
+        });
+      }
+    }
+  }, [region]);
 
   // useEffect(() => {
   //   if (apiRef.current && filterModel && status) {
@@ -296,6 +319,45 @@ const Raports: React.FC<ContainerProps> = () => {
           <KeyboardArrowRightIcon />
         </IconButton>
       ),
+    },
+  ];
+
+  const noticeColumns: GridColDef[] = [
+    {
+      field: "region",
+      headerName: "Wiadomość",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "postCode",
+      headerName: "Catering",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "city",
+      headerName: "Adres",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "street",
+      headerName: "Data dodania",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
     },
   ];
 
@@ -710,6 +772,25 @@ const Raports: React.FC<ContainerProps> = () => {
               {analyticsReportResponse ? (
                 analyticsReportResponse.routesAddresses.length > 0 ? (
                   <div className="janek-shadow mt-4">
+                    <IonRow className="ion-justify-content-end">
+                      <IonCol size="auto">
+                        <IonButton
+                          onClick={() => {
+                            // api
+                            // .post("AnalyticsReport/export-data", {
+                            //   catering: company,
+                            //   region: region,
+                            //   status: status
+                            // })
+                            // .then((response) => {
+                            // });
+                          }}
+                        >
+                          <IonIcon icon={downloadOutline} slot="end" />
+                          Eksportuj dane
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
                     <DataGridPro
                       filterModel={filterModel}
                       onSelectionModelChange={(newSelectionModel, details) => {
@@ -741,11 +822,47 @@ const Raports: React.FC<ContainerProps> = () => {
               )}
             </IonCol>
           </IonRow>
+          <IonRow>
+            <IonCol size="12" className="order-2 order-md-1">
+              {analyticsReportResponse ? (
+                analyticsReportResponse.routesAddresses.length > 0 ? (
+                  <div className="janek-shadow mt-4">
+                    <DataGridPro
+                      filterModel={filterModel}
+                      onSelectionModelChange={(newSelectionModel, details) => {
+                        setSelectionModel(newSelectionModel);
+                      }}
+                      selectionModel={selectionModel}
+                      apiRef={apiRef}
+                      style={{
+                        height: "850px",
+                      }}
+                      // rowHeight={120}
+                      rows={analyticsReportResponse.routesAddresses}
+                      columns={noticeColumns}
+                      hideFooter
+                      // pageSize={5}
+                      // rowsPerPageOptions={[5]}
+                      disableSelectionOnClick
+                      checkboxSelection
+                      // onSelectionModelChange={(ids) =>
+                      //   onRowsSelectionHandler(ids)
+                      // }
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )
+              ) : (
+                <></>
+              )}
+            </IonCol>
+          </IonRow>
         </IonCol>
         <IonCol size="12" sizeMd="4" className="order-1 order-md-2">
           <div
             style={{
-              position: "sticky",
+              // position: "sticky",
               top: "125px",
               margin: "auto",
             }}
@@ -830,54 +947,48 @@ const Raports: React.FC<ContainerProps> = () => {
             ) : (
               <></>
             )}
-            <div style={{ textAlign: "center", marginTop: "25px" }}>
-              <h2>Zgłoś uwagę</h2>
-              <IonList style={{ textAlign: "center" }}>
-                {analyticsReportResponse ? (
-                  selectionModel.map((e) => {
-                    return (
-                      // <IonItem
-                      //   style={{
-                      //     padding: "5px",
-                      //     maxWidth: "300px",
-                      //     marginTop: "5px",
-                      //     margin: "auto",
-                      //   }}
-                      //   className={"janek-shadow"}
-                      //   lines={"none"}
-                      // >
-                      //   {
-                      //     analyticsReportResponse.routesAddresses.find(
-                      //       (k) => k.id == e
-                      //     )?.region
-                      //   }{" "}
-                      //   {
-                      //     analyticsReportResponse.routesAddresses.find(
-                      //       (k) => k.id == e
-                      //     )?.postCode
-                      //   }{" "}
-                      //   {
-                      //     analyticsReportResponse.routesAddresses.find(
-                      //       (k) => k.id == e
-                      //     )?.city
-                      //   }{" "}
-                      //   {
-                      //     analyticsReportResponse.routesAddresses.find(
-                      //       (k) => k.id == e
-                      //     )?.street
-                      //   }{" "}
-                      //   {
-                      //     analyticsReportResponse.routesAddresses.find(
-                      //       (k) => k.id == e
-                      //     )?.houseNumber
-                      //   }
-                      // </IonItem>
-                      <IonItem className="" style={{ padding: "7px" }}>
-                        <IonLabel className="janek-shadow">
-                          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                padding: "15px",
+                width: "350px",
+                margin: "auto",
+                marginTop: "45px",
+              }}
+              className="janek-shadow"
+            >
+              <IonRow>
+                <IonCol size="12">
+                  <h2 style={{ textAlign: "center" }}>Zgłoś uwagę</h2>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="12">
+                  <IonList style={{ textAlign: "center" }}>
+                    {analyticsReportResponse ? (
+                      selectionModel.map((e) => {
+                        return (
+                          <IonItem
+                            className=""
+                            style={{
+                              // padding: "1px",
+                              border: "1px solid lightgrey",
+                              borderRadius: "15px",
+                              // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                              width: "90%",
+                              margin: "auto",
+                              marginBottom: "5px",
+                            }}
+                            lines="none"
+                          >
                             <IonLabel>
                               <div>
-                                <div>
+                                <div
+                                  style={{
+                                    fontWeight: "600",
+                                    fontSize: "17px",
+                                    // textAlign: "right",
+                                  }}
+                                >
                                   {
                                     analyticsReportResponse.routesAddresses.find(
                                       (k) => k.id == e
@@ -888,8 +999,22 @@ const Raports: React.FC<ContainerProps> = () => {
                                       (k) => k.id == e
                                     )?.houseNumber
                                   }
+                                  <span
+                                    style={{
+                                      float: "right",
+                                      fontSize: "14px",
+                                      opacity: "0.8",
+                                      fontWeight: " 500",
+                                    }}
+                                  >
+                                    {
+                                      analyticsReportResponse.routesAddresses.find(
+                                        (k) => k.id == e
+                                      )?.region
+                                    }
+                                  </span>
                                 </div>
-                                <div className="town-post">
+                                <div className="" style={{ opacity: "0.8" }}>
                                   {
                                     analyticsReportResponse.routesAddresses.find(
                                       (k) => k.id == e
@@ -903,23 +1028,38 @@ const Raports: React.FC<ContainerProps> = () => {
                                 </div>
                               </div>
                             </IonLabel>
-                          </div>
-                        </IonLabel>
-                      </IonItem>
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-              </IonList>
-
-              <TextareaAutosize
-                color="neutral"
-                minRows={2}
-                style={{ width: "300px" }}
-              />
-              <br />
-              <IonButton style={{ textAlign: "center" }}>Wyślij</IonButton>
+                          </IonItem>
+                        );
+                      })
+                    ) : (
+                      <></>
+                    )}
+                  </IonList>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="12">
+                  <TextField
+                    fullWidth
+                    // color=""
+                    variant="outlined"
+                    label="Komentarz"
+                    multiline
+                    minRows={4}
+                    style={{}}
+                  />
+                </IonCol>
+              </IonRow>
+              <IonRow className="ion-justify-content-center">
+                <IonCol size="auto">
+                  <IonButton
+                    style={{ margin: "auto", marginTop: "10px" }}
+                    onClick={() => {}}
+                  >
+                    Wyślij
+                  </IonButton>
+                </IonCol>
+              </IonRow>
             </div>
           </div>
         </IonCol>
