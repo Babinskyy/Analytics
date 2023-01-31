@@ -963,7 +963,9 @@ const Raports: React.FC<ContainerProps> = () => {
               </IonRow>
               <IonRow>
                 <IonCol size="12">
-                  <IonList style={{ textAlign: "center" }}>
+                  <IonList
+                    style={{ textAlign: "center", background: "transparent" }}
+                  >
                     {analyticsReportResponse ? (
                       selectionModel.map((e) => {
                         return (

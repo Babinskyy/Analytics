@@ -1,3 +1,4 @@
+import { PaletteMode } from "@mui/material";
 import React, {
   createContext,
   useState,
@@ -8,7 +9,7 @@ import React, {
 
 export interface GlobalStateInterface {
   
-  mode: string;
+  mode: PaletteMode;
 
 }
 

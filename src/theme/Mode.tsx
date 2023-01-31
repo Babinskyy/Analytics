@@ -8,6 +8,7 @@ import {
   Paper,
   Autocomplete,
   TextField,
+  PaletteMode,
 } from "@mui/material";
 import {
   IonCol,
@@ -26,26 +27,20 @@ import {
   GlobalStateInterface,
 } from "./../GlobalStateProvider";
 
-
 type ContainerProps = {
-  setMode: React.Dispatch<React.SetStateAction<string>>;
-}
+  setMode: React.Dispatch<React.SetStateAction<PaletteMode>>;
+};
 
 const Mode: React.FC<ContainerProps> = ({ setMode }) => {
-
   const { state, setState } = useGlobalState();
 
   useEffect(() => {
+    setMode(state.mode ? state.mode : "light");
 
-    setMode(state.mode ? state.mode as string : "light");
+    console.log(state.mode);
+  }, [state.mode]);
 
-    console.log(state.mode)
-
-}, [state.mode])
-
-  return (
-    <>{state.mode}</>
-  )
+  return <>{state.mode}</>;
 };
 
 export default Mode;

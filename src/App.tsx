@@ -70,20 +70,17 @@ import Mode from "./theme/Mode";
 
 setupIonicReact();
 
-const App: React.FC = () => {
-  const [mode, setMode] = useState<any>("light");
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-        },
-      }),
-    [mode]
-  );
+const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
+type MyAppProps = {
+  setMode: React.Dispatch<React.SetStateAction<PaletteMode>>;
+};
+
+const MyApp: React.FC<MyAppProps> = ({ setMode }) => {
+  const theme = useTheme();
+  const colorMode = useContext(ColorModeContext);
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Mode setMode={setMode} />
       <IonApp>
         <IonReactRouter>
@@ -96,14 +93,39 @@ const App: React.FC = () => {
             <Route exact path="/day/:month/:id" component={Day} />
             <Route exact path="/month/:id" component={Month} />
             <Route exact path="/" component={Year} />
-
-            {/* <Route exact path="/">
-            <Redirect to="/Year" />
-          </Route> */}
           </IonRouterOutlet>
         </IonReactRouter>
       </IonApp>
-    </ThemeProvider>
+    </>
+  );
+};
+
+const App: React.FC = () => {
+  const [mode, setMode] = useState<PaletteMode>("light");
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+      },
+    }),
+    []
+  );
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+      }),
+    [mode]
+  );
+
+  return (
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <MyApp setMode={setMode} />
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 };
 
