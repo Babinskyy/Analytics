@@ -12,7 +12,7 @@ import {
   IconButton,
   TextareaAutosize,
 } from "@mui/material";
-import "./Raports.css";
+import "./Raports.scss";
 import {
   IonButton,
   IonCol,
@@ -61,6 +61,7 @@ import DefaultAutocomplete from "./DefaultAutocomplete";
 import DeliveryTypeSelect from "./DeliveryTypeSelect";
 import CompanySelect from "./CompanySelect";
 import { downloadOutline } from "ionicons/icons";
+import KaryAutocomplete from "./KaryAutocomplete";
 
 type AnalyticsReportResponse = {
   allDeliveries: number;
@@ -115,6 +116,8 @@ const Raports: React.FC<ContainerProps> = () => {
   const [region, setRegion] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [company, setCompany] = useState<string>("");
+
+  const [title, setTitle] = useState<string>("");
 
   const [filterModel, setFilterModel] = useState<GridFilterModel | undefined>({
     items: [],
@@ -963,8 +966,35 @@ const Raports: React.FC<ContainerProps> = () => {
               </IonRow>
               <IonRow>
                 <IonCol size="12">
+                  <KaryAutocomplete fullWidth setTitle={setTitle} />
+                </IonCol>
+              </IonRow>
+              {selectionModel.length > 0 ? (
+                <IonRow>
+                  <IonCol size="12">
+                    <p
+                      style={{
+                        textAlign: "center",
+                        marginBottom: "0px",
+                        marginTop: "5px",
+                      }}
+                    >
+                      Wybrane adresy:
+                    </p>
+                  </IonCol>
+                </IonRow>
+              ) : (
+                <></>
+              )}
+
+              <IonRow>
+                <IonCol size="12">
                   <IonList
-                    style={{ textAlign: "center", background: "transparent" }}
+                    style={{
+                      textAlign: "center",
+                      background: "transparent",
+                      // border: "1px solid lightgrey",
+                    }}
                   >
                     {analyticsReportResponse ? (
                       selectionModel.map((e) => {

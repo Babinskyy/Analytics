@@ -44,10 +44,11 @@ const KaryAutocomplete: React.FC<Props> = ({
 
     setOptions([
       "Niedowóz",
-      "Zły adres",
+      "Pomylony adres",
       "Pomylona kaloryczność",
       "Pomylony typ diety",
       "Uszkodzona dieta",
+      "Inny",
     ]);
 
     return () => {

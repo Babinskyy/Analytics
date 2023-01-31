@@ -1,5 +1,5 @@
 .janek-shadow {
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 20px 30px;    
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 20px 30px;
     border-radius: 9px;
     border: 1px solid rgba(224, 224, 224, 1);
 }
@@ -8,7 +8,7 @@
     pointer-events: none;
 }
 
-.MuiDataGrid-columnHeaders ~ div:nth-of-type(3) {
+.MuiDataGrid-columnHeaders~div:nth-of-type(3) {
     display: none;
 }
 
@@ -26,4 +26,8 @@
     font-weight: 700;
     margin-left: 5px;
     color: rgb(255, 0, 0);
+}
+
+.MuiDataGrid-root .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer {
+    display: none;
 }
