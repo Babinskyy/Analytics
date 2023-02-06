@@ -69,7 +69,7 @@ import Header from "../components/Header";
 import api from "./../services/api";
 import LoaderContainer from "../components/LoaderContainer";
 import { Virtuoso } from "react-virtuoso";
-import DriversScanTable from "../components/DriversScanTable";
+
 import Distance from "../components/Drivers/Distance";
 import DriverNotesTable from "../components/Driver/DriverNotesTable";
 
@@ -193,7 +193,7 @@ const Drivers: React.FC = () => {
         }
         break;
       case "tacki":
-        return <DriversScanTable />;
+        return <></>;
       case "notes":
         return <DriverNotesTable />;
       default:

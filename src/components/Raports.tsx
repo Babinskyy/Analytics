@@ -62,6 +62,10 @@ import DeliveryTypeSelect from "./DeliveryTypeSelect";
 import CompanySelect from "./CompanySelect";
 import { downloadOutline } from "ionicons/icons";
 import KaryAutocomplete from "./KaryAutocomplete";
+import CityAutocomplete from "./CityAutocomplete";
+import PostCodeAutocomplete from "./PostCodeAutocomplete";
+import StreetAutocomplete from "./StreetAutocomplete";
+import StreetNumberAutocomplete from "./StreetNumberAutocomplete";
 
 type AnalyticsReportResponse = {
   allDeliveries: number;
@@ -114,6 +118,10 @@ const Raports: React.FC<ContainerProps> = () => {
   const [rows, setRows] = useState<DriversScanTableProps[]>([]);
 
   const [regions, setRegions] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [postCodes, setPostCodes] = useState<string[]>([]);
+  const [streets, setStreets] = useState<string[]>([]);
+  const [streetNumbers, setStreetNumbers] = useState<string[]>([]);
   const [status, setStatus] = useState<string>("");
   const [company, setCompany] = useState<string>("");
 
@@ -199,6 +207,122 @@ const Raports: React.FC<ContainerProps> = () => {
       }
     }
   }, [regions]);
+
+  useEffect(() => {
+    if (apiRef.current && filterModel) {
+      if (cities.length > 0) {
+        let tempFilterModelItems = filterModel.items.filter(
+          (e) => !(e.id as string).startsWith("city")
+        );
+
+        tempFilterModelItems.push({
+          id: "city",
+          columnField: "city",
+          operatorValue: "isAnyOf",
+          value: cities,
+        });
+
+        setFilterModel({
+          ...filterModel,
+          items: tempFilterModelItems,
+        });
+      } else {
+        setFilterModel({
+          ...filterModel,
+          items: filterModel.items.filter(
+            (e) => !(e.id as string).startsWith("city")
+          ),
+        });
+      }
+    }
+  }, [cities]);
+
+  useEffect(() => {
+    if (apiRef.current && filterModel) {
+      if (postCodes.length > 0) {
+        let tempFilterModelItems = filterModel.items.filter(
+          (e) => !(e.id as string).startsWith("postCode")
+        );
+
+        tempFilterModelItems.push({
+          id: "postCode",
+          columnField: "postCode",
+          operatorValue: "isAnyOf",
+          value: postCodes,
+        });
+
+        setFilterModel({
+          ...filterModel,
+          items: tempFilterModelItems,
+        });
+      } else {
+        setFilterModel({
+          ...filterModel,
+          items: filterModel.items.filter(
+            (e) => !(e.id as string).startsWith("postCode")
+          ),
+        });
+      }
+    }
+  }, [postCodes]);
+
+  useEffect(() => {
+    if (apiRef.current && filterModel) {
+      if (streets.length > 0) {
+        let tempFilterModelItems = filterModel.items.filter(
+          (e) => !(e.id as string).startsWith("street")
+        );
+
+        tempFilterModelItems.push({
+          id: "street",
+          columnField: "street",
+          operatorValue: "isAnyOf",
+          value: streets,
+        });
+
+        setFilterModel({
+          ...filterModel,
+          items: tempFilterModelItems,
+        });
+      } else {
+        setFilterModel({
+          ...filterModel,
+          items: filterModel.items.filter(
+            (e) => !(e.id as string).startsWith("street")
+          ),
+        });
+      }
+    }
+  }, [streets]);
+
+  useEffect(() => {
+    if (apiRef.current && filterModel) {
+      if (streetNumbers.length > 0) {
+        let tempFilterModelItems = filterModel.items.filter(
+          (e) => !(e.id as string).startsWith("streetNumber")
+        );
+
+        tempFilterModelItems.push({
+          id: "streetNumber",
+          columnField: "streetNumber",
+          operatorValue: "isAnyOf",
+          value: streets,
+        });
+
+        setFilterModel({
+          ...filterModel,
+          items: tempFilterModelItems,
+        });
+      } else {
+        setFilterModel({
+          ...filterModel,
+          items: filterModel.items.filter(
+            (e) => !(e.id as string).startsWith("streetNumber")
+          ),
+        });
+      }
+    }
+  }, [streetNumbers]);
 
   //#endregion
 
@@ -774,16 +898,81 @@ const Raports: React.FC<ContainerProps> = () => {
             style={{ marginTop: "20px" }}
             className={"ion-justify-content-between"}
           >
-            <IonCol size="auto">
+            <IonCol size="4">
               <CompanySelect company={company} setCompany={setCompany} />
             </IonCol>
-            <IonCol size="auto">
-              <RegionAutocomplete setRegions={setRegions} multiple />
+            <IonCol size="4">
+              <RegionAutocomplete
+                setRegions={setRegions}
+                multiple
+                options={[
+                  ...new Set(
+                    analyticsReportResponse?.routesAddresses.map(
+                      (item) => item.region
+                    )
+                  ),
+                ].sort()}
+              />
             </IonCol>
-            <IonCol size="auto">
+            <IonCol size="4">
               <DeliveryTypeSelect status={status} setStatus={setStatus} />
             </IonCol>
           </IonRow>
+          <IonRow>
+            <IonCol size="4">
+              <CityAutocomplete
+                setCities={setCities}
+                multiple
+                options={[
+                  ...new Set(
+                    analyticsReportResponse?.routesAddresses.map(
+                      (item) => item.city
+                    )
+                  ),
+                ].sort()}
+              />
+            </IonCol>
+            <IonCol size="3">
+              <PostCodeAutocomplete
+                setPostCodes={setPostCodes}
+                multiple
+                options={[
+                  ...new Set(
+                    analyticsReportResponse?.routesAddresses.map(
+                      (item) => item.postCode
+                    )
+                  ),
+                ].sort()}
+              />
+            </IonCol>
+            <IonCol size="3">
+              <StreetAutocomplete
+                setStreets={setStreets}
+                multiple
+                options={[
+                  ...new Set(
+                    analyticsReportResponse?.routesAddresses.map(
+                      (item) => item.street
+                    )
+                  ),
+                ].sort()}
+              />
+            </IonCol>
+            <IonCol size="2">
+              <StreetNumberAutocomplete
+                setStreetNumbers={setStreetNumbers}
+                multiple
+                options={[
+                  ...new Set(
+                    analyticsReportResponse?.routesAddresses.map(
+                      (item) => item.houseNumber
+                    )
+                  ),
+                ].sort()}
+              />
+            </IonCol>
+          </IonRow>
+
           {/* <IonRow
             style={{ marginTop: "20px" }}
             className={"ion-justify-content-between"}
@@ -796,7 +985,7 @@ const Raports: React.FC<ContainerProps> = () => {
             <IonCol size="12" className="order-2 order-md-1">
               {analyticsReportResponse ? (
                 analyticsReportResponse.routesAddresses.length > 0 ? (
-                  <div className="janek-shadow mt-4">
+                  <div className="janek-shadow mt-2">
                     <IonRow className="ion-justify-content-end">
                       <IonCol size="auto">
                         <IonButton

@@ -37,7 +37,7 @@ const CompanySelect: React.FC<Props> = ({ setCompany, company }) => {
         labelId="delivery-type-select-label"
         // id="delivery-type-select"
         style={{
-          width: "250px",
+          width: "100%",
           // textAlign: "left",
         }}
         value={company}

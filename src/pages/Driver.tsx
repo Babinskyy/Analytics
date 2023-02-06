@@ -88,7 +88,7 @@ import Header from "../components/Header";
 import { Virtuoso } from "react-virtuoso";
 import LoaderContainer from "../components/LoaderContainer";
 import { RouteComponentProps } from "react-router";
-import DriversScanTable from "../components/DriversScanTable";
+
 import DriverRouteTable from "../components/Driver/DriverRouteTable";
 import DriverDistance from "../components/Driver/DriverDistance";
 import DriverNotesTable from "../components/Driver/DriverNotesTable";

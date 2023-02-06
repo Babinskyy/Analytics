@@ -20,39 +20,41 @@ import api from "./../services/api";
 type Props = {
   setRegion?: React.Dispatch<React.SetStateAction<string>>;
   setRegions?: React.Dispatch<React.SetStateAction<string[]>>;
+  options: string[];
   multiple?: boolean;
 };
 
 const RegionAutocomplete: React.FC<Props> = ({
   setRegion,
   setRegions,
+  options,
   multiple = false,
 }) => {
   const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState<readonly string[]>([]);
+  // const [options, setOptions] = React.useState<readonly string[]>([]);
   const loading = open && options.length === 0;
 
-  useEffect(() => {
-    let active = true;
+  // useEffect(() => {
+  //   let active = true;
 
-    if (!loading) {
-      return undefined;
-    }
+  //   if (!loading) {
+  //     return undefined;
+  //   }
 
-    api.get("autocomplete/regions").then((response) => {
-      setOptions(response.data);
-    });
+  //   api.get("autocomplete/regions").then((response) => {
+  //     setOptions(response.data);
+  //   });
 
-    return () => {
-      active = false;
-    };
-  }, [loading]);
+  //   return () => {
+  //     active = false;
+  //   };
+  // }, [loading]);
 
-  useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
+  // useEffect(() => {
+  //   if (!open) {
+  //     setOptions([]);
+  //   }
+  // }, [open]);
 
   return (
     <Autocomplete
@@ -63,7 +65,7 @@ const RegionAutocomplete: React.FC<Props> = ({
         width: {
           xs: "100%",
           sm: "100%",
-          md: 300,
+          md: "100%",
         },
       }}
       open={open}

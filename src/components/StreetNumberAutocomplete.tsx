@@ -18,43 +18,21 @@ import api from "./../services/api";
 // import { v4 as uuidv4, v4 } from "uuid";
 
 type Props = {
-  setCity?: React.Dispatch<React.SetStateAction<string>>;
-  setCities?: React.Dispatch<React.SetStateAction<string[]>>;
+  setStreetNumber?: React.Dispatch<React.SetStateAction<string>>;
+  setStreetNumbers?: React.Dispatch<React.SetStateAction<string[]>>;
   options: string[];
   multiple?: boolean;
 };
 
-const CityAutocomplete: React.FC<Props> = ({
-  setCity,
-  setCities,
+const StreetNumberAutocomplete: React.FC<Props> = ({
+  setStreetNumber,
+  setStreetNumbers,
   options,
   multiple = false,
 }) => {
   const [open, setOpen] = React.useState(false);
-  // const [options, setOptions] = React.useState<readonly string[]>([]);
+
   const loading = open && options.length === 0;
-
-  // useEffect(() => {
-  //   let active = true;
-
-  //   if (!loading) {
-  //     return undefined;
-  //   }
-
-  //   api.get("autocomplete/Cities").then((response) => {
-  //     setOptions(response.data);
-  //   });
-
-  //   return () => {
-  //     active = false;
-  //   };
-  // }, [loading]);
-
-  // useEffect(() => {
-  //   if (!open) {
-  //     setOptions([]);
-  //   }
-  // }, [open]);
 
   return (
     <Autocomplete
@@ -80,13 +58,13 @@ const CityAutocomplete: React.FC<Props> = ({
         return option;
       }}
       onChange={(event, value) => {
-        if (setCity) {
+        if (setStreetNumber) {
           const val = value as string | null;
-          setCity(val ?? "");
+          setStreetNumber(val ?? "");
         }
-        if (setCities) {
+        if (setStreetNumbers) {
           const val = value as string[] | null;
-          setCities(val ?? []);
+          setStreetNumbers(val ?? []);
         }
       }}
       options={options}
@@ -99,7 +77,7 @@ const CityAutocomplete: React.FC<Props> = ({
           {...params}
           id={GenerateGUID()}
           autoComplete={GenerateGUID()}
-          label="Miasto"
+          label="Numer"
           InputProps={{
             ...params.InputProps,
             autoComplete: "off",
@@ -118,4 +96,4 @@ const CityAutocomplete: React.FC<Props> = ({
   );
 };
 
-export default CityAutocomplete;
+export default StreetNumberAutocomplete;

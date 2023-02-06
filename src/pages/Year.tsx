@@ -64,7 +64,7 @@ import { Bar, PolarArea, Doughnut } from "react-chartjs-2";
 import Header from "../components/Header";
 import LoaderContainer from "../components/LoaderContainer";
 import { Container } from "@mui/system";
-import DriversScanTable from "../components/DriversScanTable";
+
 import Raports from "../components/Raports";
 ChartJS.register(...registerables);
 

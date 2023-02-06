@@ -39,7 +39,7 @@ const DeliveryTypeSelect: React.FC<Props> = ({ setStatus, status }) => {
         labelId="delivery-type-select-label"
         // id="delivery-type-select"
         style={{
-          width: "250px",
+          width: "100%",
           // textAlign: "left",
         }}
         value={status}

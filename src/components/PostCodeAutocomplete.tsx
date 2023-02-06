@@ -18,15 +18,15 @@ import api from "./../services/api";
 // import { v4 as uuidv4, v4 } from "uuid";
 
 type Props = {
-  setCity?: React.Dispatch<React.SetStateAction<string>>;
-  setCities?: React.Dispatch<React.SetStateAction<string[]>>;
+  setPostCode?: React.Dispatch<React.SetStateAction<string>>;
+  setPostCodes?: React.Dispatch<React.SetStateAction<string[]>>;
   options: string[];
   multiple?: boolean;
 };
 
-const CityAutocomplete: React.FC<Props> = ({
-  setCity,
-  setCities,
+const PostCodeAutocomplete: React.FC<Props> = ({
+  setPostCode,
+  setPostCodes,
   options,
   multiple = false,
 }) => {
@@ -41,7 +41,7 @@ const CityAutocomplete: React.FC<Props> = ({
   //     return undefined;
   //   }
 
-  //   api.get("autocomplete/Cities").then((response) => {
+  //   api.get("autocomplete/PostCodes").then((response) => {
   //     setOptions(response.data);
   //   });
 
@@ -80,13 +80,13 @@ const CityAutocomplete: React.FC<Props> = ({
         return option;
       }}
       onChange={(event, value) => {
-        if (setCity) {
+        if (setPostCode) {
           const val = value as string | null;
-          setCity(val ?? "");
+          setPostCode(val ?? "");
         }
-        if (setCities) {
+        if (setPostCodes) {
           const val = value as string[] | null;
-          setCities(val ?? []);
+          setPostCodes(val ?? []);
         }
       }}
       options={options}
@@ -99,7 +99,7 @@ const CityAutocomplete: React.FC<Props> = ({
           {...params}
           id={GenerateGUID()}
           autoComplete={GenerateGUID()}
-          label="Miasto"
+          label="Kod pocztowy"
           InputProps={{
             ...params.InputProps,
             autoComplete: "off",
@@ -118,4 +118,4 @@ const CityAutocomplete: React.FC<Props> = ({
   );
 };
 
-export default CityAutocomplete;
+export default PostCodeAutocomplete;
