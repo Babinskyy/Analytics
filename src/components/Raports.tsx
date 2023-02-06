@@ -113,7 +113,7 @@ const Raports: React.FC<ContainerProps> = () => {
   const [_rows, _setRows] = useState<DriversScanTableProps[]>([]);
   const [rows, setRows] = useState<DriversScanTableProps[]>([]);
 
-  const [region, setRegion] = useState<string>("");
+  const [regions, setRegions] = useState<string[]>([]);
   const [status, setStatus] = useState<string>("");
   const [company, setCompany] = useState<string>("");
 
@@ -124,13 +124,17 @@ const Raports: React.FC<ContainerProps> = () => {
     linkOperator: GridLinkOperator.And,
   });
 
+  //#region Filtry
+
   useEffect(() => {
     if (apiRef.current && status && filterModel) {
       if (status == "unrealized") {
-        let tempFilterModelItems = filterModel.items.filter((e) => e.id != 1);
+        let tempFilterModelItems = filterModel.items.filter(
+          (e) => !(e.id as string).startsWith("status")
+        );
 
         tempFilterModelItems.push({
-          id: 1,
+          id: "status",
           columnField: "undeliveryCount",
           operatorValue: ">",
           value: 0,
@@ -141,10 +145,12 @@ const Raports: React.FC<ContainerProps> = () => {
           items: tempFilterModelItems,
         });
       } else if (status == "realized") {
-        let tempFilterModelItems = filterModel.items.filter((e) => e.id != 1);
+        let tempFilterModelItems = filterModel.items.filter(
+          (e) => !(e.id as string).startsWith("status")
+        );
 
         tempFilterModelItems.push({
-          id: 1,
+          id: "status",
           columnField: "deliveryDoneCount",
           operatorValue: ">",
           value: 0,
@@ -157,7 +163,9 @@ const Raports: React.FC<ContainerProps> = () => {
       } else {
         setFilterModel({
           ...filterModel,
-          items: filterModel.items.filter((e) => e.id != 1),
+          items: filterModel.items.filter(
+            (e) => !(e.id as string).startsWith("status")
+          ),
         });
       }
     }
@@ -165,14 +173,16 @@ const Raports: React.FC<ContainerProps> = () => {
 
   useEffect(() => {
     if (apiRef.current && filterModel) {
-      if (region) {
-        let tempFilterModelItems = filterModel.items.filter((e) => e.id != 2);
+      if (regions.length > 0) {
+        let tempFilterModelItems = filterModel.items.filter(
+          (e) => !(e.id as string).startsWith("region")
+        );
 
         tempFilterModelItems.push({
-          id: 2,
+          id: "region",
           columnField: "region",
-          operatorValue: "equals",
-          value: region,
+          operatorValue: "isAnyOf",
+          value: regions,
         });
 
         setFilterModel({
@@ -182,11 +192,15 @@ const Raports: React.FC<ContainerProps> = () => {
       } else {
         setFilterModel({
           ...filterModel,
-          items: filterModel.items.filter((e) => e.id != 2),
+          items: filterModel.items.filter(
+            (e) => !(e.id as string).startsWith("region")
+          ),
         });
       }
     }
-  }, [region]);
+  }, [regions]);
+
+  //#endregion
 
   // useEffect(() => {
   //   if (apiRef.current && filterModel && status) {
@@ -764,12 +778,20 @@ const Raports: React.FC<ContainerProps> = () => {
               <CompanySelect company={company} setCompany={setCompany} />
             </IonCol>
             <IonCol size="auto">
-              <RegionAutocomplete setRegion={setRegion} />
+              <RegionAutocomplete setRegions={setRegions} multiple />
             </IonCol>
             <IonCol size="auto">
               <DeliveryTypeSelect status={status} setStatus={setStatus} />
             </IonCol>
           </IonRow>
+          {/* <IonRow
+            style={{ marginTop: "20px" }}
+            className={"ion-justify-content-between"}
+          >
+            <IonCol size="auto">
+              <CompanySelect company={company} setCompany={setCompany} />
+            </IonCol>
+          </IonRow> */}
           <IonRow>
             <IonCol size="12" className="order-2 order-md-1">
               {analyticsReportResponse ? (

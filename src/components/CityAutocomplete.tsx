@@ -18,14 +18,14 @@ import api from "./../services/api";
 // import { v4 as uuidv4, v4 } from "uuid";
 
 type Props = {
-  setRegion?: React.Dispatch<React.SetStateAction<string>>;
-  setRegions?: React.Dispatch<React.SetStateAction<string[]>>;
+  setCity?: React.Dispatch<React.SetStateAction<string>>;
+  setCities?: React.Dispatch<React.SetStateAction<string[]>>;
   multiple?: boolean;
 };
 
-const RegionAutocomplete: React.FC<Props> = ({
-  setRegion,
-  setRegions,
+const CityAutocomplete: React.FC<Props> = ({
+  setCity,
+  setCities,
   multiple = false,
 }) => {
   const [open, setOpen] = React.useState(false);
@@ -39,7 +39,7 @@ const RegionAutocomplete: React.FC<Props> = ({
       return undefined;
     }
 
-    api.get("autocomplete/regions").then((response) => {
+    api.get("autocomplete/Cities").then((response) => {
       setOptions(response.data);
     });
 
@@ -78,13 +78,13 @@ const RegionAutocomplete: React.FC<Props> = ({
         return option;
       }}
       onChange={(event, value) => {
-        if (setRegion) {
+        if (setCity) {
           const val = value as string | null;
-          setRegion(val ?? "");
+          setCity(val ?? "");
         }
-        if (setRegions) {
+        if (setCities) {
           const val = value as string[] | null;
-          setRegions(val ?? []);
+          setCities(val ?? []);
         }
       }}
       options={options}
@@ -97,7 +97,7 @@ const RegionAutocomplete: React.FC<Props> = ({
           {...params}
           id={GenerateGUID()}
           autoComplete={GenerateGUID()}
-          label="Region"
+          label="City"
           InputProps={{
             ...params.InputProps,
             autoComplete: "off",
@@ -116,4 +116,4 @@ const RegionAutocomplete: React.FC<Props> = ({
   );
 };
 
-export default RegionAutocomplete;
+export default CityAutocomplete;
