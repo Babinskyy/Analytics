@@ -66,6 +66,7 @@ import CityAutocomplete from "./CityAutocomplete";
 import PostCodeAutocomplete from "./PostCodeAutocomplete";
 import StreetAutocomplete from "./StreetAutocomplete";
 import StreetNumberAutocomplete from "./StreetNumberAutocomplete";
+import PunishmentTitleSelect from "./PunishmentTitleSelect";
 
 type AnalyticsReportResponse = {
   allDeliveries: number;
@@ -571,6 +572,37 @@ const Raports: React.FC<ContainerProps> = () => {
 
   const [text, setText] = useState<string>();
 
+  const [punishmentTitles, setPunishmentTitles] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (apiRef.current && filterModel) {
+      if (punishmentTitles.length > 0) {
+        let tempFilterModelItems = filterModel.items.filter(
+          (e) => !(e.id as string).startsWith("punishmentTitle")
+        );
+
+        tempFilterModelItems.push({
+          id: "punishmentTitle",
+          columnField: "title",
+          operatorValue: "isAnyOf",
+          value: punishmentTitles,
+        });
+
+        setFilterModel({
+          ...filterModel,
+          items: tempFilterModelItems,
+        });
+      } else {
+        setFilterModel({
+          ...filterModel,
+          items: filterModel.items.filter(
+            (e) => !(e.id as string).startsWith("punishmentTitle")
+          ),
+        });
+      }
+    }
+  }, [punishmentTitles]);
+
   return (
     <>
       <IonModal
@@ -839,6 +871,7 @@ const Raports: React.FC<ContainerProps> = () => {
                 >
                   <TableHead>
                     <TableRow>
+                      <TableCell align="center">Niewliczane</TableCell>
                       <TableCell align="center">Wszystkie dostawy</TableCell>
                       <TableCell align="center">Ilość adresów</TableCell>
                       <TableCell align="center">Dostawy zrealizowane</TableCell>
@@ -849,6 +882,15 @@ const Raports: React.FC<ContainerProps> = () => {
                   </TableHead>
                   <TableBody>
                     <TableRow>
+                      <TableCell
+                        style={{
+                          fontWeight: "500",
+                          letterSpacing: "1px",
+                        }}
+                        align="center"
+                      >
+                        0
+                      </TableCell>
                       <TableCell
                         style={{
                           fontWeight: "500",
@@ -1177,7 +1219,20 @@ const Raports: React.FC<ContainerProps> = () => {
               </IonRow>
               <IonRow>
                 <IonCol size="12">
-                  <KaryAutocomplete fullWidth setTitle={setTitle} />
+                  {/* <KaryAutocomplete fullWidth setTitle={setTitle} /> */}
+                  <PunishmentTitleSelect
+                    punishmentTitle={punishmentTitles}
+                    setPunishmentTitles={setPunishmentTitles}
+                    // multiple
+                    options={[
+                      "Niedowóz",
+                      "Pomylony adres",
+                      "Pomylona kaloryczność",
+                      "Pomylony typ diety",
+                      "Uszkodzona dieta",
+                      "Inny",
+                    ]}
+                  />
                 </IonCol>
               </IonRow>
               {selectionModel.length > 0 ? (
