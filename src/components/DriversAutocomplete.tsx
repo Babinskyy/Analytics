@@ -22,13 +22,18 @@ type Props = {
   fullWidth?: boolean;
 };
 
+type Option = {
+  id: string;
+  value: string;
+};
+
 const DriversAutocomplete: React.FC<Props> = ({
   setDriver,
   width,
   fullWidth = false,
 }) => {
   const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState<readonly string[]>([]);
+  const [options, setOptions] = React.useState<readonly Option[]>([]);
   const loading = open && options.length === 0;
 
   useEffect(() => {
@@ -79,10 +84,10 @@ const DriversAutocomplete: React.FC<Props> = ({
       }}
       isOptionEqualToValue={(option, value) => option === value}
       getOptionLabel={(option) => {
-        return option;
+        return option.value;
       }}
       onChange={(event, value) => {
-        setDriver(value ?? "");
+        setDriver(value?.value ?? "");
       }}
       options={options}
       loading={loading}

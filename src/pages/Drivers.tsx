@@ -259,7 +259,7 @@ const Drivers: React.FC = () => {
                 Dystans
               </IonButton>
             </IonCol>
-            <IonCol size="auto" style={{ padding: "0" }}>
+            {/* <IonCol size="auto" style={{ padding: "0" }}>
               <IonButton
                 shape="round"
                 fill={whichGraph === "tacki" ? "solid" : "outline"}
@@ -284,7 +284,7 @@ const Drivers: React.FC = () => {
               >
                 Uwagi
               </IonButton>
-            </IonCol>
+            </IonCol> */}
           </IonRow>
 
           <IonRow className="ion-justify-content-center">
