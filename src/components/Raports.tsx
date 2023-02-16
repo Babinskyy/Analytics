@@ -67,6 +67,7 @@ import PostCodeAutocomplete from "./PostCodeAutocomplete";
 import StreetAutocomplete from "./StreetAutocomplete";
 import StreetNumberAutocomplete from "./StreetNumberAutocomplete";
 import PunishmentTitleSelect from "./PunishmentTitleSelect";
+import { LoadingButton } from "@mui/lab";
 
 type AnalyticsReportResponse = {
   allDeliveries: number;
@@ -124,7 +125,7 @@ const Raports: React.FC<ContainerProps> = () => {
   const [streets, setStreets] = useState<string[]>([]);
   const [streetNumbers, setStreetNumbers] = useState<string[]>([]);
   const [status, setStatus] = useState<string>("");
-  const [company, setCompany] = useState<string>("");
+  const [company, setCompany] = useState<string>("all");
 
   const [title, setTitle] = useState<string>("");
 
@@ -602,6 +603,9 @@ const Raports: React.FC<ContainerProps> = () => {
       }
     }
   }, [punishmentTitles]);
+
+  const [isClientSendReportLoading, setIsClientSendReportLoading] =
+    useState<boolean>(false);
 
   return (
     <>
@@ -1350,12 +1354,15 @@ const Raports: React.FC<ContainerProps> = () => {
               </IonRow>
               <IonRow className="ion-justify-content-center">
                 <IonCol size="auto">
-                  <IonButton
-                    style={{ margin: "auto", marginTop: "10px" }}
-                    onClick={() => {}}
+                  <LoadingButton
+                    loading={isClientSendReportLoading}
+                    variant="contained"
+                    onClick={() => {
+                      setIsClientSendReportLoading(true);
+                    }}
                   >
                     Wyślij
-                  </IonButton>
+                  </LoadingButton>
                 </IonCol>
               </IonRow>
             </div>
