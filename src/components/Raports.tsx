@@ -35,7 +35,7 @@ import { Container } from "@mui/system";
 
 import api from "./../services/api";
 import RegionAutocomplete from "./RegionAutocomplete";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import OrderExampleImage from "./dostawa.jpg";
 import { Virtuoso } from "react-virtuoso";
@@ -67,7 +67,9 @@ import PostCodeAutocomplete from "./PostCodeAutocomplete";
 import StreetAutocomplete from "./StreetAutocomplete";
 import StreetNumberAutocomplete from "./StreetNumberAutocomplete";
 import PunishmentTitleSelect from "./PunishmentTitleSelect";
-import { LoadingButton } from "@mui/lab";
+import { User } from "../services/userProps";
+
+import auth from "./../services/auth.service";
 
 type AnalyticsReportResponse = {
   allDeliveries: number;
@@ -88,12 +90,22 @@ type AnalyticsReportAddressResponse = {
   count: number;
   deliveryDoneCount: number;
   undeliveryCount: number;
+  mainCateringIds: number[];
+  mainCateringNames: string[];
+};
+
+type AnalyticsReportAddressDataPackageResponse = {
+  id: number;
+  cateringId: number | undefined;
+  cateringName: string;
+  name: string;
 };
 
 type AnalyticsReportAddressDataResponse = {
   id: number;
   // deliveryDate: string;
   imageCreated: boolean;
+  packages: AnalyticsReportAddressDataPackageResponse[];
 };
 
 type DriversScanTableProps = {
@@ -125,7 +137,7 @@ const Raports: React.FC<ContainerProps> = () => {
   const [streets, setStreets] = useState<string[]>([]);
   const [streetNumbers, setStreetNumbers] = useState<string[]>([]);
   const [status, setStatus] = useState<string>("");
-  const [company, setCompany] = useState<string>("all");
+  const [company, setCompany] = useState<string>("");
 
   const [title, setTitle] = useState<string>("");
 
@@ -133,6 +145,18 @@ const Raports: React.FC<ContainerProps> = () => {
     items: [],
     linkOperator: GridLinkOperator.And,
   });
+
+  const [user, setUser] = useState<User>();
+
+  const getUser = async () => {
+    const _user = await auth.getCurrentUser();
+
+    setUser(_user);
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   //#region Filtry
 
@@ -328,6 +352,171 @@ const Raports: React.FC<ContainerProps> = () => {
 
   //#endregion
 
+  const ShowContentUnderCalendar: React.FC = () => {
+    if (user?.role == "CateringOwner") {
+      return (
+        <div
+        style={{
+          padding: "15px",
+          width: "350px",
+          margin: "auto",
+          marginTop: "45px",
+        }}
+        className="janek-shadow"
+      >
+        <IonRow>
+          <IonCol size="12">
+            <h2 style={{ textAlign: "center" }}>Zgłoś uwagę</h2>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="12">
+            {/* <KaryAutocomplete fullWidth setTitle={setTitle} /> */}
+            <PunishmentTitleSelect
+              punishmentTitle={punishmentTitles}
+              setPunishmentTitles={setPunishmentTitles}
+              // multiple
+              options={[
+                "Niedowóz",
+                "Pomylony adres",
+                "Pomylona kaloryczność",
+                "Pomylony typ diety",
+                "Uszkodzona dieta",
+                "Inny",
+              ]}
+            />
+          </IonCol>
+        </IonRow>
+        {selectionModel.length > 0 ? (
+          <IonRow>
+            <IonCol size="12">
+              <p
+                style={{
+                  textAlign: "center",
+                  marginBottom: "0px",
+                  marginTop: "5px",
+                }}
+              >
+                Wybrane adresy:
+              </p>
+            </IonCol>
+          </IonRow>
+        ) : (
+          <></>
+        )}
+
+        <IonRow>
+          <IonCol size="12">
+            <IonList
+              style={{
+                textAlign: "center",
+                background: "transparent",
+                // border: "1px solid lightgrey",
+              }}
+            >
+              {analyticsReportResponse ? (
+                selectionModel.map((e) => {
+                  return (
+                    <IonItem
+                      className=""
+                      style={{
+                        // padding: "1px",
+                        border: "1px solid lightgrey",
+                        borderRadius: "15px",
+                        // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        width: "90%",
+                        margin: "auto",
+                        marginBottom: "5px",
+                      }}
+                      lines="none"
+                    >
+                      <IonLabel>
+                        <div>
+                          <div
+                            style={{
+                              fontWeight: "600",
+                              fontSize: "17px",
+                              // textAlign: "right",
+                            }}
+                          >
+                            {
+                              analyticsReportResponse.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.street
+                            }{" "}
+                            {
+                              analyticsReportResponse.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.houseNumber
+                            }
+                            <span
+                              style={{
+                                float: "right",
+                                fontSize: "14px",
+                                opacity: "0.8",
+                                fontWeight: " 500",
+                              }}
+                            >
+                              {
+                                analyticsReportResponse.routesAddresses.find(
+                                  (k) => k.id == e
+                                )?.region
+                              }
+                            </span>
+                          </div>
+                          <div className="" style={{ opacity: "0.8" }}>
+                            {
+                              analyticsReportResponse.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.postCode
+                            }{" "}
+                            {
+                              analyticsReportResponse.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.city
+                            }
+                          </div>
+                        </div>
+                      </IonLabel>
+                    </IonItem>
+                  );
+                })
+              ) : (
+                <></>
+              )}
+            </IonList>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="12">
+            <TextField
+              fullWidth
+              // color=""
+              variant="outlined"
+              label="Komentarz"
+              multiline
+              minRows={4}
+              style={{}}
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow className="ion-justify-content-center">
+          <IonCol size="auto">
+            <IonButton
+              style={{ margin: "auto", marginTop: "10px" }}
+              onClick={() => {}}
+            >
+              Wyślij
+            </IonButton>
+          </IonCol>
+        </IonRow>
+      </div>
+      ) ;
+    } else {
+      return <></>
+    }
+  };
+
   // useEffect(() => {
   //   if (apiRef.current && filterModel && status) {
   //     apiRef.current.setFilterModel(filterModel);
@@ -413,6 +602,17 @@ const Raports: React.FC<ContainerProps> = () => {
       disableColumnMenu: true,
       hide: true,
       type: "number",
+    },
+    {
+      field: "mainCateringNamesField",
+      headerName: "Catering",
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+      maxWidth: 200,
+      valueGetter: (params: GridValueGetterParams) =>
+        params.row.mainCateringNames.map((e: string) => e + " "),
     },
     {
       field: "deliveryStatus",
@@ -603,9 +803,6 @@ const Raports: React.FC<ContainerProps> = () => {
       }
     }
   }, [punishmentTitles]);
-
-  const [isClientSendReportLoading, setIsClientSendReportLoading] =
-    useState<boolean>(false);
 
   return (
     <>
@@ -1207,165 +1404,8 @@ const Raports: React.FC<ContainerProps> = () => {
             ) : (
               <></>
             )}
-            <div
-              style={{
-                padding: "15px",
-                width: "350px",
-                margin: "auto",
-                marginTop: "45px",
-              }}
-              className="janek-shadow"
-            >
-              <IonRow>
-                <IonCol size="12">
-                  <h2 style={{ textAlign: "center" }}>Zgłoś uwagę</h2>
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <IonCol size="12">
-                  {/* <KaryAutocomplete fullWidth setTitle={setTitle} /> */}
-                  <PunishmentTitleSelect
-                    punishmentTitle={punishmentTitles}
-                    setPunishmentTitles={setPunishmentTitles}
-                    // multiple
-                    options={[
-                      "Niedowóz",
-                      "Pomylony adres",
-                      "Pomylona kaloryczność",
-                      "Pomylony typ diety",
-                      "Uszkodzona dieta",
-                      "Inny",
-                    ]}
-                  />
-                </IonCol>
-              </IonRow>
-              {selectionModel.length > 0 ? (
-                <IonRow>
-                  <IonCol size="12">
-                    <p
-                      style={{
-                        textAlign: "center",
-                        marginBottom: "0px",
-                        marginTop: "5px",
-                      }}
-                    >
-                      Wybrane adresy:
-                    </p>
-                  </IonCol>
-                </IonRow>
-              ) : (
-                <></>
-              )}
 
-              <IonRow>
-                <IonCol size="12">
-                  <IonList
-                    style={{
-                      textAlign: "center",
-                      background: "transparent",
-                      // border: "1px solid lightgrey",
-                    }}
-                  >
-                    {analyticsReportResponse ? (
-                      selectionModel.map((e) => {
-                        return (
-                          <IonItem
-                            className=""
-                            style={{
-                              // padding: "1px",
-                              border: "1px solid lightgrey",
-                              borderRadius: "15px",
-                              // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                              width: "90%",
-                              margin: "auto",
-                              marginBottom: "5px",
-                            }}
-                            lines="none"
-                          >
-                            <IonLabel>
-                              <div>
-                                <div
-                                  style={{
-                                    fontWeight: "600",
-                                    fontSize: "17px",
-                                    // textAlign: "right",
-                                  }}
-                                >
-                                  {
-                                    analyticsReportResponse.routesAddresses.find(
-                                      (k) => k.id == e
-                                    )?.street
-                                  }{" "}
-                                  {
-                                    analyticsReportResponse.routesAddresses.find(
-                                      (k) => k.id == e
-                                    )?.houseNumber
-                                  }
-                                  <span
-                                    style={{
-                                      float: "right",
-                                      fontSize: "14px",
-                                      opacity: "0.8",
-                                      fontWeight: " 500",
-                                    }}
-                                  >
-                                    {
-                                      analyticsReportResponse.routesAddresses.find(
-                                        (k) => k.id == e
-                                      )?.region
-                                    }
-                                  </span>
-                                </div>
-                                <div className="" style={{ opacity: "0.8" }}>
-                                  {
-                                    analyticsReportResponse.routesAddresses.find(
-                                      (k) => k.id == e
-                                    )?.postCode
-                                  }{" "}
-                                  {
-                                    analyticsReportResponse.routesAddresses.find(
-                                      (k) => k.id == e
-                                    )?.city
-                                  }
-                                </div>
-                              </div>
-                            </IonLabel>
-                          </IonItem>
-                        );
-                      })
-                    ) : (
-                      <></>
-                    )}
-                  </IonList>
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <IonCol size="12">
-                  <TextField
-                    fullWidth
-                    // color=""
-                    variant="outlined"
-                    label="Komentarz"
-                    multiline
-                    minRows={4}
-                    style={{}}
-                  />
-                </IonCol>
-              </IonRow>
-              <IonRow className="ion-justify-content-center">
-                <IonCol size="auto">
-                  <LoadingButton
-                    loading={isClientSendReportLoading}
-                    variant="contained"
-                    onClick={() => {
-                      setIsClientSendReportLoading(true);
-                    }}
-                  >
-                    Wyślij
-                  </LoadingButton>
-                </IonCol>
-              </IonRow>
-            </div>
+            {<ShowContentUnderCalendar />}
           </div>
         </IonCol>
       </IonRow>
