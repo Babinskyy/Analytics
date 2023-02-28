@@ -10,7 +10,6 @@ const instance = axios.create({
   withCredentials: true,
   baseURL: "https://broccoliapi.ebert.link",
   //baseURL: "https://localhost:55931",
-  //baseURL: "https://broccoli-demo.azurewebsites.net",
   headers: {
     "Content-Type": "application/json",
   },

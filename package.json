@@ -19,6 +19,7 @@
     "@mui/icons-material": "^5.8.4",
     "@mui/lab": "^5.0.0-alpha.120",
     "@mui/material": "^5.11.9",
+    "@mui/x-data-grid-premium": "^5.17.24",
     "@mui/x-data-grid-pro": "^5.17.20",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",

@@ -28,6 +28,27 @@
     color: rgb(255, 0, 0);
 }
 
-.MuiDataGrid-root .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer {
+// .MuiDataGrid-root .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer {
+//     display: none;
+// }
+
+.datagrid-hide-select-all .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer {
     display: none;
+}
+
+.datagrid-hide-grouping-value .MuiDataGrid-groupingCriteriaCell span {
+    visibility: hidden;
+}
+
+.datagrid-hide-grouping-value .MuiDataGrid-groupingCriteriaCell {
+    pointer-events: none;
+}
+
+.MuiDataGrid-root .datagrid-hide-row-border .MuiDataGrid-cell {
+    border-bottom: none;
+}
+
+.MuiDataGrid-root .datagrid-hide-row-border-group-row .MuiDataGrid-cell {
+    border-bottom: none;
+    border-top: 1px solid rgba(224, 224, 224, 1);
 }

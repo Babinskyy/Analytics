@@ -8,7 +8,7 @@ import {
   IonToolbar,
   NavContext,
 } from "@ionic/react";
-import { IconButton, useTheme } from "@mui/material";
+import { Button, IconButton, useTheme } from "@mui/material";
 
 import {
   arrowUpOutline,
@@ -33,6 +33,8 @@ import {
   useGlobalState,
   GlobalStateInterface,
 } from "./../GlobalStateProvider";
+
+import auth from "./../services/auth.service";
 
 type Props = {
   type: "diets" | "drivers";
@@ -96,6 +98,17 @@ const Header: React.FC<Props> = ({ type }) => {
           >
             {state.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
+          <Button sx={{ margin: "0 15px" }} color="error" variant="contained" onClick={async () => {
+
+            auth.logout().finally(() => {
+              setTimeout(() => {
+                window.location.reload();
+              }, 1);
+            });
+
+          }} >
+            Wyloguj
+          </Button>
         </IonButtons>
       </IonToolbar>
     </IonHeader>
