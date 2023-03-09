@@ -1434,7 +1434,7 @@ const Raports: React.FC<ContainerProps> = () => {
                                         align="right"
                                         className="text-capitalize"
                                       >
-                                        <IonList style={{}}>
+                                        <IonList className="modal-diet-list">
                                           {e.diets
                                             .slice(
                                               0,
