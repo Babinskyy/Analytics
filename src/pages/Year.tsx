@@ -66,6 +66,8 @@ import LoaderContainer from "../components/LoaderContainer";
 import { Container } from "@mui/system";
 
 import Raports from "../components/Raports";
+import auth from "./../services/auth.service";
+import { User } from "../services/userProps";
 ChartJS.register(...registerables);
 
 const barData = {
@@ -151,6 +153,18 @@ const Year: React.FC = () => {
   const [polarChartData, setPolarChartData] = useState<any>();
   const [doughnutChartData, setDoughnutChartData] = useState<any>();
   const [whichGraph, setWhichGraph] = useState<string>("raports");
+
+  const [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    const _GetUser = async () => {
+      const user = await auth.getCurrentUser();
+
+      setUser(user);
+    };
+
+    _GetUser();
+  }, []);
 
   useEffect(() => {
     //setBarChartData(barData);
@@ -293,57 +307,68 @@ const Year: React.FC = () => {
                 Raporty
               </IonButton>
             </IonCol>
-            <IonCol size="auto" style={{ padding: "0" }}>
-              <IonButton
-                shape="round"
-                fill={whichGraph === "amount" ? "solid" : "outline"}
-                color={"tertiary"}
-                className="graph-button"
-                onClick={() => {
-                  setWhichGraph("amount");
-                }}
-              >
-                Ilość
-              </IonButton>
-            </IonCol>
-            <IonCol size="auto" style={{ padding: "0" }}>
-              <IonButton
-                shape="round"
-                fill={whichGraph === "types" ? "solid" : "outline"}
-                color={"tertiary"}
-                className="graph-button"
-                onClick={() => {
-                  setWhichGraph("types");
-                }}
-              >
-                Typy
-              </IonButton>
-            </IonCol>
-            <IonCol size="auto" style={{ padding: "0" }}>
-              <IonButton
-                shape="round"
-                fill={whichGraph === "area" ? "solid" : "outline"}
-                color={"tertiary"}
-                className="graph-button"
-                onClick={() => {
-                  setWhichGraph("area");
-                }}
-              >
-                Rejony
-              </IonButton>
-            </IonCol>
+
+            {user?.role == "Admin" ? (
+              <>
+                <IonCol size="auto" style={{ padding: "0" }}>
+                  <IonButton
+                    shape="round"
+                    fill={whichGraph === "amount" ? "solid" : "outline"}
+                    color={"tertiary"}
+                    className="graph-button"
+                    onClick={() => {
+                      setWhichGraph("amount");
+                    }}
+                  >
+                    Ilość
+                  </IonButton>
+                </IonCol>
+                <IonCol size="auto" style={{ padding: "0" }}>
+                  <IonButton
+                    shape="round"
+                    fill={whichGraph === "types" ? "solid" : "outline"}
+                    color={"tertiary"}
+                    className="graph-button"
+                    onClick={() => {
+                      setWhichGraph("types");
+                    }}
+                  >
+                    Typy
+                  </IonButton>
+                </IonCol>
+                <IonCol size="auto" style={{ padding: "0" }}>
+                  <IonButton
+                    shape="round"
+                    fill={whichGraph === "area" ? "solid" : "outline"}
+                    color={"tertiary"}
+                    className="graph-button"
+                    onClick={() => {
+                      setWhichGraph("area");
+                    }}
+                  >
+                    Rejony
+                  </IonButton>
+                </IonCol>
+              </>
+            ) : (
+              <></>
+            )}
           </IonRow>
 
-          <IonRow className="ion-justify-content-center">
-            <IonCol size="auto">
-              <IonBreadcrumbs>
-                <IonBreadcrumb active routerLink="/">
-                  Statystyki roczne
-                  <IonIcon slot="separator" icon={chevronForward}></IonIcon>
-                </IonBreadcrumb>
-              </IonBreadcrumbs>
-            </IonCol>
-          </IonRow>
+          {user?.role == "Admin" ? (
+            <IonRow className="ion-justify-content-center">
+              <IonCol size="auto">
+                <IonBreadcrumbs>
+                  <IonBreadcrumb active routerLink="/">
+                    Statystyki roczne
+                    <IonIcon slot="separator" icon={chevronForward}></IonIcon>
+                  </IonBreadcrumb>
+                </IonBreadcrumbs>
+              </IonCol>
+            </IonRow>
+          ) : (
+            <></>
+          )}
         </div>
 
         <Container maxWidth={"xl"}>

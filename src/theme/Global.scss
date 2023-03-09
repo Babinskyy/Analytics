@@ -15,6 +15,17 @@
     border-top-left-radius: 10px;
 }
 
+.double-button-first-non-admin {
+    margin-right: 0;
+    --border-radius: 0;
+    --box-shadow: none;
+}
+
+.double-button-first-non-admin::part(native) {
+
+    border-radius: 10px;
+}
+
 .double-button-second {
     margin-left: 0;
     --border-radius: 0;
@@ -25,6 +36,8 @@
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
 }
+
+
 
 
 // ion-breadcrumbs ion-breadcrumb.breadcrumb-active::part(separator)
@@ -75,6 +88,6 @@ canvas {
 }
 
 .MuiDataGrid-main .MuiDataGrid-cell {
-    padding-bottom: 5px!important;
-    padding-top: 5px!important;
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
 }

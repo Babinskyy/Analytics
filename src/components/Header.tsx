@@ -22,7 +22,7 @@ import {
   moonOutline,
   reorderFourOutline,
 } from "ionicons/icons";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Login from "./Login";
 
 import Brightness4Icon from "@mui/icons-material/Brightness4";
@@ -35,6 +35,7 @@ import {
 } from "./../GlobalStateProvider";
 
 import auth from "./../services/auth.service";
+import { User } from "../services/userProps";
 
 type Props = {
   type: "diets" | "drivers";
@@ -44,6 +45,17 @@ const Header: React.FC<Props> = ({ type }) => {
   const { navigate } = useContext(NavContext);
 
   const { state, setState } = useGlobalState();
+  const [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    const _GetUser = async () => {
+      const user = await auth.getCurrentUser();
+
+      setUser(user);
+    };
+
+    _GetUser();
+  }, []);
 
   return (
     <IonHeader>
@@ -57,23 +69,31 @@ const Header: React.FC<Props> = ({ type }) => {
           <IonButton
             fill={type == "diets" ? "solid" : "outline"}
             color="tertiary"
-            className="double-button-first"
+            className={
+              user?.role == "Admin"
+                ? "double-button-first"
+                : "double-button-first-non-admin"
+            }
             onClick={() => {
               navigate("/", "forward", "push");
             }}
           >
             Diety
           </IonButton>
-          <IonButton
-            className="double-button-second"
-            fill={type == "drivers" ? "solid" : "outline"}
-            color="tertiary"
-            onClick={() => {
-              navigate("/drivers", "forward", "push");
-            }}
-          >
-            Kierowcy
-          </IonButton>
+          {user?.role == "Admin" ? (
+            <IonButton
+              className="double-button-second"
+              fill={type == "drivers" ? "solid" : "outline"}
+              color="tertiary"
+              onClick={() => {
+                navigate("/drivers", "forward", "push");
+              }}
+            >
+              Kierowcy
+            </IonButton>
+          ) : (
+            <></>
+          )}
         </IonTitle>
         <IonButtons slot="end">
           <IconButton
@@ -98,15 +118,18 @@ const Header: React.FC<Props> = ({ type }) => {
           >
             {state.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
-          <Button sx={{ margin: "0 15px" }} color="error" variant="contained" onClick={async () => {
-
-            auth.logout().finally(() => {
-              setTimeout(() => {
-                window.location.reload();
-              }, 1);
-            });
-
-          }} >
+          <Button
+            sx={{ margin: "0 15px" }}
+            color="error"
+            variant="contained"
+            onClick={async () => {
+              auth.logout().finally(() => {
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1);
+              });
+            }}
+          >
             Wyloguj
           </Button>
         </IonButtons>

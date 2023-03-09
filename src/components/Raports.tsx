@@ -17,6 +17,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Dialog,
 } from "@mui/material";
 import "./Raports.scss";
 import {
@@ -145,10 +146,11 @@ type PointsPropertiesDietsResponse = {
 };
 
 type AnalyticsReportResponse = {
-  allDeliveries: number;
-  allDeliveriesSameAddress: number;
-  allDeliveriesDone: number;
-  allDeliveriesUndelivered: number;
+  allOrders: number;
+  allOrdersSameAddress: number;
+  allOrdersDone: number;
+  allOrdersUndelivered: number;
+  allArrivalsDone: number;
   routesAddresses: AnalyticsReportAddressResponse[];
 };
 
@@ -306,7 +308,8 @@ const Raports: React.FC<ContainerProps> = () => {
   const [options, setOptions] = React.useState<readonly Option[]>([]);
   useEffect(() => {
     api.get("autocomplete/note-titles").then((response) => {
-      setOptions(response.data);
+      // let data = response.data as Option[];
+      setOptions(response.data.splice(0, 5));
     });
   }, []);
 
@@ -862,7 +865,7 @@ const Raports: React.FC<ContainerProps> = () => {
     },
     {
       field: "deliveryStatus",
-      headerName: "Statusy dostaw",
+      headerName: "Zamówienia",
       maxWidth: 150,
       flex: 1,
       editable: false,
@@ -902,36 +905,35 @@ const Raports: React.FC<ContainerProps> = () => {
       disableColumnMenu: true,
       renderCell: (params: GridRenderCellParams<Date>) =>
         params.rowNode.children ? (
-          <IconButton
-            onClick={() => {
-              setIsDatagridLoading(true);
+          // <IconButton
+          //   onClick={() => {
+          //     setIsDatagridLoading(true);
 
-              api
-                .delete("AnalyticsReport/merge", {
-                  data: {
-                    ids: params.rowNode.children
-                      ?.map((e) => e.toString().split("-"))
-                      .flat(1),
-                  },
-                })
-                .finally(async () => {
-                  apiRef.current?.setSelectionModel([]);
+          //     api
+          //       .delete("AnalyticsReport/merge", {
+          //         data: {
+          //           ids: params.rowNode.children
+          //             ?.map((e) => e.toString().split("-"))
+          //             .flat(1),
+          //         },
+          //       })
+          //       .finally(async () => {
+          //         apiRef.current?.setSelectionModel([]);
 
-                  await getReportData();
+          //         await getReportData();
 
-                  setIsDatagridLoading(false);
-                });
-            }}
-            color="error"
-            component="label"
-          >
-            <SyncAltIcon />
-          </IconButton>
+          //         setIsDatagridLoading(false);
+          //       });
+          //   }}
+          //   color="error"
+          //   component="label"
+          // >
+          //   <SyncAltIcon />
+          // </IconButton>
+          <></>
         ) : (
           <IconButton
             onClick={() => {
-              setIsDetailsModalOpen(true);
-
               api
                 .get("AnalyticsReport/points", {
                   params: {
@@ -970,6 +972,7 @@ const Raports: React.FC<ContainerProps> = () => {
                       year: "numeric",
                     }),
                   });
+                  setIsDetailsModalOpen(true);
                 });
             }}
             color="primary"
@@ -1030,7 +1033,7 @@ const Raports: React.FC<ContainerProps> = () => {
     },
     {
       field: "caterings",
-      headerName: "Cateringi",
+      headerName: "Catering",
       maxWidth: 150,
       flex: 1,
       editable: false,
@@ -1196,9 +1199,14 @@ const Raports: React.FC<ContainerProps> = () => {
     }
   }, [punishmentTitles]);
 
+  const handleClose = () => {
+    setIsDetailsModalOpen(false);
+    setDetailsModal(undefined);
+  };
+
   return (
     <>
-      <IonModal
+      {/* <IonModal
         style={{
           "--width": "min(900px, 80vw)",
           "--height": "min(1000px, 90vh)",
@@ -1210,7 +1218,8 @@ const Raports: React.FC<ContainerProps> = () => {
           setIsDetailsModalOpen(false);
           setDetailsModal(undefined);
         }}
-      >
+      >    */}
+      <Dialog onClose={handleClose} open={isDetailsModalOpen} maxWidth={"md"}>
         <IonRow>
           <IonCol size="12">
             <IonItem lines="none">
@@ -1233,7 +1242,7 @@ const Raports: React.FC<ContainerProps> = () => {
                 <div>
                   ID klienta:{" "}
                   <span style={{ fontSize: "20px", fontWeight: "600" }}>
-                    5552345235
+                    {""}
                   </span>
                 </div>
                 <Container
@@ -1735,7 +1744,8 @@ const Raports: React.FC<ContainerProps> = () => {
             </IonItem>
           </IonCol>
         </IonRow>
-      </IonModal>
+      </Dialog>
+      {/* </IonModal> */}
 
       <IonModal
         style={{
@@ -1827,11 +1837,14 @@ const Raports: React.FC<ContainerProps> = () => {
                   <TableHead>
                     <TableRow>
                       {/* <TableCell align="center">Niewliczane</TableCell> */}
-                      <TableCell align="center">Wszystkie dostawy</TableCell>
+                      <TableCell align="center">Ilość zamówień</TableCell>
                       <TableCell align="center">Ilość adresów</TableCell>
-                      <TableCell align="center">Dostawy zrealizowane</TableCell>
+                      <TableCell align="center">Wszystkie podjazdy</TableCell>
                       <TableCell align="center">
-                        Dostawy niezrealizowane
+                        Zamówienia zrealizowane
+                      </TableCell>
+                      <TableCell align="center">
+                        Zamówienia niezrealizowane
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -1853,8 +1866,9 @@ const Raports: React.FC<ContainerProps> = () => {
                         }}
                         align="center"
                       >
-                        {analyticsReportResponse?.allDeliveries}
+                        {analyticsReportResponse?.allOrders}
                       </TableCell>
+
                       <TableCell
                         style={{
                           fontWeight: "500",
@@ -1862,28 +1876,39 @@ const Raports: React.FC<ContainerProps> = () => {
                         }}
                         align="center"
                       >
-                        {analyticsReportResponse?.allDeliveriesSameAddress}
+                        {analyticsReportResponse?.allOrdersSameAddress}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontWeight: "700",
+                          fontSize: "20px",
+                          letterSpacing: "1px",
+                          color: "#03b903",
+                        }}
+                        align="center"
+                      >
+                        {analyticsReportResponse?.allArrivalsDone}
                       </TableCell>
                       <TableCell
                         style={{
                           fontWeight: "500",
                           fontSize: "16px",
                           padding: "0",
-                          color: "#03b903",
+                          // color: "#03b903",
                         }}
                         align="center"
                       >
-                        {analyticsReportResponse?.allDeliveriesDone}
+                        {analyticsReportResponse?.allOrdersDone}
                       </TableCell>
                       <TableCell
                         align="center"
                         style={{
                           fontWeight: "500",
                           padding: "0",
-                          color: "#bf4343",
+                          // color: "#bf4343",
                         }}
                       >
-                        {analyticsReportResponse?.allDeliveriesUndelivered}
+                        {analyticsReportResponse?.allOrdersUndelivered}
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -2309,6 +2334,14 @@ const Raports: React.FC<ContainerProps> = () => {
               />
             </div>
           </div>
+        </IonCol>
+      </IonRow>
+      <IonRow
+        className="ion-justify-content-center"
+        style={{ marginTop: "20px" }}
+      >
+        <IonCol size="auto">
+          <h2>Zgłoszenia</h2>
         </IonCol>
       </IonRow>
       <IonRow>
