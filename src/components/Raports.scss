@@ -16,14 +16,26 @@
     font-weight: 600;
 }
 
-.delivery-done-count {
+.arrival-done-count {
     font-weight: 700;
     margin-right: 5px;
     color: rgb(72, 169, 72);
 }
 
-.undelivery-count {
+.arrival-undone-count {
     font-weight: 700;
+    margin-left: 5px;
+    color: rgb(255, 0, 0);
+}
+
+.delivery-done-count {
+    font-weight: 500;
+    margin-right: 5px;
+    color: rgb(72, 169, 72);
+}
+
+.undelivery-count {
+    font-weight: 500;
     margin-left: 5px;
     color: rgb(255, 0, 0);
 }
