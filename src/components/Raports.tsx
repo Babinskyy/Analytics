@@ -1940,7 +1940,7 @@ const Raports: React.FC<ContainerProps> = () => {
                       {/* <TableCell align="center">Niewliczane</TableCell> */}
                       <TableCell align="center">Ilość zamówień</TableCell>
                       <TableCell align="center">Ilość adresów</TableCell>
-                      <TableCell align="center">Wykonane podjazdy</TableCell>
+                      <TableCell align="center">Podjazdy</TableCell>
                       <TableCell align="center">Niewykonane podjazdy</TableCell>
                       {/* <TableCell align="center">
                         Zamówienia zrealizowane
