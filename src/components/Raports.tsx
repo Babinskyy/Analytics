@@ -119,7 +119,6 @@ type PointsProperties = {
 
 type PointsPropertiesResponse = {
   id: number;
-  deliveryDate: string;
   image: string;
   street: string;
   houseNumber: string;
@@ -139,6 +138,13 @@ type PointsPropertiesResponse = {
 
   dietsShowMore: boolean;
   diets: PointsPropertiesDietsResponse[];
+
+  customerId: string;
+  customerPhone: string;
+
+  deliveryDate: string;
+
+  isFreeDelivery: boolean;
 };
 
 type PointsPropertiesDietsResponse = {
@@ -157,7 +163,8 @@ type AnalyticsReportResponse = {
 };
 
 type AnalyticsReportAddressResponse = {
-  mergedId: string | undefined;
+  mergeString: string;
+  // mergedId: string | undefined;
   id: string;
   ids: number;
   deliveries: AnalyticsReportAddressDataResponse[];
@@ -179,6 +186,9 @@ type AnalyticsReportAddressResponse = {
   arrivalUndoneGroupCount: number;
 
   deliveryDateList: Date[];
+
+  customerPhone: string;
+  customerId: string;
 };
 
 type AnalyticsReportAddressDataPackageResponse = {
@@ -218,9 +228,9 @@ const Raports: React.FC<ContainerProps> = () => {
       // sorting: {
       //   sortModel: [{ field: 'mergedId', sort: 'desc' }],
       // },
-      rowGrouping: {
-        model: ["mergedId"],
-      },
+      // rowGrouping: {
+      //   model: ["mergeString"],
+      // },
       columns: {
         columnVisibilityModel: {
           undeliveryCount: false,
@@ -236,6 +246,14 @@ const Raports: React.FC<ContainerProps> = () => {
 
   const [_rows, _setRows] = useState<DriversScanTableProps[]>([]);
   const [rows, setRows] = useState<DriversScanTableProps[]>([]);
+
+  const [_regions, _setRegions] = useState<string[]>([]);
+  const [_cities, _setCities] = useState<string[]>([]);
+  const [_postCodes, _setPostCodes] = useState<string[]>([]);
+  const [_streets, _setStreets] = useState<string[]>([]);
+  const [_streetNumbers, _setStreetNumbers] = useState<string[]>([]);
+  const [_status, _setStatus] = useState<string>("");
+  const [_companys, _setCompanys] = useState<string[]>([]);
 
   const [regions, setRegions] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
@@ -289,33 +307,33 @@ const Raports: React.FC<ContainerProps> = () => {
     }
   };
 
-  const UpdateUpdateTime = () => {
-    setLastEditedDateMiliseconds((prev) => prev + 1000);
-  };
+  // const UpdateUpdateTime = () => {
+  //   setLastEditedDateMiliseconds((prev) => prev + 1000);
+  // };
 
-  useEffect(() => {
-    if (lastEditedDate) {
-      let dateNow = new Date().getTime();
-      let diff =
-        dateNow -
-        (dateNow - new Date(Number.parseFloat(lastEditedDate)).getTime());
+  // useEffect(() => {
+  //   if (lastEditedDate) {
+  //     let dateNow = new Date().getTime();
+  //     let diff =
+  //       dateNow -
+  //       (dateNow - new Date(Number.parseFloat(lastEditedDate)).getTime());
 
-      setLastEditedDateMiliseconds(diff);
-    }
-  }, [lastEditedDate]);
+  //     setLastEditedDateMiliseconds(diff);
+  //   }
+  // }, [lastEditedDate]);
 
-  useEffect(() => {
-    const interval = setInterval(() => UpdateUpdateTime(), 1000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => UpdateUpdateTime(), 1000);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, []);
 
   const [options, setOptions] = React.useState<readonly Option[]>([]);
   useEffect(() => {
-    api.get("autocomplete/note-titles").then((response) => {
+    api.get("autocomplete/analytics-note-titles").then((response) => {
       // let data = response.data as Option[];
-      setOptions(response.data.splice(0, 5));
+      setOptions(response.data);
     });
   }, []);
 
@@ -506,7 +524,7 @@ const Raports: React.FC<ContainerProps> = () => {
           id: "streetNumber",
           columnField: "houseNumber",
           operatorValue: "isAnyOf",
-          value: streets,
+          value: streetNumbers,
         });
 
         setFilterModel({
@@ -735,6 +753,19 @@ const Raports: React.FC<ContainerProps> = () => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [detailsModal, setDetailsModal] = useState<PointsProperties>();
 
+  const [isMultipleNotesModalOpen, setIsMultipleNotesModalOpen] =
+    useState(false);
+
+
+
+    const [multipleNotesDescription, setMultipleNotesDescription] = useState(""); 
+
+    const [multipleNotesTitleId, setMultipleNotesTitleId] = useState<number>(); 
+
+    const [multipleNotesButtonLoading, setMultipleNotesButtonLoading] = useState(false); 
+
+
+
   const [isDeliveryImageClicked, setIsDeliveryImageClicked] =
     useState<boolean>(false);
   const [isDietsModalOpen, setIsDietsModalOpen] = useState<boolean>(false);
@@ -743,13 +774,41 @@ const Raports: React.FC<ContainerProps> = () => {
 
   const columns: GridColDef[] = [
     {
-      field: "mergedId",
-      headerName: "Scalenie",
-      maxWidth: 50,
-      // flex: 1,
-      // editable: false,
-      // sortable: true,
-      // disableColumnMenu: true,
+      field: "isFreeDelivery",
+      headerName: "Darmowa dostawa",
+      type: "boolean",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "deliveryDate",
+      headerName: "Data dostawy",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "customerId",
+      headerName: "ID konta",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
+    },
+    {
+      field: "customerPhone",
+      headerName: "Nr telefonu",
+      maxWidth: 150,
+      flex: 1,
+      editable: false,
+      sortable: true,
+      disableColumnMenu: true,
     },
     {
       field: "region",
@@ -817,127 +876,127 @@ const Raports: React.FC<ContainerProps> = () => {
       disableColumnMenu: true,
       type: "number",
     },
-    {
-      field: "mainCateringNamesFieldHidden",
-      headerName: "Catering",
-      flex: 1,
-      editable: false,
-      sortable: true,
-      disableColumnMenu: true,
-      maxWidth: 200,
-      valueGetter: (params: GridValueGetterParams) =>
-        params.row.mainCateringNames,
-    },
-    {
-      field: "mainCateringNamesField",
-      headerName: "Catering",
-      flex: 1,
-      editable: false,
-      sortable: true,
-      disableColumnMenu: true,
-      maxWidth: 200,
-      valueGetter: (params: GridValueGetterParams) =>
-        params.row.mainCateringNames
-          ? params.row.mainCateringNames.map((e: string) => e + " ")
-          : "",
-    },
-    {
-      field: "arrivalCount",
-      headerName: "Podjazdy",
-      maxWidth: 150,
-      flex: 1,
-      editable: false,
-      sortable: false,
-      disableColumnMenu: true,
-      align: "center",
-      headerAlign: "center",
-      renderCell: (params: GridRenderCellParams<Date>) => {
-        if (analyticsReportResponse) {
-          if (params.rowNode.isAutoGenerated) {
-            if (params.rowNode.children) {
-              const child = params.rowNode.children[0];
-              const arrivalGroupCountItem =
-                analyticsReportResponse.routesAddresses.find(
-                  (e) => e.id == child
-                );
-              if (arrivalGroupCountItem) {
-                return (
-                  <>
-                    {arrivalGroupCountItem.arrivalDoneGroupCount > 0 ? (
-                      <span className="arrival-done-count">
-                        {arrivalGroupCountItem.arrivalDoneGroupCount}
-                      </span>
-                    ) : (
-                      <></>
-                    )}
-                    {arrivalGroupCountItem.arrivalUndoneGroupCount > 0 ? (
-                      <span className="arrival-undone-count">
-                        {arrivalGroupCountItem.arrivalUndoneGroupCount}
-                      </span>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                );
-              }
-            }
-          } else if (!params.rowNode.isAutoGenerated && params.rowNode.parent) {
-            return "";
-          } else {
-            return (
-              <>
-                {params.row.arrivalDoneCount > 0 ? (
-                  <span className="arrival-done-count">
-                    {params.row.arrivalDoneCount}
-                  </span>
-                ) : (
-                  <></>
-                )}
-                {params.row.arrivalUndoneCount > 0 ? (
-                  <span className="arrival-undone-count">
-                    {params.row.arrivalUndoneCount}
-                  </span>
-                ) : (
-                  <></>
-                )}
-              </>
-            );
-          }
-        }
-      },
-    },
-    {
-      field: "deliveryStatus",
-      headerName: "Zamówienia",
-      maxWidth: 150,
-      flex: 1,
-      editable: false,
-      sortable: false,
-      disableColumnMenu: true,
-      align: "center",
-      headerAlign: "center",
-      // cellClassName: "d-block",
-      renderCell: (params: GridRenderCellParams<Date>) => {
-        return (
-          <>
-            {params.row.deliveryDoneCount > 0 ? (
-              <span className="delivery-done-count">
-                {params.row.deliveryDoneCount}
-              </span>
-            ) : (
-              <></>
-            )}
-            {params.row.undeliveryCount > 0 ? (
-              <span className="undelivery-count">
-                {params.row.undeliveryCount}
-              </span>
-            ) : (
-              <></>
-            )}
-          </>
-        );
-      },
-    },
+    // {
+    //   field: "mainCateringNamesFieldHidden",
+    //   headerName: "Catering",
+    //   flex: 1,
+    //   editable: false,
+    //   sortable: true,
+    //   disableColumnMenu: true,
+    //   maxWidth: 200,
+    //   valueGetter: (params: GridValueGetterParams) =>
+    //     params.row.mainCateringNames,
+    // },
+    // {
+    //   field: "mainCateringNamesField",
+    //   headerName: "Catering",
+    //   flex: 1,
+    //   editable: false,
+    //   sortable: true,
+    //   disableColumnMenu: true,
+    //   maxWidth: 200,
+    //   valueGetter: (params: GridValueGetterParams) =>
+    //     params.row.mainCateringNames
+    //       ? params.row.mainCateringNames.map((e: string) => e + " ")
+    //       : "",
+    // },
+    // {
+    //   field: "arrivalCount",
+    //   headerName: "Podjazdy",
+    //   maxWidth: 150,
+    //   flex: 1,
+    //   editable: false,
+    //   sortable: false,
+    //   disableColumnMenu: true,
+    //   align: "center",
+    //   headerAlign: "center",
+    //   renderCell: (params: GridRenderCellParams<Date>) => {
+    //     if (analyticsReportResponse) {
+    //       if (params.rowNode.isAutoGenerated) {
+    //         if (params.rowNode.children) {
+    //           const child = params.rowNode.children[0];
+    //           const arrivalGroupCountItem =
+    //             analyticsReportResponse.routesAddresses.find(
+    //               (e) => e.id == child
+    //             );
+    //           if (arrivalGroupCountItem) {
+    //             return (
+    //               <>
+    //                 {arrivalGroupCountItem.arrivalDoneGroupCount > 0 ? (
+    //                   <span className="arrival-done-count">
+    //                     {arrivalGroupCountItem.arrivalDoneGroupCount}
+    //                   </span>
+    //                 ) : (
+    //                   <></>
+    //                 )}
+    //                 {arrivalGroupCountItem.arrivalUndoneGroupCount > 0 ? (
+    //                   <span className="arrival-undone-count">
+    //                     {arrivalGroupCountItem.arrivalUndoneGroupCount}
+    //                   </span>
+    //                 ) : (
+    //                   <></>
+    //                 )}
+    //               </>
+    //             );
+    //           }
+    //         }
+    //       } else if (!params.rowNode.isAutoGenerated && params.rowNode.parent) {
+    //         return "";
+    //       } else {
+    //         return (
+    //           <>
+    //             {params.row.arrivalDoneCount > 0 ? (
+    //               <span className="arrival-done-count">
+    //                 {params.row.arrivalDoneCount}
+    //               </span>
+    //             ) : (
+    //               <></>
+    //             )}
+    //             {params.row.arrivalUndoneCount > 0 ? (
+    //               <span className="arrival-undone-count">
+    //                 {params.row.arrivalUndoneCount}
+    //               </span>
+    //             ) : (
+    //               <></>
+    //             )}
+    //           </>
+    //         );
+    //       }
+    //     }
+    //   },
+    // },
+    // {
+    //   field: "deliveryStatus",
+    //   headerName: "Zamówienia",
+    //   maxWidth: 150,
+    //   flex: 1,
+    //   editable: false,
+    //   sortable: false,
+    //   disableColumnMenu: true,
+    //   align: "center",
+    //   headerAlign: "center",
+    //   // cellClassName: "d-block",
+    //   renderCell: (params: GridRenderCellParams<Date>) => {
+    //     return (
+    //       <>
+    //         {params.row.deliveryDoneCount > 0 ? (
+    //           <span className="delivery-done-count">
+    //             {params.row.deliveryDoneCount}
+    //           </span>
+    //         ) : (
+    //           <></>
+    //         )}
+    //         {params.row.undeliveryCount > 0 ? (
+    //           <span className="undelivery-count">
+    //             {params.row.undeliveryCount}
+    //           </span>
+    //         ) : (
+    //           <></>
+    //         )}
+    //       </>
+    //     );
+    //   },
+    // },
     {
       field: "actions",
       headerName: "",
@@ -1131,13 +1190,13 @@ const Raports: React.FC<ContainerProps> = () => {
   }, []);
 
   const DaysInWeek = (current: Date) => {
-    // console.log(current);
-
     var week = new Array<string>();
     // Starting Monday not Sunday
     current.setDate(current.getDate() - current.getDay() + 1);
+    const tempDate = current;
     for (var i = 0; i < 7; i++) {
       week.push(new Date(current).toISOString());
+
       current.setDate(current.getDate() + 1);
     }
     return week;
@@ -1272,6 +1331,208 @@ const Raports: React.FC<ContainerProps> = () => {
           setDetailsModal(undefined);
         }}
       >    */}
+      <Dialog
+        onClose={() => {
+          setIsMultipleNotesModalOpen(false);
+        }}
+        open={isMultipleNotesModalOpen}
+        maxWidth={"md"}
+      >
+        <IonRow>
+          <IonCol size="12">
+            <Container
+              // style={{
+              //   display: "flex",
+              //   flexDirection: "row",
+              //   flexWrap: "wrap",
+              //   justifyContent: "space-around",
+              // }}
+              style={{
+                padding: "15px",
+              }}
+            >
+              <Paper
+                elevation={0}
+                style={{
+                  margin: "auto",
+                  padding: "0 20px",
+                  marginBottom: "10px",
+                }}
+              >
+                <div className="row">
+                  <div className="col-12">
+                    <IonList>
+                      {selectionModel.map((e) => {
+                        return (
+                          <IonItem>
+                            {
+                              analyticsReportResponse?.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.customerId
+                            }
+                            {" "}
+                            {
+                              analyticsReportResponse?.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.customerPhone
+                            }
+                            {" "}
+                            {
+                              analyticsReportResponse?.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.region
+                            }
+                            {" "}
+                            {
+                              analyticsReportResponse?.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.postCode
+                            }
+                            {" "}
+                            {
+                              analyticsReportResponse?.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.city
+                            }
+                            {" "}
+                            {
+                              analyticsReportResponse?.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.street
+                            }
+                            {" "}
+                            {
+                              analyticsReportResponse?.routesAddresses.find(
+                                (k) => k.id == e
+                              )?.houseNumber
+                            }
+                          </IonItem>
+                        );
+                      })}
+                    </IonList>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div
+                    className="row justify-content-end"
+                    style={{
+                      marginBottom: "15px",
+                    }}
+                  >
+                    <div style={{ padding: "15px 25px" }}>
+                      <div className="row">
+                        <div className="col-12">
+                          <FormControl fullWidth>
+                            <InputLabel id={"note-title-multiple"}>Tytuł</InputLabel>
+                            <Select
+                              // className="shadow-mui"
+                              labelId={"note-title-multiple"}
+                              // id="delivery-type-select"
+                              style={{
+                                width: "100%",
+                                // textAlign: "left",
+                              }}
+                              value={multipleNotesTitleId}
+                              label="Tytuł"
+                              // onChange={(e) => setStatus(e.target.value!)}
+                              onChange={(event) => {
+                                setMultipleNotesTitleId(event.target.value as number);
+                              }}
+                            >
+                              {options.map((item) => {
+                                return (
+                                  <MenuItem value={item.id}>
+                                    {item.value}
+                                  </MenuItem>
+                                );
+                              })}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="col-12">
+                          <TextField
+                            className="mt-3"
+                            value={multipleNotesDescription}
+                            onChange={(event) => {
+                              setMultipleNotesDescription(event.target.value);
+                            }}
+                            rows={5}
+                            variant="outlined"
+                            multiline
+                            fullWidth
+                            label="Opis"
+                          ></TextField>
+                        </div>
+                        <div className="col-12">
+                          <div className="row justify-content-center">
+                            <div className="col-auto">
+                              <LoadingButton
+                                onClick={() => {
+
+                                  setMultipleNotesButtonLoading(true);
+
+                                 
+
+                                  for(const n of selectionModel)
+                                  {
+
+                                    console.log(n)
+
+                                    const e = analyticsReportResponse?.routesAddresses.find(k => k.id == n);
+
+                                    console.log(e)
+
+                                    if(e)
+                                    {
+                                      api
+                                      .post(
+                                        "analyticsReport/add-note",
+                                        {
+                                          userDriverId: "-",
+                                          routeChecked: false,
+
+                                          driverId: "-",
+                                          routeDate: null,
+                                          routeAddressId: e.id,
+
+                                          punishmentCost: 0,
+
+                                          titleId: multipleNotesTitleId,
+                                          description: multipleNotesDescription,
+                                        }
+                                      )
+                                      .then((response) => {})
+                                      .catch(() => {});
+                                    }
+
+                                    
+                                  }
+
+
+
+                                }}
+                                loading={multipleNotesButtonLoading}
+                                className="mt-3"
+                                size="large"
+                                variant="contained"
+                              >
+                                Dodaj uwagę
+                              </LoadingButton>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Paper>
+            </Container>
+          </IonCol>
+        </IonRow>
+      </Dialog>
+      {/* </IonModal> */}
+
       <Dialog onClose={handleClose} open={isDetailsModalOpen} maxWidth={"md"}>
         <IonRow>
           <IonCol size="12">
@@ -1798,7 +2059,6 @@ const Raports: React.FC<ContainerProps> = () => {
           </IonCol>
         </IonRow>
       </Dialog>
-      {/* </IonModal> */}
 
       <IonModal
         style={{
@@ -2070,7 +2330,7 @@ const Raports: React.FC<ContainerProps> = () => {
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol size="4">
+            <IonCol size="7">
               <CityAutocomplete
                 setCities={setCities}
                 multiple
@@ -2083,7 +2343,7 @@ const Raports: React.FC<ContainerProps> = () => {
                 ].sort()}
               />
             </IonCol>
-            <IonCol size="3">
+            <IonCol size="5">
               <PostCodeAutocomplete
                 setPostCodes={setPostCodes}
                 multiple
@@ -2096,7 +2356,9 @@ const Raports: React.FC<ContainerProps> = () => {
                 ].sort()}
               />
             </IonCol>
-            <IonCol size="3">
+          </IonRow>
+          <IonRow>
+            <IonCol size="7">
               <StreetAutocomplete
                 setStreets={setStreets}
                 multiple
@@ -2109,7 +2371,7 @@ const Raports: React.FC<ContainerProps> = () => {
                 ].sort()}
               />
             </IonCol>
-            <IonCol size="2">
+            <IonCol size="5">
               <StreetNumberAutocomplete
                 setStreetNumbers={setStreetNumbers}
                 multiple
@@ -2123,6 +2385,23 @@ const Raports: React.FC<ContainerProps> = () => {
               />
             </IonCol>
           </IonRow>
+          {/* <IonRow>
+            <IonCol>
+              <Button
+                onClick={() => {
+                  setCompanys(_companys);
+                  setRegions(_regions);
+                  setStatus(_status);
+                  setCities(_cities);
+                  setPostCodes(_postCodes);
+                  setStreets(_streets);
+                  setStreetNumbers(_streetNumbers);
+                }}
+              >
+                Ustaw filtry
+              </Button>
+            </IonCol>
+          </IonRow> */}
 
           {/* <IonRow
             style={{ marginTop: "20px" }}
@@ -2231,19 +2510,19 @@ const Raports: React.FC<ContainerProps> = () => {
         <IonCol size="12" className="order-2 order-md-1">
           {user?.role == "Admin" ? (
             <div
-              style={{
-                padding: "16px 20px 0",
-                color: "#7b7b7b",
-              }}
+              // style={{
+              //   padding: "16px 20px 0",
+              //   color: "#7b7b7b",
+              // }}
             >
-              Ostatnia aktualizacja:{" "}
+              {/* Ostatnia aktualizacja:{" "}
               <strong>
                 {CalculateLeftTimeString(lastEditedDateMiliseconds)}
-              </strong>
+              </strong> */}
               <Button
                 disabled={isDatagridLoading}
                 variant="text"
-                style={{ marginLeft: "13px" }}
+                // style={{ marginLeft: "13px" }}
                 onClick={async () => {
                   await getReportData(true);
                 }}
@@ -2258,7 +2537,7 @@ const Raports: React.FC<ContainerProps> = () => {
             <IonRow className="">
               {user?.role == "Admin" ? (
                 <IonCol size="auto">
-                  <IonButton
+                  {/* <IonButton
                     disabled={
                       !(selectionModel.length > 0 && !mergeButtonLoading)
                     }
@@ -2287,6 +2566,14 @@ const Raports: React.FC<ContainerProps> = () => {
                   >
                     <IonIcon icon={gitCompare} slot="end" />
                     Scal adresy
+                  </IonButton> */}
+                  <IonButton
+                    color={"danger"}
+                    onClick={() => {
+                      setIsMultipleNotesModalOpen(true);
+                    }}
+                  >
+                    Dodaj uwagę
                   </IonButton>
                 </IonCol>
               ) : (
@@ -2358,7 +2645,7 @@ const Raports: React.FC<ContainerProps> = () => {
                 <></>
               )}
 
-              {analyticsReportResponse?.routesAddresses &&
+              {/* {analyticsReportResponse?.routesAddresses &&
               selectionModel.length > 0 ? (
                 <div style={{ padding: "0 10px 10px" }}>
                   {selectionModel.map((e) => {
@@ -2396,25 +2683,25 @@ const Raports: React.FC<ContainerProps> = () => {
                 </div>
               ) : (
                 <></>
-              )}
+              )} */}
 
               <DataGridPremium
-                getRowClassName={(params) => {
-                  if (params.row.mergedId) {
-                    return "datagrid-hide-row-border";
-                  } else if (!params.row.id) {
-                    return "datagrid-hide-row-border-group-row";
-                  } else {
-                    return "";
-                  }
-                }}
+                // getRowClassName={(params) => {
+                //   if (params.row.mergeString) {
+                //     return "datagrid-hide-row-border";
+                //   } else if (!params.row.id) {
+                //     return "datagrid-hide-row-border-group-row";
+                //   } else {
+                //     return "";
+                //   }
+                // }}
                 isRowSelectable={(params) => !!params.row.id}
-                className={
-                  selectionModel.length > 0
-                    ? ""
-                    : "datagrid-hide-select-all datagrid-hide-grouping-value"
-                }
-                defaultGroupingExpansionDepth={-1}
+                // className={
+                //   selectionModel.length > 0
+                //     ? ""
+                //     : "datagrid-hide-select-all datagrid-hide-grouping-value"
+                // }
+                // defaultGroupingExpansionDepth={-1}
                 initialState={initialState}
                 filterModel={filterModel}
                 onSelectionModelChange={(newSelectionModel, details) => {
