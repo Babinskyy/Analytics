@@ -1507,7 +1507,7 @@ const Raports: React.FC<ContainerProps> = () => {
                                     
                                   }
 
-
+                                  setMultipleNotesButtonLoading(false);
 
                                 }}
                                 loading={multipleNotesButtonLoading}
