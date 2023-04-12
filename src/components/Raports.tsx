@@ -1468,7 +1468,7 @@ const Raports: React.FC<ContainerProps> = () => {
                           <div className="row justify-content-center">
                             <div className="col-auto">
                               <LoadingButton
-                                onClick={() => {
+                                onClick={async () => {
 
                                   setMultipleNotesButtonLoading(true);
 
@@ -1485,7 +1485,7 @@ const Raports: React.FC<ContainerProps> = () => {
 
                                     if(e)
                                     {
-                                      api
+                                      const result = await api
                                       .post(
                                         "analyticsReport/add-note",
                                         {
@@ -1502,8 +1502,6 @@ const Raports: React.FC<ContainerProps> = () => {
                                           description: multipleNotesDescription,
                                         }
                                       )
-                                      .then((response) => {})
-                                      .catch(() => {});
                                     }
 
                                     
