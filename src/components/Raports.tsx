@@ -1509,6 +1509,8 @@ const Raports: React.FC<ContainerProps> = () => {
 
                                   setMultipleNotesButtonLoading(false);
 
+                                  await getNotesData();
+
                                 }}
                                 loading={multipleNotesButtonLoading}
                                 className="mt-3"
@@ -2742,11 +2744,9 @@ const Raports: React.FC<ContainerProps> = () => {
       </IonRow>
       <IonRow>
         <IonCol size="12" className="order-2 order-md-1">
-          {analyticsReportResponse ? (
-            analyticsReportResponse.routesAddresses.length > 0 ? (
-              <div className="janek-shadow mt-4">
+        <div className="janek-shadow mt-4">
                 <DataGridPremium
-                  getRowHeight={() => "auto"}
+                  // getRowHeight={() => "auto"}
                   // filterModel={filterModel}
                   // onSelectionModelChange={(newSelectionModel, details) => {
                   //   setSelectionModel(newSelectionModel);
@@ -2768,12 +2768,6 @@ const Raports: React.FC<ContainerProps> = () => {
                   // }
                 />
               </div>
-            ) : (
-              <></>
-            )
-          ) : (
-            <></>
-          )}
         </IonCol>
       </IonRow>
     </>
