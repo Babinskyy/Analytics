@@ -1094,7 +1094,6 @@ const Raports: React.FC<ContainerProps> = () => {
       maxWidth: 150,
       flex: 1,
       editable: false,
-      sortable: true,
       disableColumnMenu: true,
     },
     {
@@ -1103,7 +1102,6 @@ const Raports: React.FC<ContainerProps> = () => {
       maxWidth: 150,
       flex: 1,
       editable: false,
-      sortable: true,
       disableColumnMenu: true,
     },
     {
@@ -1112,7 +1110,6 @@ const Raports: React.FC<ContainerProps> = () => {
       maxWidth: 150,
       flex: 1,
       editable: false,
-      sortable: true,
       disableColumnMenu: true,
     },
     {
@@ -1121,7 +1118,6 @@ const Raports: React.FC<ContainerProps> = () => {
       maxWidth: 150,
       flex: 1,
       editable: false,
-      sortable: true,
       disableColumnMenu: true,
     },
     {
@@ -1130,7 +1126,6 @@ const Raports: React.FC<ContainerProps> = () => {
       maxWidth: 150,
       flex: 1,
       editable: false,
-      sortable: true,
       disableColumnMenu: true,
     },
     {
@@ -1139,7 +1134,6 @@ const Raports: React.FC<ContainerProps> = () => {
       maxWidth: 150,
       flex: 1,
       editable: false,
-      sortable: true,
       disableColumnMenu: true,
       valueGetter: (params: GridValueGetterParams) =>
         params.row.caterings
@@ -1152,7 +1146,6 @@ const Raports: React.FC<ContainerProps> = () => {
       maxWidth: 150,
       flex: 1,
       editable: false,
-      sortable: true,
       disableColumnMenu: true,
     },
     {
@@ -1161,7 +1154,6 @@ const Raports: React.FC<ContainerProps> = () => {
       maxWidth: 200,
       flex: 1,
       editable: false,
-      sortable: true,
       disableColumnMenu: true,
     },
     {
@@ -1171,7 +1163,6 @@ const Raports: React.FC<ContainerProps> = () => {
       maxWidth: 200,
       flex: 1,
       editable: false,
-      sortable: true,
       disableColumnMenu: true,
     },
   ];
@@ -2761,7 +2752,7 @@ const Raports: React.FC<ContainerProps> = () => {
                   hideFooter
                   // pageSize={5}
                   // rowsPerPageOptions={[5]}
-                  disableSelectionOnClick
+                  // disableSelectionOnClick
                   // checkboxSelection
                   // onSelectionModelChange={(ids) =>
                   //   onRowsSelectionHandler(ids)
