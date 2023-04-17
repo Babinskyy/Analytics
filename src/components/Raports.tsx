@@ -2677,6 +2677,7 @@ const Raports: React.FC<ContainerProps> = () => {
               )} */}
 
               <DataGridPremium
+                disableVirtualization
                 // getRowClassName={(params) => {
                 //   if (params.row.mergeString) {
                 //     return "datagrid-hide-row-border";
@@ -2701,7 +2702,7 @@ const Raports: React.FC<ContainerProps> = () => {
                 selectionModel={selectionModel}
                 apiRef={apiRef}
                 style={{
-                  height: "850px",
+                  height: "900px",
                   filter: isDatagridLoading ? "blur(2px)" : "none",
                   pointerEvents: isDatagridLoading ? "none" : "all",
                 }}
@@ -2712,8 +2713,9 @@ const Raports: React.FC<ContainerProps> = () => {
                     : []
                 }
                 columns={columns}
-                hideFooter
-                // pageSize={5}
+                pageSize={15}
+                pagination={true}
+                // hideFooter
                 // rowsPerPageOptions={[5]}
                 disableSelectionOnClick
                 checkboxSelection={user?.role == "Admin"}
