@@ -756,15 +756,20 @@ const Raports: React.FC<ContainerProps> = () => {
   const [isMultipleNotesModalOpen, setIsMultipleNotesModalOpen] =
     useState(false);
 
+  const [isMultipleNotesDeleteModalOpen, setIsMultipleNotesDeleteModalOpen] =
+    useState(false);
 
+  const [
+    multipleNotesDeleteButtonLoading,
+    setMultipleNotesDeleteButtonLoading,
+  ] = useState(false);
 
-    const [multipleNotesDescription, setMultipleNotesDescription] = useState(""); 
+  const [multipleNotesDescription, setMultipleNotesDescription] = useState("");
 
-    const [multipleNotesTitleId, setMultipleNotesTitleId] = useState<number>(); 
+  const [multipleNotesTitleId, setMultipleNotesTitleId] = useState<number>();
 
-    const [multipleNotesButtonLoading, setMultipleNotesButtonLoading] = useState(false); 
-
-
+  const [multipleNotesButtonLoading, setMultipleNotesButtonLoading] =
+    useState(false);
 
   const [isDeliveryImageClicked, setIsDeliveryImageClicked] =
     useState<boolean>(false);
@@ -1089,6 +1094,11 @@ const Raports: React.FC<ContainerProps> = () => {
 
   const noticeColumns: GridColDef[] = [
     {
+      field: "id",
+      headerName: "id",
+      hide: true
+    },
+    {
       field: "region",
       headerName: "Region",
       maxWidth: 150,
@@ -1269,6 +1279,9 @@ const Raports: React.FC<ContainerProps> = () => {
 
   const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
 
+  const [selectionNotesModel, setSelectionNotesModel] =
+    useState<GridSelectionModel>([]);
+
   const [text, setText] = useState<string>();
 
   const [punishmentTitles, setPunishmentTitles] = useState<string[]>([]);
@@ -1309,19 +1322,108 @@ const Raports: React.FC<ContainerProps> = () => {
 
   return (
     <>
-      {/* <IonModal
-        style={{
-          "--width": "min(900px, 80vw)",
-          "--height": "min(1000px, 90vh)",
-          "--overflow": "auto",
-          // alignItems: "end",
+      <Dialog
+        onClose={() => {
+          setIsMultipleNotesDeleteModalOpen(false);
         }}
-        isOpen={isDetailsModalOpen}
-        onIonModalDidDismiss={() => {
-          setIsDetailsModalOpen(false);
-          setDetailsModal(undefined);
-        }}
-      >    */}
+        open={isMultipleNotesDeleteModalOpen}
+        maxWidth={"md"}
+      >
+        <IonRow>
+          <IonCol size="12">
+            <Container
+              // style={{
+              //   display: "flex",
+              //   flexDirection: "row",
+              //   flexWrap: "wrap",
+              //   justifyContent: "space-around",
+              // }}
+              style={{
+                padding: "15px",
+              }}
+            >
+              <Paper
+                elevation={0}
+                style={{
+                  margin: "auto",
+                  padding: "0 20px",
+                  marginBottom: "10px",
+                }}
+              >
+                <div className="row">
+                  <div className="col-12">
+                    <IonList>
+                      {selectionNotesModel.map((e) => {
+                        return (
+                          <IonItem>
+                            {notes.find((k) => k.id == e)?.deliveryDate}{" "}
+                            {notes.find((k) => k.id == e)?.region}{" "}
+                            {notes.find((k) => k.id == e)?.postCode}{" "}
+                            {notes.find((k) => k.id == e)?.city}{" "}
+                            {notes.find((k) => k.id == e)?.street}{" "}
+                            {notes.find((k) => k.id == e)?.houseNumber}{" "}
+                            {notes.find((k) => k.id == e)?.title}{" "}
+                            {notes.find((k) => k.id == e)?.description}{" "}
+                          </IonItem>
+                        );
+                      })}
+                    </IonList>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div
+                    className="row justify-content-end"
+                    style={{
+                      marginBottom: "15px",
+                    }}
+                  >
+                    <div style={{ padding: "15px 25px" }}>
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="row justify-content-center">
+                            <div className="col-auto">
+                              <LoadingButton
+                                onClick={async () => {
+                                  setMultipleNotesDeleteButtonLoading(true);
+
+                                  for (const n of selectionNotesModel) {
+                                    console.log(n);
+
+                                    const e = notes.find((k) => k.id == n);
+
+                                    console.log(e);
+
+                                    if (e) {
+                                      const res = await api.delete("stats/driver/note/" + e.id);
+                                    }
+                                  }
+
+                                  await getNotesData();
+
+                                  setMultipleNotesDeleteButtonLoading(false);
+                                }}
+                                loading={multipleNotesDeleteButtonLoading}
+                                className="mt-3"
+                                size="large"
+                                variant="contained"
+                                color="error"
+                              >
+                                Usuń uwagi
+                              </LoadingButton>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Paper>
+            </Container>
+          </IonCol>
+        </IonRow>
+      </Dialog>
+
       <Dialog
         onClose={() => {
           setIsMultipleNotesModalOpen(false);
@@ -1360,38 +1462,32 @@ const Raports: React.FC<ContainerProps> = () => {
                               analyticsReportResponse?.routesAddresses.find(
                                 (k) => k.id == e
                               )?.customerId
-                            }
-                            {" "}
+                            }{" "}
                             {
                               analyticsReportResponse?.routesAddresses.find(
                                 (k) => k.id == e
                               )?.customerPhone
-                            }
-                            {" "}
+                            }{" "}
                             {
                               analyticsReportResponse?.routesAddresses.find(
                                 (k) => k.id == e
                               )?.region
-                            }
-                            {" "}
+                            }{" "}
                             {
                               analyticsReportResponse?.routesAddresses.find(
                                 (k) => k.id == e
                               )?.postCode
-                            }
-                            {" "}
+                            }{" "}
                             {
                               analyticsReportResponse?.routesAddresses.find(
                                 (k) => k.id == e
                               )?.city
-                            }
-                            {" "}
+                            }{" "}
                             {
                               analyticsReportResponse?.routesAddresses.find(
                                 (k) => k.id == e
                               )?.street
-                            }
-                            {" "}
+                            }{" "}
                             {
                               analyticsReportResponse?.routesAddresses.find(
                                 (k) => k.id == e
@@ -1415,7 +1511,9 @@ const Raports: React.FC<ContainerProps> = () => {
                       <div className="row">
                         <div className="col-12">
                           <FormControl fullWidth>
-                            <InputLabel id={"note-title-multiple"}>Tytuł</InputLabel>
+                            <InputLabel id={"note-title-multiple"}>
+                              Tytuł
+                            </InputLabel>
                             <Select
                               // className="shadow-mui"
                               labelId={"note-title-multiple"}
@@ -1428,7 +1526,9 @@ const Raports: React.FC<ContainerProps> = () => {
                               label="Tytuł"
                               // onChange={(e) => setStatus(e.target.value!)}
                               onChange={(event) => {
-                                setMultipleNotesTitleId(event.target.value as number);
+                                setMultipleNotesTitleId(
+                                  event.target.value as number
+                                );
                               }}
                             >
                               {options.map((item) => {
@@ -1460,24 +1560,20 @@ const Raports: React.FC<ContainerProps> = () => {
                             <div className="col-auto">
                               <LoadingButton
                                 onClick={async () => {
-
                                   setMultipleNotesButtonLoading(true);
 
-                                 
+                                  for (const n of selectionModel) {
+                                    console.log(n);
 
-                                  for(const n of selectionModel)
-                                  {
+                                    const e =
+                                      analyticsReportResponse?.routesAddresses.find(
+                                        (k) => k.id == n
+                                      );
 
-                                    console.log(n)
+                                    console.log(e);
 
-                                    const e = analyticsReportResponse?.routesAddresses.find(k => k.id == n);
-
-                                    console.log(e)
-
-                                    if(e)
-                                    {
-                                      const result = await api
-                                      .post(
+                                    if (e) {
+                                      const result = await api.post(
                                         "analyticsReport/add-note",
                                         {
                                           userDriverId: "-",
@@ -1492,16 +1588,13 @@ const Raports: React.FC<ContainerProps> = () => {
                                           titleId: multipleNotesTitleId,
                                           description: multipleNotesDescription,
                                         }
-                                      )
+                                      );
                                     }
-
-                                    
                                   }
 
                                   setMultipleNotesButtonLoading(false);
 
                                   await getNotesData();
-
                                 }}
                                 loading={multipleNotesButtonLoading}
                                 className="mt-3"
@@ -2501,10 +2594,10 @@ const Raports: React.FC<ContainerProps> = () => {
         <IonCol size="12" className="order-2 order-md-1">
           {user?.role == "Admin" ? (
             <div
-              // style={{
-              //   padding: "16px 20px 0",
-              //   color: "#7b7b7b",
-              // }}
+            // style={{
+            //   padding: "16px 20px 0",
+            //   color: "#7b7b7b",
+            // }}
             >
               {/* Ostatnia aktualizacja:{" "}
               <strong>
@@ -2737,30 +2830,44 @@ const Raports: React.FC<ContainerProps> = () => {
       </IonRow>
       <IonRow>
         <IonCol size="12" className="order-2 order-md-1">
-        <div className="janek-shadow mt-4">
-                <DataGridPremium
-                  // getRowHeight={() => "auto"}
-                  // filterModel={filterModel}
-                  // onSelectionModelChange={(newSelectionModel, details) => {
-                  //   setSelectionModel(newSelectionModel);
-                  // }}
-                  // selectionModel={selectionModel}
-                  style={{
-                    height: "850px",
+          <div className="janek-shadow mt-4">
+            {user?.role == "Admin" ? (
+              <IonCol size="auto">
+                <IonButton
+                  color={"danger"}
+                  onClick={() => {
+                    setIsMultipleNotesDeleteModalOpen(true);
                   }}
-                  // rowHeight={120}
-                  rows={notes}
-                  columns={noticeColumns}
-                  hideFooter
-                  // pageSize={5}
-                  // rowsPerPageOptions={[5]}
-                  // disableSelectionOnClick
-                  // checkboxSelection
-                  // onSelectionModelChange={(ids) =>
-                  //   onRowsSelectionHandler(ids)
-                  // }
-                />
-              </div>
+                >
+                  Usuń zaznaczone
+                </IonButton>
+              </IonCol>
+            ) : (
+              <></>
+            )}
+            <DataGridPremium
+              // getRowHeight={() => "auto"}
+              // filterModel={filterModel}
+              onSelectionModelChange={(newSelectionModel, details) => {
+                setSelectionNotesModel(newSelectionModel);
+              }}
+              selectionModel={selectionNotesModel}
+              style={{
+                height: "850px",
+              }}
+              // rowHeight={120}
+              rows={notes}
+              columns={noticeColumns}
+              hideFooter
+              // pageSize={5}
+              // rowsPerPageOptions={[5]}
+              // disableSelectionOnClick
+              checkboxSelection
+              // onSelectionModelChange={(ids) =>
+              //   onRowsSelectionHandler(ids)
+              // }
+            />
+          </div>
         </IonCol>
       </IonRow>
     </>
