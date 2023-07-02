@@ -1096,7 +1096,7 @@ const Raports: React.FC<ContainerProps> = () => {
     {
       field: "id",
       headerName: "id",
-      hide: true
+      hide: true,
     },
     {
       field: "region",
@@ -1395,7 +1395,9 @@ const Raports: React.FC<ContainerProps> = () => {
                                     console.log(e);
 
                                     if (e) {
-                                      const res = await api.delete("stats/driver/note/" + e.id);
+                                      const res = await api.delete(
+                                        "stats/driver/note/" + e.id
+                                      );
                                     }
                                   }
 
@@ -2820,15 +2822,15 @@ const Raports: React.FC<ContainerProps> = () => {
           </div>
         </IonCol>
       </IonRow>
-      <IonRow
+      {/* <IonRow
         className="ion-justify-content-center"
         style={{ marginTop: "20px" }}
       >
         <IonCol size="auto">
           <h2>Zgłoszenia</h2>
         </IonCol>
-      </IonRow>
-      <IonRow>
+      </IonRow> */}
+      {/* <IonRow>
         <IonCol size="12" className="order-2 order-md-1">
           <div className="janek-shadow mt-4">
             {user?.role == "Admin" ? (
@@ -2869,7 +2871,7 @@ const Raports: React.FC<ContainerProps> = () => {
             />
           </div>
         </IonCol>
-      </IonRow>
+      </IonRow> */}
     </>
   );
 };
