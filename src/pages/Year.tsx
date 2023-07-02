@@ -103,16 +103,42 @@ const barData = {
     {
       label: "Ilość",
       data: [0, 0, 887, 235, 345, 1233, 544, 654, 560, 234, 432, 333],
-      backgroundColor: ["#ffbb11", "#17b2d9", "#50AF95", "#80Ab10", "#10FA95"],
+      backgroundColor: [
+        "#FF6633",
+        "#FFB399",
+        "#FF33FF",
+        "#E6331A",
+        "#00B3E6",
+        "#E6B333",
+        "#3366E6",
+        "#999966",
+        "#99FF99",
+        "#B34D4D",
+        "#80B300",
+        "#991AFF",
+        "#E6B3B3",
+        "#6680B3",
+        "#66991A",
+      ],
     },
   ],
 };
 const polarData = {
-  labels: ["Trójmiasto", "Warszawa ", "Śląsk", "Kujawy", "Podlasie"],
+  labels: [
+    "Trójmiasto",
+    "Warszawa",
+    "Śląsk",
+    "Kujawy",
+    "Podlasie",
+    "Małopolska",
+    "Lublin",
+    "Mazury",
+    "Mazowsze",
+  ],
   datasets: [
     {
       label: "Ilość",
-      data: [534, 300, 250, 530, 300],
+      data: [534, 300, 250, 530, 300, 256, 425, 554, 565],
       backgroundColor: ["#ffbb11", "#17b2d9", "#50AF95", "#80Ab10", "#10FA95"],
     },
   ],
@@ -167,17 +193,17 @@ const Year: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    //setBarChartData(barData);
+    setBarChartData(barData);
 
-    if (!barChartData) {
-      api.get("/stats/year/bar").then((e) => {
-        const data = e.data;
+    // if (!barChartData) {
+    //   api.get("/stats/year/bar").then((e) => {
+    //     const data = e.data;
 
-        console.log(data);
+    //     console.log(data);
 
-        setBarChartData(data);
-      });
-    }
+    //     setBarChartData(data);
+    //   });
+    // }
   }, []);
 
   const GraphSelect: React.FC<GraphSelectType> = ({ defaultGraph }) => {
@@ -185,99 +211,73 @@ const Year: React.FC = () => {
 
     switch (defaultGraph) {
       case "area":
-        if (polarChartData) {
-          return (
-            <Bar
-              height={500}
-              data={polarChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość dostarczonych diet w rejonie",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
+        return (
+          <Bar
+            height={300}
+            data={polarData}
+            options={{
+              indexAxis: "y",
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Ilość dostarczonych diet w rejonie",
                 },
-              }}
-            />
-          );
-        } else {
-          api.get("/stats/year/polar").then((e) => {
-            const data = e.data;
+                legend: {
+                  display: false,
+                  position: "bottom",
+                },
+              },
+            }}
+          />
+        );
 
-            if (!polarChartData) {
-              setPolarChartData(data);
-            }
-          });
-        }
-        break;
-      case "raports":
-        {
-          return <Raports />;
-        }
-        break;
+      case "raports": {
+        return <Raports />;
+      }
+
       case "amount":
-        if (barChartData) {
-          return (
-            <Bar
-              height={300}
-              data={barChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość dostarczonych diet",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
+        return (
+          <Bar
+            height={300}
+            data={barData}
+            options={{
+              indexAxis: "y",
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Ilość dostarczonych diet",
                 },
-              }}
-            />
-          );
-        }
-        break;
-      case "types":
-        if (doughnutChartData) {
-          return (
-            <Doughnut
-              style={{
-                maxHeight: "650px",
-              }}
-              data={doughnutChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Typy dostarczonych diet",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
+                legend: {
+                  display: false,
+                  position: "bottom",
                 },
-              }}
-            />
-          );
-        } else {
-          api.get("/stats/year/doughnut").then((e) => {
-            const data = e.data;
+              },
+            }}
+          />
+        );
 
-            if (!doughnutChartData) {
-              setDoughnutChartData(data);
-            }
-          });
-        }
-        break;
-      default:
-        return <LoaderContainer height={500} />;
+      case "types":
+        return (
+          <Doughnut
+            style={{
+              maxHeight: "650px",
+            }}
+            data={doughnutData}
+            options={{
+              indexAxis: "y",
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Typy dostarczonych diet",
+                },
+                legend: {
+                  display: false,
+                  position: "bottom",
+                },
+              },
+            }}
+          />
+        );
     }
 
     return <LoaderContainer height={500} />;
@@ -308,67 +308,64 @@ const Year: React.FC = () => {
               </IonButton>
             </IonCol>
 
-            {user?.role == "Admin" ? (
-              <>
-                <IonCol size="auto" style={{ padding: "0" }}>
-                  <IonButton
-                    shape="round"
-                    fill={whichGraph === "amount" ? "solid" : "outline"}
-                    color={"tertiary"}
-                    className="graph-button"
-                    onClick={() => {
-                      setWhichGraph("amount");
-                    }}
-                  >
-                    Ilość
-                  </IonButton>
-                </IonCol>
-                <IonCol size="auto" style={{ padding: "0" }}>
-                  <IonButton
-                    shape="round"
-                    fill={whichGraph === "types" ? "solid" : "outline"}
-                    color={"tertiary"}
-                    className="graph-button"
-                    onClick={() => {
-                      setWhichGraph("types");
-                    }}
-                  >
-                    Typy
-                  </IonButton>
-                </IonCol>
-                <IonCol size="auto" style={{ padding: "0" }}>
-                  <IonButton
-                    shape="round"
-                    fill={whichGraph === "area" ? "solid" : "outline"}
-                    color={"tertiary"}
-                    className="graph-button"
-                    onClick={() => {
-                      setWhichGraph("area");
-                    }}
-                  >
-                    Rejony
-                  </IonButton>
-                </IonCol>
-              </>
-            ) : (
-              <></>
-            )}
+            {/* {user?.role == "Admin" ? ( */}
+            <>
+              <IonCol size="auto" style={{ padding: "0" }}>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "amount" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("amount");
+                  }}
+                >
+                  Ilość
+                </IonButton>
+              </IonCol>
+              <IonCol size="auto" style={{ padding: "0" }}>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "types" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("types");
+                  }}
+                >
+                  Typy
+                </IonButton>
+              </IonCol>
+              <IonCol size="auto" style={{ padding: "0" }}>
+                <IonButton
+                  shape="round"
+                  fill={whichGraph === "area" ? "solid" : "outline"}
+                  color={"tertiary"}
+                  className="graph-button"
+                  onClick={() => {
+                    setWhichGraph("area");
+                  }}
+                >
+                  Rejony
+                </IonButton>
+              </IonCol>
+            </>
           </IonRow>
 
-          {user?.role == "Admin" ? (
-            <IonRow className="ion-justify-content-center">
-              <IonCol size="auto">
-                <IonBreadcrumbs>
-                  <IonBreadcrumb active routerLink="/">
-                    Statystyki roczne
-                    <IonIcon slot="separator" icon={chevronForward}></IonIcon>
-                  </IonBreadcrumb>
-                </IonBreadcrumbs>
-              </IonCol>
-            </IonRow>
-          ) : (
+          {/* {user?.role == "Admin" ? ( */}
+          <IonRow className="ion-justify-content-center">
+            <IonCol size="auto">
+              <IonBreadcrumbs>
+                <IonBreadcrumb active routerLink="/">
+                  Statystyki roczne
+                  <IonIcon slot="separator" icon={chevronForward}></IonIcon>
+                </IonBreadcrumb>
+              </IonBreadcrumbs>
+            </IonCol>
+          </IonRow>
+          {/* ) : (
             <></>
-          )}
+          )} */}
         </div>
 
         <Container maxWidth={"xl"}>

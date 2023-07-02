@@ -10,7 +10,18 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { IonCol, IonDatetime, IonFab, IonFabButton, IonIcon, IonImg, IonModal, IonRow, useIonLoading, useIonViewWillEnter } from "@ionic/react";
+import {
+  IonCol,
+  IonDatetime,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonImg,
+  IonModal,
+  IonRow,
+  useIonLoading,
+  useIonViewWillEnter,
+} from "@ionic/react";
 import { Container } from "@mui/system";
 
 import api from "./../../services/api";
@@ -19,6 +30,7 @@ import { useEffect, useState } from "react";
 import DriversAutocomplete from "./../DriversAutocomplete";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { closeOutline } from "ionicons/icons";
+import examplePicture from "./icon.png";
 
 type DriversRouteTableDietProps = {
   name: string;
@@ -38,7 +50,7 @@ type DriversRouteTableProps = {
 
 type ContainerProps = {
   driverName: string;
-}
+};
 
 const DriverRouteTable: React.FC<ContainerProps> = ({ driverName }) => {
   const [_rows, _setRows] = useState<DriversRouteTableProps[]>([]);
@@ -53,49 +65,264 @@ const DriverRouteTable: React.FC<ContainerProps> = ({ driverName }) => {
 
   const [presentLoading, dismissLoading] = useIonLoading();
 
+  // useEffect(() => {
+  //   if (date) {
+  //     presentLoading();
+
+  //     api
+  //       .get("stats/driver/" + driverName + "/route", {
+  //         params: {
+  //           Date: date.toLocaleDateString("pl-PL", {
+  //             year: "numeric",
+  //             month: "2-digit",
+  //             day: "2-digit",
+  //           }),
+  //         },
+  //       })
+  //       .then((response) => {
+  //         _setRows([
+  //           {
+  //             city: "gdańsk",
+  //             diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+  //             houseNumber: "13",
+  //             id: 111,
+  //             image: "",
+  //             order: 1,
+  //             // packagesCompleted: false,
+  //             postCode: "06-300",
+  //             region: "trójmiasto",
+  //             street: "grunwaldzka",
+  //           },
+  //           {
+  //             city: "gdańsk",
+  //             diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+  //             houseNumber: "13",
+  //             id: 111,
+  //             image: "",
+  //             order: 1,
+  //             // packagesCompleted: false,
+  //             postCode: "06-300",
+  //             region: "trójmiasto",
+  //             street: "grunwaldzka",
+  //           },
+  //           {
+  //             city: "gdańsk",
+  //             diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+  //             houseNumber: "13",
+  //             id: 111,
+  //             image: examplePicture,
+  //             order: 1,
+  //             // packagesCompleted: false,
+  //             postCode: "06-300",
+  //             region: "trójmiasto",
+  //             street: "grunwaldzka",
+  //           },
+  //           {
+  //             city: "gdańsk",
+  //             diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+  //             houseNumber: "13",
+  //             id: 111,
+  //             image: "",
+  //             order: 1,
+  //             // packagesCompleted: false,
+  //             postCode: "06-300",
+  //             region: "trójmiasto",
+  //             street: "grunwaldzka",
+  //           },
+  //           {
+  //             city: "gdańsk",
+  //             diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+  //             houseNumber: "13",
+  //             id: 111,
+  //             image: examplePicture,
+  //             order: 1,
+  //             // packagesCompleted: false,
+  //             postCode: "06-300",
+  //             region: "trójmiasto",
+  //             street: "grunwaldzka",
+  //           },
+  //           {
+  //             city: "gdańsk",
+  //             diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+  //             houseNumber: "13",
+  //             id: 111,
+  //             image: "",
+  //             order: 1,
+  //             // packagesCompleted: false,
+  //             postCode: "06-300",
+  //             region: "trójmiasto",
+  //             street: "grunwaldzka",
+  //           },
+  //           {
+  //             city: "gdańsk",
+  //             diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+  //             houseNumber: "13",
+  //             id: 111,
+  //             image: "",
+  //             order: 1,
+  //             // packagesCompleted: false,
+  //             postCode: "06-300",
+  //             region: "trójmiasto",
+  //             street: "grunwaldzka",
+  //           },
+  //           {
+  //             city: "gdańsk",
+  //             diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+  //             houseNumber: "13",
+  //             id: 111,
+  //             image: examplePicture,
+  //             order: 1,
+  //             // packagesCompleted: false,
+  //             postCode: "06-300",
+  //             region: "trójmiasto",
+  //             street: "grunwaldzka",
+  //           },
+  //           {
+  //             city: "gdańsk",
+  //             diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+  //             houseNumber: "13",
+  //             id: 111,
+  //             image: examplePicture,
+  //             order: 1,
+  //             // packagesCompleted: false,
+  //             postCode: "06-300",
+  //             region: "trójmiasto",
+  //             street: "grunwaldzka",
+  //           },
+  //         ]);
+
+  //         console.log(rows);
+  //       })
+  //       .finally(() => {
+  //         dismissLoading();
+  //       });
+  //   }
+  // }, [date, driverName]);
   useEffect(() => {
-
-    if(date)
-    {
-
-      presentLoading();
-
-      api
-        .get("stats/driver/" + driverName + "/route", {
-          params: {
-            Date: date.toLocaleDateString("pl-PL", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            }),
-          },
-        })
-        .then((response) => {
-          _setRows(response.data);
-        }).finally(() => {
-  
-          dismissLoading();
-  
-        });
-
-    }
-
-    
+    _setRows([
+      {
+        city: "gdańsk",
+        diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+        houseNumber: "13",
+        id: 111,
+        image: "",
+        order: 1,
+        // packagesCompleted: false,
+        postCode: "06-300",
+        region: "trójmiasto",
+        street: "grunwaldzka",
+      },
+      {
+        city: "gdańsk",
+        diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+        houseNumber: "13",
+        id: 111,
+        image: "",
+        order: 1,
+        // packagesCompleted: false,
+        postCode: "06-300",
+        region: "trójmiasto",
+        street: "grunwaldzka",
+      },
+      {
+        city: "gdańsk",
+        diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+        houseNumber: "13",
+        id: 111,
+        image: examplePicture,
+        order: 1,
+        // packagesCompleted: false,
+        postCode: "06-300",
+        region: "trójmiasto",
+        street: "grunwaldzka",
+      },
+      {
+        city: "gdańsk",
+        diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+        houseNumber: "13",
+        id: 111,
+        image: "",
+        order: 1,
+        // packagesCompleted: false,
+        postCode: "06-300",
+        region: "trójmiasto",
+        street: "grunwaldzka",
+      },
+      {
+        city: "gdańsk",
+        diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+        houseNumber: "13",
+        id: 111,
+        image: examplePicture,
+        order: 1,
+        // packagesCompleted: false,
+        postCode: "06-300",
+        region: "trójmiasto",
+        street: "grunwaldzka",
+      },
+      {
+        city: "gdańsk",
+        diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+        houseNumber: "13",
+        id: 111,
+        image: "",
+        order: 1,
+        // packagesCompleted: false,
+        postCode: "06-300",
+        region: "trójmiasto",
+        street: "grunwaldzka",
+      },
+      {
+        city: "gdańsk",
+        diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+        houseNumber: "13",
+        id: 111,
+        image: "",
+        order: 1,
+        // packagesCompleted: false,
+        postCode: "06-300",
+        region: "trójmiasto",
+        street: "grunwaldzka",
+      },
+      {
+        city: "gdańsk",
+        diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+        houseNumber: "13",
+        id: 111,
+        image: examplePicture,
+        order: 1,
+        // packagesCompleted: false,
+        postCode: "06-300",
+        region: "trójmiasto",
+        street: "grunwaldzka",
+      },
+      {
+        city: "gdańsk",
+        diets: [{ name: "dietacud" }, { name: "diet-slim" }],
+        houseNumber: "13",
+        id: 111,
+        image: examplePicture,
+        order: 1,
+        // packagesCompleted: false,
+        postCode: "06-300",
+        region: "trójmiasto",
+        street: "grunwaldzka",
+      },
+    ]);
   }, [date, driverName]);
 
   useEffect(() => {
-    if(!availableDays)
-    {
-      api.get("stats/driver/" + driverName + "/available-days").then((response) => {
-        setAvailableDays(response.data);
+    if (!availableDays) {
+      api
+        .get("stats/driver/" + driverName + "/available-days")
+        .then((response) => {
+          setAvailableDays(response.data);
 
-        let tempDate = new Date(response.data[response.data.length - 1]);
-        tempDate.setHours(5);
+          let tempDate = new Date(response.data[response.data.length - 1]);
+          tempDate.setHours(5);
 
-        setDate(tempDate);
-
-
-      });
+          setDate(tempDate);
+        });
     }
   }, [driverName]);
 
@@ -108,18 +335,21 @@ const DriverRouteTable: React.FC<ContainerProps> = ({ driverName }) => {
     let tempRows = _rows;
 
     const lowerSearch = search.toLowerCase();
-    
+
     if (search) {
       tempRows = tempRows.filter(
-        (e) => 
-        e.region.toLowerCase().includes(lowerSearch) ||
-        e.postCode.toLowerCase().includes(lowerSearch) ||
-        (e.street + " " + e.houseNumber).toLowerCase().includes(lowerSearch) ||
-        e.diets.some(s => s.name.toLowerCase().includes(lowerSearch))
+        (e) =>
+          e.region.toLowerCase().includes(lowerSearch) ||
+          e.postCode.toLowerCase().includes(lowerSearch) ||
+          (e.street + " " + e.houseNumber)
+            .toLowerCase()
+            .includes(lowerSearch) ||
+          e.diets.some((s) => s.name.toLowerCase().includes(lowerSearch))
       );
     }
 
     setRows(tempRows);
+    console.log(rows);
   }, [search, _rows]);
 
   return (
@@ -226,9 +456,10 @@ const DriverRouteTable: React.FC<ContainerProps> = ({ driverName }) => {
                         <TableCell align="center">
                           <Button
                             onClick={() => {
-                              if(row.image)
-                              {
-                                setOrderImage(row.image);
+                              if (row.image) {
+                                // setOrderImage(row.image);
+                                setOrderImage(examplePicture);
+
                                 setShowOrderPhoto(true);
                               }
                             }}
@@ -272,7 +503,7 @@ const DriverRouteTable: React.FC<ContainerProps> = ({ driverName }) => {
               })}
             </strong>
           </h2>
-          {availableDays && date ? (
+          {/* {availableDays && date ? (
             <IonDatetime
               firstDayOfWeek={1}
               style={{
@@ -310,7 +541,22 @@ const DriverRouteTable: React.FC<ContainerProps> = ({ driverName }) => {
             />
           ) : (
             <></>
-          )}
+          )} */}
+          <IonDatetime
+            multiple
+            firstDayOfWeek={1}
+            style={{
+              margin: "auto",
+            }}
+            presentation="date"
+            mode="ios"
+            className="janek-shadow report-calendar"
+            isDateEnabled={(date) => {
+              const tempDate = new Date(date);
+
+              return true;
+            }}
+          />
         </IonCol>
       </IonRow>
     </Container>

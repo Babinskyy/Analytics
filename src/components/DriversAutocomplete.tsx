@@ -43,9 +43,30 @@ const DriversAutocomplete: React.FC<Props> = ({
       return undefined;
     }
 
-    api.get("autocomplete/drivers").then((response) => {
-      setOptions(response.data);
-    });
+    // api.get("autocomplete/drivers").then((response) => {
+    //   setOptions(response.data);
+    //   console.log(response.data);
+    // });
+    // console.log(options);
+
+    setOptions([
+      { id: "P0001", value: "120" },
+      { id: "P0001", value: "12s" },
+      { id: "P0001", value: "44j" },
+      { id: "P0001", value: "52s" },
+      { id: "P0001", value: "66l" },
+      { id: "P0001", value: "90a" },
+      { id: "P0001", value: "55e" },
+      { id: "P0001", value: "52w" },
+      { id: "P0001", value: "54q" },
+      { id: "P0001", value: "73m" },
+      { id: "P0001", value: "23q" },
+      { id: "P0001", value: "74p" },
+      { id: "P0001", value: "89b" },
+      { id: "P0001", value: "12a" },
+      { id: "P0001", value: "71a" },
+      { id: "P0001", value: "12s" },
+    ]);
 
     return () => {
       active = false;

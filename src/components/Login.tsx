@@ -1,14 +1,20 @@
-import { IonCol, IonModal, IonRow, NavContext, useIonAlert, useIonLoading } from "@ionic/react";
+import {
+  IonCol,
+  IonModal,
+  IonRow,
+  NavContext,
+  useIonAlert,
+  useIonLoading,
+} from "@ionic/react";
 import { Button, TextField } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import api from "./../services/api";
 import auth from "./../services/auth.service";
 import { User } from "./../services/userProps";
 
-interface ContainerProps { }
+interface ContainerProps {}
 
 const Login: React.FC<ContainerProps> = () => {
-
   const { navigate } = useContext(NavContext);
 
   const [username, setUsername] = useState<string>("");
@@ -23,27 +29,20 @@ const Login: React.FC<ContainerProps> = () => {
   const [canDismiss, setCanDismiss] = useState(false);
 
   useEffect(() => {
-
     const _GetUser = async () => {
-
-
       const user = await auth.getCurrentUser();
 
-      if(user == undefined)
-      {
+      if (user == undefined) {
         setShowLogin(true);
       }
-
-
-    }
+    };
 
     _GetUser();
-
-  }, [])
+  }, []);
 
   return (
     <>
-    <IonModal
+      {/* <IonModal
         ref={modalRef}
         isOpen={showLogin}
         canDismiss={canDismiss}
@@ -131,8 +130,8 @@ const Login: React.FC<ContainerProps> = () => {
             </IonCol>
           </IonRow>
         </div>
-      </IonModal>
-      </>
+      </IonModal> */}
+    </>
   );
 };
 

@@ -777,6 +777,50 @@ const Raports: React.FC<ContainerProps> = () => {
 
   const [mergeButtonLoading, setMergeButtonLoading] = useState<boolean>(false);
 
+  const exampleColumns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 90 },
+    {
+      field: "firstName",
+      headerName: "First name",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "lastName",
+      headerName: "Last name",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "age",
+      headerName: "Age",
+      type: "number",
+      width: 110,
+      editable: true,
+    },
+    {
+      field: "fullName",
+      headerName: "Full name",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 160,
+      valueGetter: (params: GridValueGetterParams) =>
+        `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+    },
+  ];
+
+  const exampleRows = [
+    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
+    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
+    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
+    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
+    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
+    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
+    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
+    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
+    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+  ];
+
   const columns: GridColDef[] = [
     {
       field: "isFreeDelivery",
@@ -2225,54 +2269,52 @@ const Raports: React.FC<ContainerProps> = () => {
           }}
         >
           <IonRow>
-            {user?.role == "Admin" ? (
-              <IonCol
-                style={{
-                  marginLeft: "auto",
-                }}
-                size="auto"
-              >
-                <LoadingButton
-                  loading={isExcelAccountingReportLoading}
-                  onClick={() => {
-                    setIsExcelAccountingReportLoading(true);
+            {/* {user?.role == "Admin" ? ( */}
+            <IonCol
+              style={{
+                marginLeft: "auto",
+              }}
+              size="auto"
+            >
+              <LoadingButton
+                loading={isExcelAccountingReportLoading}
+                onClick={() => {
+                  setIsExcelAccountingReportLoading(true);
 
-                    api
-                      .post(
-                        "analyticsreport/generate-accounting-report-excel"
-                        // {
-                        //   firstDate: reportCalendarDates[0],
-                        //   lastDate:
-                        //     reportCalendarDates[reportCalendarDates.length - 1],
-                        //   clearCache: false,
-                        // }
-                        // ,
-                        // {
-                        //   responseType: "blob",
-                        // }
-                      )
-                      .then((response) => {
-                        const link = document.createElement("a");
-                        link.href = response.data;
-                        link.setAttribute(
-                          "download",
-                          response.headers["file-name"]
-                        );
-                        document.body.appendChild(link);
-                        link.click();
-                      })
-                      .finally(() => {
-                        setIsExcelAccountingReportLoading(false);
-                      });
-                  }}
-                  variant="contained"
-                >
-                  Pobierz raport księgowy
-                </LoadingButton>
-              </IonCol>
-            ) : (
-              <></>
-            )}
+                  api
+                    .post(
+                      "analyticsreport/generate-accounting-report-excel"
+                      // {
+                      //   firstDate: reportCalendarDates[0],
+                      //   lastDate:
+                      //     reportCalendarDates[reportCalendarDates.length - 1],
+                      //   clearCache: false,
+                      // }
+                      // ,
+                      // {
+                      //   responseType: "blob",
+                      // }
+                    )
+                    .then((response) => {
+                      const link = document.createElement("a");
+                      link.href = response.data;
+                      link.setAttribute(
+                        "download",
+                        response.headers["file-name"]
+                      );
+                      document.body.appendChild(link);
+                      link.click();
+                    })
+                    .finally(() => {
+                      setIsExcelAccountingReportLoading(false);
+                    });
+                }}
+                variant="contained"
+              >
+                Pobierz raport księgowy
+              </LoadingButton>
+            </IonCol>
+
             <IonCol size="12">
               <TableContainer className="janek-shadow">
                 <Table
@@ -2314,7 +2356,9 @@ const Raports: React.FC<ContainerProps> = () => {
                         }}
                         align="center"
                       >
-                        {analyticsReportResponse?.allOrders}
+                        {/* {analyticsReportResponse?.allOrders}
+                         */}{" "}
+                        13478
                       </TableCell>
 
                       <TableCell
@@ -2324,7 +2368,8 @@ const Raports: React.FC<ContainerProps> = () => {
                         }}
                         align="center"
                       >
-                        {analyticsReportResponse?.allOrdersSameAddress}
+                        {/* {analyticsReportResponse?.allOrdersSameAddress} */}
+                        11423
                       </TableCell>
                       <TableCell
                         style={{
@@ -2335,7 +2380,9 @@ const Raports: React.FC<ContainerProps> = () => {
                         }}
                         align="center"
                       >
-                        {analyticsReportResponse?.allArrivalsDone}
+                        {/* {analyticsReportResponse?.allArrivalsDone}
+                         */}{" "}
+                        9532
                       </TableCell>
                       <TableCell
                         style={{
@@ -2346,7 +2393,8 @@ const Raports: React.FC<ContainerProps> = () => {
                         }}
                         align="center"
                       >
-                        {analyticsReportResponse?.allArrivalsUndone}
+                        {/* {analyticsReportResponse?.allArrivalsUndone} */}
+                        54
                       </TableCell>
                       {/* <TableCell
                         style={{
@@ -2380,25 +2428,23 @@ const Raports: React.FC<ContainerProps> = () => {
             style={{ marginTop: "20px" }}
             className={"ion-justify-content-between"}
           >
-            {user?.role == "Admin" ? (
-              <IonCol size="4">
-                <CompanySelect
-                  setCompanys={setCompanys}
-                  multiple
-                  options={[
-                    ...new Set(
-                      analyticsReportResponse?.routesAddresses
-                        .map((item) => item.mainCateringNames)
-                        .flat(1)
-                    ),
-                  ].sort()}
-                />
-              </IonCol>
-            ) : (
-              <></>
-            )}
+            {/* {user?.role == "Admin" ? ( */}
+            <IonCol size="4">
+              <CompanySelect
+                setCompanys={setCompanys}
+                multiple
+                options={[
+                  ...new Set(
+                    analyticsReportResponse?.routesAddresses
+                      .map((item) => item.mainCateringNames)
+                      .flat(1)
+                  ),
+                ].sort()}
+              />
+            </IonCol>
 
-            <IonCol size={user?.role == "Admin" ? "4" : "6"}>
+            {/* <IonCol size={user?.role == "Admin" ? "4" : "6"}> */}
+            <IonCol size={"4"}>
               <RegionAutocomplete
                 setRegions={setRegions}
                 multiple
@@ -2411,7 +2457,8 @@ const Raports: React.FC<ContainerProps> = () => {
                 ].sort()}
               />
             </IonCol>
-            <IonCol size={user?.role == "Admin" ? "4" : "6"}>
+            {/* <IonCol size={user?.role == "Admin" ? "4" : "6"}> */}
+            <IonCol size={"4"}>
               <DeliveryTypeSelect status={status} setStatus={setStatus} />
             </IonCol>
           </IonRow>
@@ -2535,57 +2582,54 @@ const Raports: React.FC<ContainerProps> = () => {
                 <></>
               )}
             </h2>
-            {availableDays && date ? (
-              <IonDatetime
-                ref={reportCalendarRef}
-                multiple
-                firstDayOfWeek={1}
-                style={{
-                  margin: "auto",
-                }}
-                value={reportCalendarDates}
-                presentation="date"
-                mode="ios"
-                className="janek-shadow report-calendar"
-                isDateEnabled={(date) => {
-                  if (!reportCalendarDates) {
-                    return true;
-                  }
-
-                  const tempDate = new Date(date);
-
-                  for (let n of reportCalendarDates) {
-                    const nDate = new Date(n);
-
-                    if (
-                      nDate.getFullYear() === tempDate.getFullYear() &&
-                      nDate.getMonth() === tempDate.getMonth() &&
-                      nDate.getDate() === tempDate.getDate()
-                    ) {
-                      return false;
-                    }
-                  }
-
+            {/* {availableDays && date ? ( */}
+            <IonDatetime
+              ref={reportCalendarRef}
+              multiple
+              firstDayOfWeek={1}
+              style={{
+                margin: "auto",
+              }}
+              value={reportCalendarDates}
+              presentation="date"
+              mode="ios"
+              className="janek-shadow report-calendar"
+              isDateEnabled={(date) => {
+                if (!reportCalendarDates) {
                   return true;
-                }}
-                onIonChange={(e) => {
-                  if (!e.target.value) {
-                    return;
+                }
+
+                const tempDate = new Date(date);
+
+                for (let n of reportCalendarDates) {
+                  const nDate = new Date(n);
+
+                  if (
+                    nDate.getFullYear() === tempDate.getFullYear() &&
+                    nDate.getMonth() === tempDate.getMonth() &&
+                    nDate.getDate() === tempDate.getDate()
+                  ) {
+                    return false;
                   }
+                }
 
-                  const val = e.target.value as string[];
+                return true;
+              }}
+              onIonChange={(e) => {
+                if (!e.target.value) {
+                  return;
+                }
 
-                  if (val.length == 7) {
-                    return;
-                  }
+                const val = e.target.value as string[];
 
-                  const daysInWeek = DaysInWeek(new Date(val[val.length - 1]));
-                  setReportCalendarDates(daysInWeek);
-                }}
-              />
-            ) : (
-              <></>
-            )}
+                if (val.length == 7) {
+                  return;
+                }
+
+                const daysInWeek = DaysInWeek(new Date(val[val.length - 1]));
+                setReportCalendarDates(daysInWeek);
+              }}
+            />
 
             {/* {<ShowContentUnderCalendar />} */}
           </div>
@@ -2594,36 +2638,33 @@ const Raports: React.FC<ContainerProps> = () => {
 
       <IonRow>
         <IonCol size="12" className="order-2 order-md-1">
-          {user?.role == "Admin" ? (
-            <div
-            // style={{
-            //   padding: "16px 20px 0",
-            //   color: "#7b7b7b",
-            // }}
-            >
-              {/* Ostatnia aktualizacja:{" "}
+          {/* {user?.role == "Admin" ? ( */}
+          <div
+          // style={{
+          //   padding: "16px 20px 0",
+          //   color: "#7b7b7b",
+          // }}
+          >
+            {/* Ostatnia aktualizacja:{" "}
               <strong>
                 {CalculateLeftTimeString(lastEditedDateMiliseconds)}
               </strong> */}
-              <Button
-                disabled={isDatagridLoading}
-                variant="text"
-                // style={{ marginLeft: "13px" }}
-                onClick={async () => {
-                  await getReportData(true);
-                }}
-              >
-                Wymuś aktualizację
-              </Button>
-            </div>
-          ) : (
-            <></>
-          )}
+            <Button
+              disabled={isDatagridLoading}
+              variant="text"
+              // style={{ marginLeft: "13px" }}
+              onClick={async () => {
+                await getReportData(true);
+              }}
+            >
+              Wymuś aktualizację
+            </Button>
+          </div>
+
           <div className="janek-shadow mt-2">
             <IonRow className="">
-              {user?.role == "Admin" ? (
-                <IonCol size="auto">
-                  {/* <IonButton
+              <IonCol size="auto">
+                {/* <IonButton
                     disabled={
                       !(selectionModel.length > 0 && !mergeButtonLoading)
                     }
@@ -2653,25 +2694,26 @@ const Raports: React.FC<ContainerProps> = () => {
                     <IonIcon icon={gitCompare} slot="end" />
                     Scal adresy
                   </IonButton> */}
-                  <IonButton
-                    color={"danger"}
-                    onClick={() => {
-                      setIsMultipleNotesModalOpen(true);
-                    }}
-                  >
-                    Dodaj uwagę
-                  </IonButton>
-                </IonCol>
-              ) : (
-                <></>
-              )}
+                <IonButton
+                  color={"danger"}
+                  onClick={() => {
+                    setIsMultipleNotesModalOpen(true);
+                  }}
+                >
+                  Dodaj uwagę
+                </IonButton>
+              </IonCol>
+
               <IonCol
                 size="auto"
                 style={{
                   marginLeft: "auto",
                 }}
               >
-                <LoadingButton
+                <Button onClick={() => {}}>
+                  Eksportuj {datagridVisibleItemsCount} pozycji do excela
+                </Button>
+                {/* <LoadingButton
                   onClick={() => {
                     setIsExcelExportButtonLoading(true);
 
@@ -2712,25 +2754,10 @@ const Raports: React.FC<ContainerProps> = () => {
                   endIcon={<FileDownloadIcon />}
                 >
                   Eksportuj {datagridVisibleItemsCount} pozycji do excela
-                </LoadingButton>
+                </LoadingButton> */}
               </IonCol>
             </IonRow>
             <div>
-              {isDatagridLoading ? (
-                <div
-                  style={{
-                    position: "absolute",
-                    right: "calc(50% - 20px)",
-                    top: "calc(50% - 23px)",
-                    zIndex: 1,
-                  }}
-                >
-                  <CircularProgress />
-                </div>
-              ) : (
-                <></>
-              )}
-
               {/* {analyticsReportResponse?.routesAddresses &&
               selectionModel.length > 0 ? (
                 <div style={{ padding: "0 10px 10px" }}>
@@ -2796,18 +2823,13 @@ const Raports: React.FC<ContainerProps> = () => {
                 }}
                 selectionModel={selectionModel}
                 apiRef={apiRef}
-                style={{
-                  height: "900px",
-                  filter: isDatagridLoading ? "blur(2px)" : "none",
-                  pointerEvents: isDatagridLoading ? "none" : "all",
-                }}
+                // style={{
+                //   height: "900px",
+                // }}
+                autoHeight
                 // rowHeight={120}
-                rows={
-                  analyticsReportResponse
-                    ? analyticsReportResponse.routesAddresses
-                    : []
-                }
-                columns={columns}
+                rows={exampleRows}
+                columns={exampleColumns}
                 pageSize={15}
                 pagination={true}
                 // hideFooter

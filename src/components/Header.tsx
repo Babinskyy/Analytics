@@ -60,7 +60,7 @@ const Header: React.FC<Props> = ({ type }) => {
   return (
     <IonHeader>
       <IonToolbar>
-        <Login />
+        {/* <Login /> */}
 
         {/* <IonButtons slot="start">
           <IonBackButton />
@@ -69,18 +69,19 @@ const Header: React.FC<Props> = ({ type }) => {
           <IonButton
             fill={type == "diets" ? "solid" : "outline"}
             color="tertiary"
-            className={
-              user?.role == "Admin"
-                ? "double-button-first"
-                : "double-button-first-non-admin"
-            }
+            // className={
+            //   user?.role == "Admin"
+            //     ? "double-button-first"
+            //     : "double-button-first-non-admin"
+            // }
+            className={"double-button-first"}
             onClick={() => {
               navigate("/", "forward", "push");
             }}
           >
             Diety
           </IonButton>
-          {user?.role == "Admin" ? (
+          {/* {user?.role == "Admin" ? (
             <IonButton
               className="double-button-second"
               fill={type == "drivers" ? "solid" : "outline"}
@@ -93,7 +94,18 @@ const Header: React.FC<Props> = ({ type }) => {
             </IonButton>
           ) : (
             <></>
-          )}
+          )} */}
+
+          <IonButton
+            className="double-button-second"
+            fill={type == "drivers" ? "solid" : "outline"}
+            color="tertiary"
+            onClick={() => {
+              navigate("/drivers", "forward", "push");
+            }}
+          >
+            Kierowcy
+          </IonButton>
         </IonTitle>
         <IonButtons slot="end">
           <IconButton

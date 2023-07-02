@@ -45,7 +45,7 @@ type DriversScanTableProps = {
 
 type ContainerProps = {
   driverName: string;
-}
+};
 
 const DriverDistance: React.FC<ContainerProps> = ({ driverName }) => {
   const { navigate } = useContext(NavContext);
@@ -56,19 +56,115 @@ const DriverDistance: React.FC<ContainerProps> = ({ driverName }) => {
   const [presentLoading, dismissLoading] = useIonLoading();
 
   useEffect(() => {
-    api.get("/stats/driver/" + driverName + "/distance/").then((e) => {
-      const data = e.data;
+    const data = {
+      datasets: [
+        {
+          backgroundColor: [
+            "#FF6633",
+            "#FFB399",
+            "#FF33FF",
+            "#FFFF99",
+            "#00B3E6",
+            "#E6B333",
+            "#3366E6",
+            "#999966",
+            "#99FF99",
+            "#B34D4D",
+            "#80B300",
+          ],
+          data: [3122, 5721, 4427, 5388, 4164, 5729, 1318, 0, 0, 0, 0, 0],
+          label: "Ilość",
+        },
+      ],
+      date: [
+        "01.2023",
+        "02.2023",
+        "03.2023",
+        "04.2023",
+        "05.2023",
+        "06.2023",
+        "07.2023",
+        "08.2023",
+        "09.2023",
+        "10.2023",
+        "11.2023",
+        "12.2023",
+      ],
+      labels: [
+        "Styczeń",
+        "Luty",
+        "Marzec",
+        "Kwiecień",
+        "Maj",
+        "Czerwiec",
+        "Lipiec",
+        "Sierpień",
+        "Wrzesień",
+        "Październik",
+        "Listopad",
+        "Grudzień",
+      ],
+    };
 
-      console.log(data);
+    setPolarChartData(data);
 
-      setPolarChartData(data);
-
-      setDeliveryArrayPolar({
-        data: data.datasets[0].data,
-        labels: data.labels,
-      });
+    setDeliveryArrayPolar({
+      data: [3122, 5721, 4427, 5388, 4164, 5729, 1318, 0, 0, 0, 0, 0],
+      labels: data.labels,
     });
   }, []);
+
+  // useEffect(() => {
+  //   const data = {
+  //     data: [3122, 5721, 4427, 5388, 4164, 5729, 1318, 0, 0, 0, 0, 0],
+  //     labels: [
+  //       "Styczeń",
+  //       "Luty",
+  //       "Marzec",
+  //       "Kwiecień",
+  //       "Maj",
+  //       "Czerwiec",
+  //       "Lipiec",
+  //       "Sierpień",
+  //       "Wrzesień",
+  //       "Październik",
+  //       "Listopad",
+  //       "Grudzień",
+  //     ],
+  //   };
+
+  //   console.log(data);
+
+  //   setPolarChartData(data);
+  //   // setPolarChartData({
+  //   //   data: [3122, 5721, 4427, 5388, 4164, 5729, 1318, 0, 0, 0, 0, 0],
+  //   //   labels: [
+  //   //     "Styczeń",
+  //   //     "Luty",
+  //   //     "Marzec",
+  //   //     "Kwiecień",
+  //   //     "Maj",
+  //   //     "Czerwiec",
+  //   //     "Lipiec",
+  //   //     "Sierpień",
+  //   //     "Wrzesień",
+  //   //     "Październik",
+  //   //     "Listopad",
+  //   //     "Grudzień",
+  //   //   ],
+  //   // });
+  //   console.log(polarChartData);
+
+  //   // setDeliveryArrayPolar({
+  //   //   data: data.datasets[0].data,
+  //   //   labels: data.labels,
+  //   // });
+  //   setDeliveryArrayPolar({
+  //     data: [3122, 5721, 4427, 5388, 4164, 5729, 1318, 0, 0, 0, 0, 0],
+  //     labels: data.labels,
+  //   });
+  //   console.log(deliveryArrayPolar);
+  // }, []);
 
   const memoGraph = useMemo(() => {
     return (
@@ -151,46 +247,45 @@ const DriverDistance: React.FC<ContainerProps> = ({ driverName }) => {
                 // />
 
                 deliveryArrayPolar.data.map((e: any, i: number) => {
-                  return (
-                          e
-                          ?
-                          <IonItem className="day-item" lines="none">
-                        <IonLabel
-                          style={{
-                            "white-space": "normal",
-                          }}
-                        >
-                          <div className="street">{deliveryArrayPolar.labels[i]}</div>
-                        </IonLabel>
+                  return e ? (
+                    <IonItem className="day-item" lines="none">
+                      <IonLabel
+                        style={{
+                          "white-space": "normal",
+                        }}
+                      >
+                        <div className="street">
+                          {deliveryArrayPolar.labels[i]}
+                        </div>
+                      </IonLabel>
 
-                        <IonLabel
-                          style={{ textAlign: "right", fontSize: "20px" }}
-                        >
-                          <IonLabel>
-                            <span
-                              style={{
-                                fontSize: "15px",
-                                opacity: "0.5",
-                                marginBottom: "2px",
-                              }}
-                            >
-                              Łącznie:{" "}
-                            </span>
-                            {e}
-                          </IonLabel>
-                          <IonLabel>
-                            <span style={{ fontSize: "15px", opacity: "0.5" }}>
-                              Średnio:{" "}
-                            </span>
-                            {Math.round(deliveryArrayPolar.data[i] / 30)}
-                          </IonLabel>
+                      <IonLabel
+                        style={{ textAlign: "right", fontSize: "20px" }}
+                      >
+                        <IonLabel>
+                          <span
+                            style={{
+                              fontSize: "15px",
+                              opacity: "0.5",
+                              marginBottom: "2px",
+                            }}
+                          >
+                            Łącznie:{" "}
+                          </span>
+                          {e}
                         </IonLabel>
-                      </IonItem>
-                      :
-                      <></>
-                  )
+                        <IonLabel>
+                          <span style={{ fontSize: "15px", opacity: "0.5" }}>
+                            Średnio:{" "}
+                          </span>
+                          {Math.round(deliveryArrayPolar.data[i] / 30)}
+                        </IonLabel>
+                      </IonLabel>
+                    </IonItem>
+                  ) : (
+                    <></>
+                  );
                 })
-
               ) : (
                 <></>
               )}

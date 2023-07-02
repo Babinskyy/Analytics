@@ -82,6 +82,7 @@ import api from "./../services/api";
 import { Virtuoso } from "react-virtuoso";
 import LoaderContainer from "../components/LoaderContainer";
 import { Container } from "@mui/system";
+import examplePicture from "./../components/Driver/icon.png";
 
 ChartJS.register(...registerables);
 const doughnutData = {
@@ -155,22 +156,23 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
     setPolarChartData(undefined);
   });
 
-  useIonViewWillEnter(() => {
-    api
-      .get("/stats/day/data/" + (match.params as MatchParamsType).id, {
-        params: {
-          Search: searchTerm,
-        },
-      })
-      .then((e) => {
-        const data = e.data;
+  // useIonViewWillEnter(() => {
+  //   api
+  //     .get("/stats/day/data/" + (match.params as MatchParamsType).id, {
+  //       params: {
+  //         Search: searchTerm,
+  //       },
+  //     })
+  //     .then((e) => {
+  //       const data = e.data;
 
-        setDeliveryArray(data);
-      })
-      .finally(() => {
-        setSearchTermLoading(false);
-      });
-  });
+  //       setDeliveryArray(data);
+  //       console.log(deliveryArray);
+  //     })
+  //     .finally(() => {
+  //       setSearchTermLoading(false);
+  //     });
+  // });
 
   type GraphSelectType = {
     defaultGraph?: string;
@@ -179,77 +181,55 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
   const GraphSelect: React.FC<GraphSelectType> = ({ defaultGraph }) => {
     switch (defaultGraph ? defaultGraph : whichGraph) {
       case "area":
-        if (polarChartData) {
-          return (
-            <Bar
-              height={300}
-              data={polarChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość dostarczonych diet na rejon",
-                  },
-                  legend: {
-                    display: true,
-                    position: "bottom",
-                  },
+        return (
+          <PolarArea
+            height={300}
+            data={polarData}
+            options={{
+              indexAxis: "y",
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Ilość dostarczonych diet na rejon",
                 },
-              }}
-            />
-          );
-        } else {
-          api
-            .get("/stats/day/polar/" + (match.params as MatchParamsType).id)
-            .then((e) => {
-              const data = e.data;
+                legend: {
+                  display: true,
+                  position: "bottom",
+                },
+              },
+            }}
+          />
+        );
 
-              console.log(data);
-
-              setPolarChartData(data);
-            });
-        }
         break;
       case "types":
-        if (doughnutChartData) {
-          return (
-            <Doughnut
-              style={{
-                maxHeight: "650px",
-              }}
-              data={doughnutChartData}
-              options={{
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Typy dostarczonych diet",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
+        return (
+          <Doughnut
+            style={{
+              maxHeight: "650px",
+            }}
+            data={doughnutData}
+            options={{
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Typy dostarczonych diet",
                 },
-              }}
-            />
-          );
-        } else {
-          api
-            .get("/stats/day/doughnut/" + (match.params as MatchParamsType).id)
-            .then((e) => {
-              const data = e.data;
+                legend: {
+                  display: false,
+                  position: "bottom",
+                },
+              },
+            }}
+          />
+        );
 
-              console.log(data);
-
-              setDoughnutChartData(data);
-            });
-        }
         break;
       default:
         return <LoaderContainer height={500} />;
     }
 
-    return <LoaderContainer height={500} />;
+    // return <LoaderContainer height={500} />;
   };
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -269,6 +249,7 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
           const data = e.data;
 
           setDeliveryArray(data);
+          console.log(deliveryArray);
         })
         .finally(() => {
           setSearchTermLoading(false);
@@ -277,6 +258,38 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
+
+  // useEffect(() => {
+  //   setSearchTermLoading(true);
+
+  //   const delayDebounceFn = setTimeout(() => {
+  //     api
+  //       .get("/stats/day/data/" + (match.params as MatchParamsType).id, {
+  //         params: {
+  //           Search: searchTerm,
+  //         },
+  //       })
+  //       .then((e) => {
+  //         const data = e.data;
+
+  //         setDeliveryArray([
+  //           {
+  //             address1: "sosnowa 12/81",
+  //             address2: "przasnysz 06-300",
+  //             diets: ["wege-2000", "slim-1500"],
+  //             time: "21:04",
+  //             image: examplePicture,
+  //           },
+  //         ]);
+  //         console.log(deliveryArray);
+  //       })
+  //       .finally(() => {
+  //         setSearchTermLoading(false);
+  //       });
+  //   }, 500);
+
+  //   return () => clearTimeout(delayDebounceFn);
+  // }, [searchTerm]);
 
   const memoGraphSelect = useMemo(() => {
     return <GraphSelect defaultGraph={whichGraph} />;
@@ -443,7 +456,7 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
                 {memoGraphSelect}
               </IonItem>
             </IonCol>
-            <IonCol sizeMd="5" size="12">
+            {/* <IonCol sizeMd="5" size="12">
               {doughnutChartData ? (
                 <div>
                   <div>
@@ -552,7 +565,7 @@ const Day: React.FC<RouteComponentProps> = ({ match }) => {
               ) : (
                 <LoaderContainer height={500} width={400} />
               )}
-            </IonCol>
+            </IonCol> */}
           </IonRow>
         </Container>
       </IonContent>

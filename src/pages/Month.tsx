@@ -224,15 +224,15 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
   });
 
   useEffect(() => {
-    api
-      .get("/stats/month/bar/" + (match.params as MatchParamsType).id)
-      .then((e) => {
-        const data = e.data;
+    // api
+    //   .get("/stats/month/bar/" + (match.params as MatchParamsType).id)
+    //   .then((e) => {
+    //     const data = e.data;
 
-        console.log(data);
+    //     console.log(data);
 
-        setBarChartData(data);
-      });
+    //     setBarChartData(data);
+    //   });
 
     setPolarChartData(null);
     setDoughnutChartData(null);
@@ -245,100 +245,71 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
   const GraphSelect: React.FC<GraphSelectType> = ({ defaultGraph }) => {
     switch (defaultGraph ? defaultGraph : whichGraph) {
       case "area":
-        if (polarChartData) {
-          return (
-            <Bar
-              height={500}
-              data={polarChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość dostarczonych diet na rejon",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
+        return (
+          <PolarArea
+            height={500}
+            data={polarData}
+            options={{
+              indexAxis: "y",
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Ilość dostarczonych diet na rejon",
                 },
-              }}
-            />
-          );
-        } else {
-          api
-            .get("/stats/month/polar/" + (match.params as MatchParamsType).id)
-            .then((e) => {
-              const data = e.data;
+                legend: {
+                  display: false,
+                  position: "bottom",
+                },
+              },
+            }}
+          />
+        );
 
-              console.log(data);
-
-              if (!polarChartData) {
-                setPolarChartData(data);
-              }
-            });
-        }
         break;
       case "amount":
-        if (barChartData) {
-          return (
-            <Bar
-              height={300}
-              data={barChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Ilość dostarczonych diet",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
+        return (
+          <Bar
+            height={300}
+            data={barData}
+            options={{
+              indexAxis: "y",
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Ilość dostarczonych diet",
                 },
-              }}
-            />
-          );
-        }
+                legend: {
+                  display: false,
+                  position: "bottom",
+                },
+              },
+            }}
+          />
+        );
+
         break;
       case "types":
-        if (doughnutChartData) {
-          return (
-            <Doughnut
-              style={{
-                maxHeight: "650px",
-              }}
-              data={doughnutChartData}
-              options={{
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Typy dostarczonych diet",
-                  },
-                  legend: {
-                    display: false,
-                    position: "bottom",
-                  },
+        return (
+          <Doughnut
+            style={{
+              maxHeight: "650px",
+            }}
+            data={doughnutData}
+            options={{
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Typy dostarczonych diet",
                 },
-              }}
-            />
-          );
-        } else {
-          api
-            .get(
-              "/stats/month/doughnut/" + (match.params as MatchParamsType).id
-            )
-            .then((e) => {
-              const data = e.data;
+                legend: {
+                  display: false,
+                  position: "bottom",
+                },
+              },
+            }}
+          />
+        );
 
-              console.log(data);
-
-              if (!doughnutChartData) {
-                setDoughnutChartData(data);
-              }
-            });
-        }
         break;
       default:
         return <LoaderContainer height={500} />;
@@ -349,7 +320,7 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
 
   const memoGraphSelect = useMemo(() => {
     return <GraphSelect defaultGraph={whichGraph} />;
-  }, [whichGraph, polarChartData, barChartData, doughnutChartData]);
+  }, [whichGraph, polarData, barData, doughnutData]);
 
   return (
     <IonPage className="month">
@@ -455,67 +426,69 @@ const Month: React.FC<RouteComponentProps> = ({ match }) => {
                   </IonLabel>
                 </IonItem>
                 <div style={{ maxHeight: "750px", overflow: "auto" }}>
-                  {barChartData ? (
-                    <IonList
-                      className="days-list"
-                      lines="none"
-                      style={{ background: "transparent" }}
-                    >
-                      {barChartData?.labels.map((e: any, i: number) => {
-                        return barData.datasets[0].data[i] > 0 ? (
-                          <IonItem
-                            className="day-item"
-                            button
-                            onClick={() => {
-                              navigate(
-                                "/day/" +
-                                  (match.params as MatchParamsType).id +
-                                  "/" +
-                                  barChartData.date[i],
-                                "forward",
-                                "push"
-                              );
-                            }}
-                          >
-                            <IonLabel>
-                              <div
-                                style={{
-                                  fontSize: "24px",
-                                  fontWeight: "550",
-                                  paddingBottom: "5px",
-                                }}
-                              >
-                                {barChartData.date[i]}
-                              </div>
-                              <div
-                                style={{
-                                  color: "rgb(143, 143, 143)",
-                                  letterSpacing: "1px",
-                                  textTransform: "capitalize",
-                                }}
-                              >
-                                {barChartData.days[i]}
-                              </div>
-                            </IonLabel>
-                            <IonLabel>
-                              <div
-                                style={{
-                                  textAlign: "right",
-                                  fontSize: "20px",
-                                }}
-                              >
-                                {barChartData.datasets[0].data[i]}
-                              </div>
-                            </IonLabel>
-                          </IonItem>
-                        ) : (
-                          <></>
-                        );
-                      })}
-                    </IonList>
-                  ) : (
-                    <LoaderContainer height={500} width={400} />
-                  )}
+                  <IonList
+                    className="days-list"
+                    lines="none"
+                    style={{
+                      background: "transparent",
+                      height: "575px",
+                      overflow: "scroll",
+                      overflowX: "hidden",
+                    }}
+                  >
+                    {barData?.labels.map((e: any, i: number) => {
+                      return barData.datasets[0].data[i] > 0 ? (
+                        <IonItem
+                          className="day-item"
+                          button
+                          onClick={() => {
+                            navigate(
+                              "/day/" +
+                                (match.params as MatchParamsType).id +
+                                "/" +
+                                // barData.date[i],
+                                "28.06.2022",
+                              "forward",
+                              "push"
+                            );
+                          }}
+                        >
+                          <IonLabel>
+                            <div
+                              style={{
+                                fontSize: "24px",
+                                fontWeight: "550",
+                                paddingBottom: "5px",
+                              }}
+                            >
+                              {barData.date[i]}
+                            </div>
+                            <div
+                              style={{
+                                color: "rgb(143, 143, 143)",
+                                letterSpacing: "1px",
+                                textTransform: "capitalize",
+                              }}
+                            >
+                              {/* {barData.days[i]} */}
+                            </div>
+                          </IonLabel>
+                          <IonLabel>
+                            <div
+                              style={{
+                                textAlign: "right",
+                                fontSize: "20px",
+                              }}
+                            >
+                              {barData.datasets[0].data[i]}
+                            </div>
+                          </IonLabel>
+                        </IonItem>
+                      ) : (
+                        <></>
+                      );
+                    })}
+                  </IonList>
                 </div>
               </div>
             </IonCol>
