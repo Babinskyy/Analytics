@@ -782,20 +782,20 @@ const Raports: React.FC<ContainerProps> = () => {
     {
       field: "firstName",
       headerName: "First name",
-      width: 150,
+      width: 250,
       editable: true,
     },
     {
       field: "lastName",
       headerName: "Last name",
-      width: 150,
+      width: 250,
       editable: true,
     },
     {
       field: "age",
       headerName: "Age",
       type: "number",
-      width: 110,
+      width: 210,
       editable: true,
     },
     {
@@ -803,7 +803,7 @@ const Raports: React.FC<ContainerProps> = () => {
       headerName: "Full name",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 160,
+      width: 260,
       valueGetter: (params: GridValueGetterParams) =>
         `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
@@ -2703,7 +2703,14 @@ const Raports: React.FC<ContainerProps> = () => {
                   Dodaj uwagę
                 </IonButton>
               </IonCol>
-
+              <IonCol
+                size="auto"
+                style={{
+                  margin: "auto",
+                }}
+              >
+                <h3 style={{ margin: "auto" }}>Example Array</h3>
+              </IonCol>
               <IonCol
                 size="auto"
                 style={{
@@ -2835,7 +2842,7 @@ const Raports: React.FC<ContainerProps> = () => {
                 // hideFooter
                 // rowsPerPageOptions={[5]}
                 disableSelectionOnClick
-                checkboxSelection={user?.role == "Admin"}
+                // checkboxSelection={user?.role == "Admin"}
                 // onSelectionModelChange={(ids) =>
                 //   onRowsSelectionHandler(ids)
                 // }
