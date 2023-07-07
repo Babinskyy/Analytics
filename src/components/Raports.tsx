@@ -2709,7 +2709,7 @@ const Raports: React.FC<ContainerProps> = () => {
                   margin: "auto",
                 }}
               >
-                <h3 style={{ margin: "auto" }}>Example Array</h3>
+                <h3 style={{ margin: "auto" }}>Example</h3>
               </IonCol>
               <IonCol
                 size="auto"
